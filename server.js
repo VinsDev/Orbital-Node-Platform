@@ -34,6 +34,12 @@ app.get('/contact', (req, res) => {
     res.sendFile(__dirname + '/views/contact.html');
 });
 
+
+// School . . .
+app.get('/school', (req, res) => {
+    res.sendFile(__dirname + '/school/index.html');
+});
+
 app.post('/getFruits', async (req, res) => {
     let payload = req.body.payload.trim();
     let search = Fruit.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
