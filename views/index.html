@@ -79,19 +79,19 @@
       <div class="header-text caption">
         <h2>Visit your school Website</h2>
         <div id="search-section">
-          <form id="suggestion_form" name="gs" method="get" action="#">
+          <form id="suggestion_form" name="gs" method="get" action="school">
             <div class="search-wrapper">
-              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your school name here" autocomplete="on"
-                onkeyup="sendData(this)">
-              <section id="searchResults" ></section>
+              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your school name here"
+                autocomplete="on" onkeyup="sendData(this)">
+              <section id="searchResults"></section>
               <div class="icon">
-                <a href="#" class="gradient-button">Go</a>
+                <input type="submit" name="school" value="Go" class="gradient-button" placeholder="go">
               </div>
               <script>
                 function sendData(e) {
                   const searchResults = document.getElementById('searchResults');
 
-                  if(e.value.length === 0){
+                  if (e.value.length === 0) {
                     searchResults.classList.add("hide");
                   }
                   else {
@@ -126,7 +126,7 @@
                   searchResults.innerHTML = '';
                 }
 
-                function select(element){
+                function select(element) {
                   let box = document.getElementById('search-field');
                   let result_wrapper = document.getElementById('searchResults');
                   let selectedItem = element.textContent;
@@ -142,45 +142,6 @@
     </div>
   </div>
   <!-- Banner Ends Here -->
-
-  <!-- Trusted Starts Here -->
-  <!--  <div class="trusted-section">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="trusted-section-heading">
-            <h4>TRUSTED BY 100+ SCHOOLS NATIONWIDE</h4>
-          </div>
-        </div>
-        <div class="col-md-12">
-          <div class="owl-trusted owl-carousel">
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 1">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 2">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 3">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 4">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 5">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 6">
-            </div>
-            <div class="trusted-item">
-              <img src="assets/images/trusted-01.png" alt="trusted 7">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-  <!-- Trusted Ends Here -->
 
 
   <!-- Services Starts Here -->
@@ -236,36 +197,17 @@
     </div>
     <div class="container">
       <div class="row">
-        <div class="col-md-8 offset-md-2">
+        <div class="col-md-9 offset-md-2">
           <div class="section-heading">
             <h2>Orbital Node Service Pricing</h2>
             <p>Orbital Node offers a uniform pricing system to all registered schools.</p>
           </div>
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <!--   <div class="pricing-item">
-            <h4>ONS Basic</h4>
-            <div class="price">
-              <h6>₦5,000</h6>
-              <span>termly</span>
-            </div>
-            <p>This Plan is suitable for small sized starup schools with a few number of students.</p>
-            <div class="dev"></div>
-            <ul>
-              <li><i class="fa fa-check"></i>School Website</li>
-              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
-              <li><i class="fa fa-check"></i>Students Portal</li>
-              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
-              <li><i class="fa fa-check"></i>Admin Panel</li>
-              <li><i class="fa fa-check"></i>300 Maximumum Students Carrying Capacity</li>
-            </ul>
-            <a href="#" class="main-button">Start Plan</a>
-          </div> -->
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
           <div class="pricing-item">
-            <!--             <h4>ONS</h4>
- -->
+
             <div class="price price-gradient">
               <h6>₦16,680</h6>
               <span>termly</span>
@@ -285,26 +227,6 @@
           </div>
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
-          <!--  <div class="pricing-item">
-            <h4>ONS Advanced</h4>
-            <div class="price">
-              <h6>₦8,000</h6>
-              <span>termly</span>
-            </div>
-            <p>Suitable for Large schools with many students</p>
-            <div class="dev"></div>
-            <ul>
-              <li><i class="fa fa-check"></i>School Website</li>
-              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
-              <li><i class="fa fa-check"></i>Managed Fees Payments</li>
-              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li>
-              <li><i class="fa fa-check"></i>Students Portal</li>
-              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
-              <li><i class="fa fa-check"></i>Admin Panel</li>
-              <li><i class="fa fa-check"></i>1500 Maximumum Students Carrying Capacity</li>
-            </ul>
-            <a href="#" class="main-button">Take it now</a>
-          -->
         </div>
 
       </div>
