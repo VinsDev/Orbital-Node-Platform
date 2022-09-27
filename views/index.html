@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="TemplateMo">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+  <title>Orbital Node</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Additional CSS Files -->
+  <link rel="stylesheet" href="assets/css/fontawesome.css">
+  <link rel="stylesheet" href="assets/css/templatemo-host-cloud.css">
+  <link rel="stylesheet" href="assets/css/owl.css">
+
+</head>
+
+<body>
+
+  <!-- ***** Preloader Start ***** -->
+  <div id="preloader">
+    <div class="jumper">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <!-- ***** Preloader End ***** -->
+
+  <!-- Header -->
+  <header class="">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="/">
+          <h2>Orbital <em>Node</em></h2>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+          aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="about">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="services">Our Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="contact">Contact Us</a>
+            </li>
+          </ul>
+        </div>
+        <div class="functional-buttons">
+          <ul>
+            <li><a href="#">Get Started</a></li>
+            <!-- <li><a href="#">Sign Up</a></li> -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Content -->
+  <!-- Banner Starts Here -->
+  <div class="banner">
+    <div class="col-md-8 offset-md-2">
+      <div class="header-text caption">
+        <h2>Visit your school Website</h2>
+        <div id="search-section">
+          <form id="suggestion_form" name="gs" method="get" action="#">
+            <div class="searchWrapper">
+              <input type="text" name="q" class="searchInput" placeholder="Enter your school name here"
+                autocomplete="on" onkeyup="sendData(this)">
+              <section id="searchResults">
+
+              </section>
+              <script>
+                function sendData(e) {
+                  const searchResults = document.getElementById('searchResults');
+                  let match = e.value.match(/^[a-zA-Z ]*/);
+                  let match2 = e.value.match(/\s*/);
+                  if (match2[0] === e.value) {
+                    searchResults.innerHTML = '';
+                    return;
+                  }
+                  if (match[0] === e.value) {
+                    fetch('getFruits', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ payload: e.value })
+                    }).then(res => res.json()).then(data => {
+                      let payload = data.payload;
+                      searchResults.innerHTML = '';
+                      if (payload.length < 1) {
+                        searchResults.innerHTML = '<p> Sorry. Nothing Found.</p>';
+                        return;
+                      }
+                      payload.forEach((item, index) => {
+                        if (index > 0) searchResults.innerHTML += '<hr>';
+                        searchResults.innerHTML += `<p>${item.name}<p>`;
+                      });
+                    });
+                    return;
+                  }
+                  searchResults.innerHTML = '';
+                }
+              </script>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Banner Ends Here -->
+
+  <!-- Trusted Starts Here -->
+  <!--  <div class="trusted-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="trusted-section-heading">
+            <h4>TRUSTED BY 100+ SCHOOLS NATIONWIDE</h4>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="owl-trusted owl-carousel">
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 1">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 2">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 3">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 4">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 5">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 6">
+            </div>
+            <div class="trusted-item">
+              <img src="assets/images/trusted-01.png" alt="trusted 7">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <!-- Trusted Ends Here -->
+
+
+  <!-- Services Starts Here -->
+  <div class="services-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-heading">
+            <span>School Management Services</span>
+            <h2>Services we provide</h2>
+            <p>Orbital Node provides you with modern cutting edge school management system technology which can make
+              your school an icon in the society.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="service-item">
+            <i class="fa fa-database"></i>
+            <h4>School Website</h4>
+            <p>Orbital Node provides a fully functional website for all registered schools where news and information
+              about the given schools can be shared with the public. Also, parents can communicate with the school
+              authoririties about the welfare of their kids.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="service-item">
+            <i class="fa fa-database"></i>
+            <h4>Students Portal</h4>
+            <p>We also provide a student portal integrated in the school website where every information about a student
+              such as class attendance and behavioural activities can be accessed, school fees can be paid and students
+              results can also be checked.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="service-item">
+            <i class="fa fa-database"></i>
+            <h4>Results Computation</h4>
+            <p>We provide an Automatic Results Computation System where the School will input the student's scores and
+              our system will Automatically compute the Results. Configurations of the individual school grading
+              systems will be made via the school's Orbital Node Admin Panel. The Results will be Prepared in a
+              Printable
+              format and placed in each Student's Portal in the School Website.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Services Ends Here -->
+
+
+  <!-- Pricing Starts Here -->
+  <div class="pricing-section">
+    <div class="background-image-pricing">
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <div class="section-heading">
+            <h2>Orbital Node Service Pricing</h2>
+            <p>Orbital Node offers a uniform pricing system to all registered schools.</p>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <!--   <div class="pricing-item">
+            <h4>ONS Basic</h4>
+            <div class="price">
+              <h6>₦5,000</h6>
+              <span>termly</span>
+            </div>
+            <p>This Plan is suitable for small sized starup schools with a few number of students.</p>
+            <div class="dev"></div>
+            <ul>
+              <li><i class="fa fa-check"></i>School Website</li>
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
+              <li><i class="fa fa-check"></i>Students Portal</li>
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
+              <li><i class="fa fa-check"></i>Admin Panel</li>
+              <li><i class="fa fa-check"></i>300 Maximumum Students Carrying Capacity</li>
+            </ul>
+            <a href="#" class="main-button">Start Plan</a>
+          </div> -->
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="pricing-item">
+            <!--             <h4>ONS</h4>
+ -->
+            <div class="price price-gradient">
+              <h6>₦16,680</h6>
+              <span>termly</span>
+            </div>
+            <p>Suitable for all Schools</p>
+            <div class="dev"></div>
+            <ul>
+              <li><i class="fa fa-check"></i>School Website</li>
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
+              <li><i class="fa fa-check"></i>Managed Fees Payments</li>
+              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li>
+              <li><i class="fa fa-check"></i>Students Portal</li>
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
+              <li><i class="fa fa-check"></i>Admin Panel</li>
+            </ul>
+            <a href="#" class="gradient-button">Subscribe</a>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <!--  <div class="pricing-item">
+            <h4>ONS Advanced</h4>
+            <div class="price">
+              <h6>₦8,000</h6>
+              <span>termly</span>
+            </div>
+            <p>Suitable for Large schools with many students</p>
+            <div class="dev"></div>
+            <ul>
+              <li><i class="fa fa-check"></i>School Website</li>
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
+              <li><i class="fa fa-check"></i>Managed Fees Payments</li>
+              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li>
+              <li><i class="fa fa-check"></i>Students Portal</li>
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
+              <li><i class="fa fa-check"></i>Admin Panel</li>
+              <li><i class="fa fa-check"></i>1500 Maximumum Students Carrying Capacity</li>
+            </ul>
+            <a href="#" class="main-button">Take it now</a>
+          -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- Pricing Ends Here -->
+
+
+  <!-- Features Starts Here -->
+  <div class="features-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-heading">
+            <span>Best Quality for you</span>
+            <h2>Orbital Node Features</h2>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>School Website</h4>
+            <p>This will contain all the information about the school; a brief history of the school, pictorial review,
+              services available, location of the school and the contact information.</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>Student Follow Up Platform</h4>
+            <p>This section will make provision for the school to update the students' everyday development, capturing
+              the cognitive, affective and the psychomotor domains;the students' attendance to class.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>Fees Payment Platform</h4>
+            <p>The tuition fees and all other payments made to the school will be performed through the app. This
+              section will help keep track of the transactions done in the school for easy accounting.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>Students Attendance E-Register</h4>
+            <p>The class attendance register will be customized in an app that teachers will use to mark the student's
+              everyday attendance to classes same way as in the manual register.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>Automatic Results Computation</h4>
+            <p>The entire processes of results computation will be carried out using an app that will provide offline
+              services to compute and manage both terminal and annual student's results that will hereafter, be updated
+              on the server to appear on the school's portal and in the student's follow-up platform.
+            </p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-item">
+            <div class="icon">
+              <img src="assets/images/feature-01.png" alt="">
+            </div>
+            <h4>Secured Database Information</h4>
+            <p>All aspects incorporated into the portal will be usable and accessible only by the school. The school
+              will set a login code to enable her manage the security of her portal.
+              The very work supplied to the school in form of a mobile application cannot be transferred to another
+              school for use.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Features Ends Here -->
+
+
+  <!-- Testimonials Starts Here -->
+  <div class="testimonials-section">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="section-heading">
+            <span>Our Vision</span>
+            <h2>What our executives are saying</h2>
+          </div>
+        </div>
+        <div class="col-md-10 offset-md-1">
+          <div class="owl-testimonials owl-carousel">
+            <div class="testimonial-item">
+              <div class="icon">
+                <i class="fa fa-quote-right"></i>
+              </div>
+              <p>"Orbital Node is a great platform and we hope to serve you all through our tireless efforts."</p>
+              <h4>Jesse Avachia</h4>
+              <span>Co-Founder</span>
+            </div>
+            <div class="testimonial-item">
+              <div class="icon">
+                <i class="fa fa-quote-right"></i>
+              </div>
+              <p>"Our target is ensuring a fully organized and efficient educational system through out the country by
+                providing quality services. Enjoy your visit to our website."</p>
+              <h4>Vincent Dominic</h4>
+              <span>Co-Founder</span>
+            </div>
+            <div class="testimonial-item">
+              <div class="icon">
+                <i class="fa fa-quote-right"></i>
+              </div>
+              <p>"Orbital Node is a great platform and we hope to serve you all through our tireless efforts."</p>
+              <h4>Unum Elijah</h4>
+              <span>Co-Founder</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Testimonials Ends Here -->
+
+
+  <!-- Footer Starts Here -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="footer-item">
+            <div class="footer-heading">
+              <h2>About Us</h2>
+            </div>
+            <p>Orbital Node is a subsidiary of Orbital Technologies. We Provide a platform solve real-time educational
+              problems in lower institutions of learning ranging from School Websites, Portal, Fees Payment Platforms,
+              Electronic Attendance Registers, Results Computation Database and so much more. Our Mobile App is
+              available for download at google Play Store.</p>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="footer-item">
+            <div class="footer-heading">
+              <h2>Service Plans</h2>
+            </div>
+            <ul class="footer-list">
+              <li><a href="#">ONS Basic</a></li>
+              <li><a href="#">ONS Intermediate</a></li>
+              <li><a href="#">ONS Advanced</a></li>
+              <li><a href="#">Special Plans</a></li>
+            </ul>
+          </div>
+        </div>
+
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="footer-item">
+            <div class="footer-heading">
+              <h2>Useful Links</h2>
+            </div>
+            <ul class="footer-list">
+              <li><a href="#">Register School</a></li>
+              <li><a href="#">Agent Program</a></li>
+              <li><a href="#">Customer Support</a></li>
+              <li><a href="#">Latest News</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="footer-item">
+            <div class="footer-heading">
+              <h2>More Information</h2>
+            </div>
+            <ul class="footer-list">
+              <li>Phone: <a href="#">08117805406</a></li>
+              <li>Email: <a href="#">orbitalnode@gmail.com</a></li>
+              <!--               <li>Support: <a href="#">support@orbitalnode.com</a></li>
+ -->
+              <li>Website: <a href="#">www.orital.com</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="sub-footer">
+            <p>Copyright &copy; 2022 Orbital Node
+              - Powered by <a rel="nofollow" href="#">Orbital Technologies</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- Footer Ends Here -->
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Additional Scripts -->
+  <script src="assets/js/custom.js"></script>
+  <script src="assets/js/owl.js"></script>
+  <script src="assets/js/accordions.js"></script>
+
+
+  <script language="text/Javascript">
+    cleared[0] = cleared[1] = cleared[2] = 0; //set a cleared flag for each field
+    function clearField(t) {                   //declaring the array outside of the
+      if (!cleared[t.id]) {                      // function makes it static and global
+        cleared[t.id] = 1;  // you could use true and false, but that's more typing
+        t.value = '';         // with more chance of typos
+        t.style.color = '#fff';
+      }
+    }
+  </script>
+
+</body>
+
+</html>
