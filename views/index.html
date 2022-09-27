@@ -81,15 +81,23 @@
         <div id="search-section">
           <form id="suggestion_form" name="gs" method="get" action="#">
             <div class="search-wrapper">
-              <input type="text" name="q" class="searchText" placeholder="Enter your school name here" autocomplete="on"
+              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your school name here" autocomplete="on"
                 onkeyup="sendData(this)">
-              <section id="searchResults" class=""></section>
+              <section id="searchResults" ></section>
               <div class="icon">
                 <a href="#" class="gradient-button">Go</a>
               </div>
               <script>
                 function sendData(e) {
                   const searchResults = document.getElementById('searchResults');
+
+                  if(e.value.length === 0){
+                    searchResults.classList.add("hide");
+                  }
+                  else {
+                    searchResults.classList.remove("hide");
+                  }
+
                   let match = e.value.match(/^[a-zA-Z ]*/);
                   let match2 = e.value.match(/\s*/);
                   if (match2[0] === e.value) {
@@ -109,13 +117,21 @@
                         return;
                       }
                       payload.forEach((item, index) => {
-                        if (index > 0) searchResults.innerHTML += '<hr>';
-                        searchResults.innerHTML += `<p>${item.name}</p>`;
+                        if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p><p></p>`; }
+                        else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p>`; }
                       });
                     });
                     return;
                   }
                   searchResults.innerHTML = '';
+                }
+
+                function select(element){
+                  let box = document.getElementById('search-field');
+                  let result_wrapper = document.getElementById('searchResults');
+                  let selectedItem = element.textContent;
+                  box.value = selectedItem;
+                  result_wrapper.classList.add("hide");
                 }
               </script>
 
