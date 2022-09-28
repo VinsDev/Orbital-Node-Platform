@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register your School</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 id="title" class="text-center">
+        Register your School
+      </h1>
+    </header>
+
+    <p id="description" class="description text-center">
+      To the Orbital Node Platform
+    </p>
+
+    <form id="survey-form" method="POST" action="/">
+      <div class="form-group">
+        <label for="name" id="name-label">Name</label>
+        <input type="text" name="name" id="name" class="form-control" placeholder="Enter your name" required />
+      </div>
+
+      <div class="form-group">
+        <label id="email-label" for="email">Email</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your Email" required />
+      </div>
+
+      <div class="form-group">
+        <label id="number-label" for="number"> Age <span class="clue"> (optional) </span></label>
+        <input type="number" name="age" id="number" min="10" max="99" class="form-control" placeholder="Age" />
+      </div>
+
+      <div class="form-group">
+        <p>Which option best describes your current role?</p>
+        <select id="dropdown" name="role" class="form-control" required>
+          <option disabled selected value>Select current role</option>
+          <option value="student">Student</option>
+          <option value="job">Full Time Job</option>
+          <option value="learner">Full Time Learner</option>
+          <option value="preferNo">Prefer not to say</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <p>Would you recommend h3ck Ph4se to a friend?</p>
+        <label> <input name="userRecommend" value="definitely" type="radio" class="input-radio"
+            checked />Definitely</label>
+        <label> <input name="userRecommend" value="maybe" type="radio" class="input-radio" />Maybe</label>
+        <label> <input name="userRecommend" value="not-sure" type="radio" class="input-radio" />Not sure</label>
+      </div>
+
+      <div class="form-group">
+        <p>
+          What is your favorite feature of h3ck Ph4se?
+        </p>
+        <select id="most-like" name="mostLike" class="form-control" required>
+          <option disabled selected value>Select an option</option>
+          <option value="challenges">Challenges</option>
+          <option value="projects">Projects</option>
+          <option value="support">Support</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <p>
+          What would you like to see improved or added?
+          <span class="clue">(Check all that apply)</span>
+        </p>
+        <label><input name="prefer" value="challenges" type="checkbox" class="input-checkbox" />Challenges</label>
+        <label><input name="prefer" value="tutorials" type="checkbox" class="input-checkbox" />Tutorials</label>
+        <label><input name="prefer" value="videos" type="checkbox" class="input-checkbox" />Videos</label>
+        <label><input name="prefer" value="project-videos" type="checkbox" class="input-checkbox" />Project
+          Videos</label>
+        <label><input name="prefer" value="often-upload-videos" type="checkbox" class="input-checkbox" />Often Upload
+          Videos</label>
+      </div>
+
+      <div class="form-group">
+        <p>Any comments or suggestions?
+          <span class="clue">(Favorite programming language)</span>
+        </p>
+        <textarea id="comments" class="input-textarea form-control" name="comment"
+          placeholder="Enter your comment here..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <button type="submit" id="submit" class="submit-button">
+          Submit
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('survey-form').reset()
+  </script>
+</body>
+
+</html>
