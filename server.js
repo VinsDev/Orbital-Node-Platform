@@ -33,6 +33,9 @@ app.get('/services', (req, res) => {
 app.get('/contact', (req, res) => {
     res.sendFile(__dirname + '/views/contact.html');
 });
+app.get('/register', (req, res) => {
+    res.sendFile(__dirname + '/views/register.html');
+});
 
 app.post('/getFruits', async (req, res) => {
     let payload = req.body.payload.trim();
@@ -46,6 +49,21 @@ app.post('/getFruits', async (req, res) => {
 // School . . .
 app.get('/school', (req, res) => {
     res.sendFile(__dirname + '/school/index.html');
+});
+app.get('/admissions', (req, res) => {
+    res.sendFile(__dirname + '/school/admissions.html');
+});
+app.get('/portal', (req, res) => {
+    res.sendFile(__dirname + '/school/portal.html');
+});
+app.get('/fees', (req, res) => {
+    res.sendFile(__dirname + '/school/fees.html');
+});
+app.get('/s_contact', (req, res) => {
+    res.sendFile(__dirname + '/school/contact.html');
+});
+app.get('/s_about', (req, res) => {
+    res.sendFile(__dirname + '/school/about.html');
 });
 
 
