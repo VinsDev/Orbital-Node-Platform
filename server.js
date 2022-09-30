@@ -1,47 +1,48 @@
 const express = require("express");
-// const Fruit = require('./liveSearch');
+
 const mongoose = require("mongoose");
 const app = express();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
 
-// const { db } = require("./liveSearch");
-
-/* mongoose.connect(
-    "mongodb://localhost:27017/",
-    {
-        dbName: "fruitLiveSearch",
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    },
-    (err) =>
-        err ? console.log(err) : console.log(
-            "Connected to " + db.name)
-); */
-
-const username = encodeURIComponent("vins");
-const password = encodeURIComponent("Vins46185");
-
 
 let uri =
-  `mongodb+srv://${username}:${password}@cluster0.1243w2d.mongodb.net/orbital?retryWrites=true&w=majority`;
+    "mongodb+srv://vins:Vins46185@cluster0.1243w2d.mongodb.net/orbital?retryWrites=true&w=majority";
 
-mongoose.connect(uri, {
+let url = "mongodb://localhost:27017/orbital";
+
+mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+}, (err) => err ? console.log(err) : console.log("Connected to Database"));
 
-const formSchema = new mongoose.Schema(
+const schoolSchema = new mongoose.Schema(
     {
-        data: Object,
+        name: 'String',
+        email: 'String',
+        phone: 'String',
+        about: 'String',
+        d_about: 'String',
+        p_name: 'String',
+        fees: 'String',
+        e_register: 'String',
     },
-    { collection: "school" }
+    { collection: "schools" }
 );
 
-const Form = mongoose.model("Form", formSchema);
+const School = mongoose.model("School", schoolSchema);
 
-const formData = (bodyData) => {
-    Form({ data: bodyData }).save((err) => {
+const schoolData = (bodyData) => {
+    School({
+        name: bodyData.name,
+        email: bodyData.email,
+        phone: bodyData.phone,
+        about: bodyData.about,
+        d_about: bodyData.d_about,
+        p_name: bodyData.p_name,
+        fees: bodyData.fees,
+        e_register: bodyData.e_register,
+    }).save((err) => {
         if (err) {
             throw err;
         }
@@ -59,11 +60,6 @@ app.use(express.static('public'));
 
 
 // Landing . . .
-app.post("/", urlencodedParser, (req, res) => {
-    formData(req.body);
-    res.render("success", { name: req.body.name });
-});
-
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/views/index.html');
 });
@@ -79,19 +75,25 @@ app.get('/contact', (req, res) => {
 app.get('/register', (req, res) => {
     res.render("register");
 });
-
-/* app.post('/getFruits', async (req, res) => {
+app.post("/register", urlencodedParser, (req, res) => {
+    schoolData(req.body);
+    res.render("success", { name: req.body.name });
+});
+app.post('/getSchools', async (req, res) => {
     let payload = req.body.payload.trim();
-    let search = Fruit.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
+    let search = School.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
     //Limit Search Results to 10
     search = (await search).slice(0, 10);
     res.send({ payload: search });
-}); */
+});
 
+// $regex: new RegExp('^' + payload + '.*', 'i')
 
 // School . . .
-app.get('/school', (req, res) => {
-    res.sendFile(__dirname + '/school/index.html');
+app.get('/school', async (req, res) => {
+    let result = await School.findOne({ name: { $regex: new RegExp('^' + req.query.q + '.*', 'i') } }).exec();
+    console.log(result);
+    res.render("../school/index", { school_obj: result});
 });
 app.get('/admissions', (req, res) => {
     res.sendFile(__dirname + '/school/admissions.html');
@@ -116,3 +118,11 @@ app.get('/s_about', (req, res) => {
 app.listen(process.env.PORT || 3000, () => {
     console.log('Server has started on PORT 3000');
 });
+
+
+
+/* 
+const username = encodeURIComponent("vins");
+const password = encodeURIComponent("Vins46185");
+let uri =
+  `mongodb+srv://${username}:${password}@cluster0.1243w2d.mongodb.net/orbital?retryWrites=true&w=majority`; */

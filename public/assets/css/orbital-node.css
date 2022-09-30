@@ -319,8 +319,7 @@ header {
 }
 
 .navbar .navbar-toggler {
-	border-color: #fff;
-	background-color: #fff;
+	background-color: transparent;
 	height: 36px;
 	outline: none;
 	border-radius: 0px;
@@ -331,9 +330,9 @@ header {
 
 .navbar .navbar-toggler-icon:after {
 	content: '\f0c9';
-	color: #00bcd4;
-	font-size: 18px;
-	line-height: 26px;
+	color: rgb(101, 221, 252);
+	font-size: 20px;
+	line-height: 30px;
 	font-family: 'FontAwesome';
 }
 
@@ -1287,7 +1286,7 @@ footer .sub-footer a {
 	}
 
 	.functional-buttons ul li {
-		display: inline-block;
+		display: none;
 		margin-left: 3px;
 	}
 

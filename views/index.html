@@ -64,7 +64,7 @@
         </div>
         <div class="functional-buttons">
           <ul>
-            <li><a href="#">Get Started</a></li>
+            <li><a href="register">Register</a></li>
             <!-- <li><a href="#">Sign Up</a></li> -->
           </ul>
         </div>
@@ -81,7 +81,7 @@
         <div id="search-section">
           <form id="suggestion_form" name="gs" method="get" action="school">
             <div class="search-wrapper">
-              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your school name here"
+              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your School name"
                 autocomplete="on" onkeyup="sendData(this)">
               <section id="searchResults"></section>
               <div class="icon">
@@ -105,7 +105,7 @@
                     return;
                   }
                   if (match[0] === e.value) {
-                    fetch('getFruits', {
+                    fetch('getSchools', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ payload: e.value })
@@ -116,6 +116,7 @@
                         searchResults.innerHTML = '<p> Sorry. Nothing Found.</p>';
                         return;
                       }
+                      console.log(payload);
                       payload.forEach((item, index) => {
                         if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p><p></p>`; }
                         else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p>`; }
@@ -223,7 +224,7 @@
               <li><i class="fa fa-check"></i>Automatic Results Computation</li>
               <li><i class="fa fa-check"></i>Admin Panel</li>
             </ul>
-            <a href="#" class="gradient-button">Subscribe</a>
+            <a href="/register" class="gradient-button">Subscribe</a>
           </div>
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
