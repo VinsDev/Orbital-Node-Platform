@@ -11,7 +11,7 @@ let uri =
 
 let url = "mongodb://localhost:27017/orbital";
 
-mongoose.connect(url, {
+mongoose.connect(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }, (err) => err ? console.log(err) : console.log("Connected to Database"));
@@ -91,24 +91,23 @@ app.post('/getSchools', async (req, res) => {
 
 // School . . .
 app.get('/school', async (req, res) => {
-    let result = await School.findOne({ name: { $regex: new RegExp('^' + req.query.q + '.*', 'i') } }).exec();
-    console.log(result);
-    res.render("../school/index", { school_obj: result});
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.query.q + '.*', 'i') } }).exec();
+    res.render("../school/index", { school_obj: school_data});
 });
 app.get('/admissions', (req, res) => {
-    res.sendFile(__dirname + '/school/admissions.html');
+    res.render("../school/admissions", { school_obj: school_data});
 });
 app.get('/portal', (req, res) => {
-    res.sendFile(__dirname + '/school/portal.html');
+    res.render("../school/portal", { school_obj: school_data});
 });
 app.get('/fees', (req, res) => {
-    res.sendFile(__dirname + '/school/fees.html');
+    res.render("../school/fees", { school_obj: school_data});
 });
 app.get('/s_contact', (req, res) => {
-    res.sendFile(__dirname + '/school/contact.html');
+    res.render("../school/contact", { school_obj: school_data});
 });
 app.get('/s_about', (req, res) => {
-    res.sendFile(__dirname + '/school/about.html');
+    res.render("../school/about", { school_obj: school_data});
 });
 
 

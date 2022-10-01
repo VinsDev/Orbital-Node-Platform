@@ -62,8 +62,8 @@
                         <div class="info_wrapper">
                             <div class="contact_info">
                                 <ul class="list-unstyled">
-                                    <li><i class="flaticon-phone-receiver"></i>+000-2356-222</li>
-                                    <li><i class="flaticon-mail-black-envelope-symbol"></i>school@gmail.com</li>
+                                    <li><i class="flaticon-phone-receiver"></i><%= school_obj.phone %></li>
+                                    <li><i class="flaticon-mail-black-envelope-symbol"></i><%= school_obj.email %></li>
                                 </ul>
                             </div>
                             <div class="login_info">
@@ -498,7 +498,7 @@
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="footer_single_col footer_intro">
                                 <img src="images/logo2.png" alt="" class="f_logo">
-                                <p>About school goes in here.</p>
+                                <p><%= school_obj.about %></p>
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-2">
@@ -527,8 +527,8 @@
                                 <h3>Contact Us</h3>
                                 <p>Fell free to get in touch us via Phone or send us a message.</p>
                                 <div class="contact_info">
-                                    <span>+000 124 325</span>
-                                    <span class="email">school@gmail.com</span>
+                                    <span><%= school_obj.phone %></span>
+                                    <span class="email"><%= school_obj.email %></span>
                                 </div>
                                 <ul class="social_items d-flex list-unstyled">
                                     <li><a href="#"><i class="fab fa-facebook-f fb-icon"></i></a></li>
