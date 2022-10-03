@@ -8,30 +8,33 @@
     <meta name="keywords" content="HTML,CSS,XML,JavaScript">
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Name</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <title>
+        <%= school_obj.name %>
+    </title>
+    <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
     <!-- Goole Font -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/assets/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/assets/bootstrap.min.css">
     <!-- Font awsome CSS -->
-    <link rel="stylesheet" href="css/assets/font-awesome.min.css">
-    <link rel="stylesheet" href="css/assets/flaticon.css">
-    <link rel="stylesheet" href="css/assets/magnific-popup.css">
+    <link rel="stylesheet" href="../../css/assets/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/assets/flaticon.css">
+    <link rel="stylesheet" href="../../css/assets/magnific-popup.css">
     <!-- owl carousel -->
-    <link rel="stylesheet" href="css/assets/owl.carousel.css">
-    <link rel="stylesheet" href="css/assets/owl.theme.css">
-    <link rel="stylesheet" href="css/assets/animate.css">
+    <link rel="stylesheet" href="../../css/assets/owl.carousel.css">
+    <link rel="stylesheet" href="../../css/assets/owl.theme.css">
+    <link rel="stylesheet" href="../../css/assets/animate.css">
     <!-- Slick Carousel -->
-    <link rel="stylesheet" href="css/assets/slick.css">
+    <link rel="stylesheet" href="../../css/assets/slick.css">
+
     <!-- Mean Menu-->
-    <link rel="stylesheet" href="css/assets/meanmenu.css">
+    <link rel="stylesheet" href="../../css/assets/meanmenu.css">
     <!-- main style-->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/demo.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
+
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -53,8 +56,12 @@
                         <div class="info_wrapper">
                             <div class="contact_info">
                                 <ul class="list-unstyled">
-                                    <li><i class="flaticon-phone-receiver"></i>+000-2356-222</li>
-                                    <li><i class="flaticon-mail-black-envelope-symbol"></i>school@gmail.com</li>
+                                    <li><i class="flaticon-phone-receiver"></i>
+                                        <%= school_obj.phone %>
+                                    </li>
+                                    <li><i class="flaticon-mail-black-envelope-symbol"></i>
+                                        <%= school_obj.email %>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="login_info">
@@ -74,15 +81,15 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="school"><img src="images/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="home"><img src="../../images/logo.png" alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
-                            <li class="nav-item"><a href="school" class="nav-link">Home</a></li>
+                            <li class="nav-item"><a href="home" class="nav-link">Home</a></li>
                             <li class="nav-item"><a href="admissions" class="nav-link">Admissions</a></li>
                             <li class="nav-item"><a href="portal" class="nav-link active">Portal</a></li>
                             <li class="nav-item"><a href="fees" class="nav-link">Fees</a></li>
-                            <li class="nav-item"><a href="s_contact" class="nav-link">Contact</a></li>
-                            <li class="nav-item"><a href="s_about" class="nav-link">About</a></li>
+                            <li class="nav-item"><a href="follow" class="nav-link">Follow Up</a></li>
+                            <li class="nav-item"><a href="about" class="nav-link">About</a></li>
                         </ul>
                     </div>
                     <div class="mr-auto search_area ">
@@ -104,448 +111,35 @@
         <div class="intro_wrapper">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12 col-md-8 col-lg-8">
-                        <div class="intro_text">
-                            <h1>Teachers Profile</h1>
-                            <div class="pages_links">
-                                <a href="#" title="">Home</a>
-                                <a href="#" title="" class="active">Teacher profile</a>
+                    <div class="col-md-8 offset-md-2">
+                        <p id="description" class="hdd text-center">
+                            Login to your Student Portal
+                        </p>
+                        <form id="survey-form" method="POST" action="/register">
+                            <div class="form-group">
+                                <!-- <label for="name" id="name-label">School Name</label> -->
+                                <input type="text" name="name" id="name" class="form-control" placeholder="Username"
+                                    required />
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <!-- <label id="email-label" for="email">School Email</label> -->
+                                <input type="email" name="email" id="email" class="form-control" placeholder="Password"
+                                    required />
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" id="submit" class="submit-button">
+                                    Login
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
             </div>
         </div>
     </header> <!-- End header -->
-
-
-
-    <section class="login_signup_option">
-        <div class="l-modal is-hidden--off-flow js-modal-shopify">
-            <div class="l-modal__shadow js-modal-hide"></div>
-            <div class="login_popup login_modal_body">
-                <div class="Popup_title d-flex justify-content-between">
-                    <h2 class="hidden">&nbsp;</h2>
-                    <!-- Nav tabs -->
-                    <div class="row">
-                        <div class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#login"
-                                        role="tab">Login</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panel2"
-                                        role="tab">Register</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <!-- Tab panels -->
-                            <div class="tab-content card">
-                                <!--Login-->
-                                <div class="tab-pane fade in show active" id="login" role="tabpanel">
-                                    <form action="#">
-                                        <div class="row">
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Email</label>
-                                                    <input type="email" class="form-control" placeholder="Username">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Password</label>
-                                                    <input type="password" class="form-control" placeholder="Password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option">
-                                                <a href="forgot-password.html" title="" class="forget_pass">Forget
-                                                    Password ?</a>
-                                                <button type="submit" class="btn btn-default login_btn">Login</button>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="social_login">
-                                                    <div class="social_items">
-                                                        <button class="google_login google">Login Google</button>
-                                                        <button class="google_login facebook">Login Facebook</button>
-                                                        <button class="google_login twitter">Login Twitter</button>
-                                                        <button class="google_login linkdin">Login Linkdin</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!--/.Panel 1-->
-                                <!--Panel 2-->
-                                <div class="tab-pane fade" id="panel2" role="tabpanel">
-                                    <form action="#" class="register">
-                                        <div class="row">
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Name</label>
-                                                    <input type="text" class="form-control" placeholder="Username">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Email</label>
-                                                    <input type="email" class="form-control" placeholder="Email">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Password</label>
-                                                    <input type="password" class="form-control" placeholder="Password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option">
-                                                <button type="submit"
-                                                    class="btn btn-default login_btn">Register</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!--/.Panel 2-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> <!-- End Login Signup Option -->
-
-
-
-
-    <section class="teachers_profile">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-4 teacher-detail-left">
-                    <div class="teacher_info_wrapper">
-                        <div class="teacger-image">
-                            <img src="images/team/team_1.jpg" alt="" class="img-fluid">
-                        </div>
-                        <div class="social_wraper">
-                            <ul class="social-items d-flex list-unstyled">
-                                <li><a href="#"><i class="fab fa-facebook-f fb-icon"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter twitt-icon"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin-in link-icon"></i></a></li>
-                                <li><a href="#"><i class="fab fa-instagram ins-icon"></i></a></li>
-                            </ul>
-                        </div>
-                        <div class="teacher-skills">
-                            <div class="skill-single">
-                                <span>HTML - <span class="skills_lavel">80%</span></span>
-                                <span><span style="width:80%;"></span></span>
-                            </div>
-                            <div class="skill-single">
-                                <span>Wordpress - <span class="skills_lavel">70%</span></span>
-                                <span><span style="width:70%;"></span></span>
-                            </div>
-                            <div class="skill-single">
-                                <span>Photoshop - <span class="skills_lavel">90%</span></span>
-                                <span><span style="width:90%;"></span></span>
-                            </div>
-                            <div class="skill-single">
-                                <span>CSS3 - <span class="skills_lavel">75%</span></span>
-                                <span><span style="width:75%;"></span></span>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Ends: .teacher-detail-left -->
-                <div class="col-sm-8 teacher-detail-right">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="teacher-info">
-                                <ul class="list-unstyled">
-                                    <li>
-                                        <h3>Name :</h3>
-                                        <span>John Doe, M.Sc, M.Phil</span>
-                                    </li>
-                                    <li>
-                                        <h3>Department :</h3>
-                                        <span>Web Design & Development</span>
-                                    </li>
-                                    <li>
-                                        <h3>Experience :</h3>
-                                        <span>5 Years of Teaching Career</span>
-                                    </li>
-                                    <li>
-                                        <h3>Language :</h3>
-                                        <span>English, French, Italic, Arabic</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="teacher-contact">
-                                <h2>Contact Us</h2>
-                                <form action="#">
-                                    <input type="text" placeholder="Your Name*" required>
-                                    <input type="email" placeholder="Email*" required>
-                                    <textarea>Your Message</textarea>
-                                    <button type="submit">Submit Your Request</button>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="col-sm-12">
-                            <div class="courses_tab_wrapper">
-                                <div class="courses_details_nav_tabs">
-                                    <ul class="nav nav-tabs" role="tablist">
-                                        <li class="nav-item"><a class="nav-link active" href="#information" role="tab"
-                                                data-toggle="tab"><i class="flaticon-info-sign"></i>About Insructor</a>
-                                        </li>
-                                        <li class="nav-item"><a class="nav-link" href="#curricularm" role="tab"
-                                                data-toggle="tab"><i class="flaticon-portfolio"></i>Qualification</a>
-                                        </li>
-                                        <li class="nav-item"><a class="nav-link" href="#courses" role="tab"
-                                                data-toggle="tab"><i class="flaticon-portfolio"></i>Courses</a></li>
-                                    </ul>
-                                </div>
-
-                                <!-- Tab panes -->
-                                <div class="tab_contents tab-content">
-                                    <div role="tabpanel" class="tab-pane fade in active show" id="information">
-                                        <p>iscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
-                                            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                                            nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                                            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                                            officia deserunt mollit anim id est laborum."</p>
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane fade" id="curricularm">
-                                        <p>"Lorem ipsum idunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
-                                            non proident, sunt in culpa qui officia deserunt mollit anim id est
-                                            laborum."</p>
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane fade" id="courses">
-                                        <!--Start Courses Area Section-->
-                                        <div class="popular_courses">
-                                            <div class="row">
-                                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div class="single-courses">
-                                                        <div class="courses_banner_wrapper">
-                                                            <div class="courses_banner"><a href="#"><img
-                                                                        src="images/courses/courses_1.jpg" alt=""
-                                                                        class="img-fluid"></a></div>
-                                                            <div class="purchase_price">
-                                                                <a href="#" class="read_more-btn">$150</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="courses_info_wrapper">
-                                                            <div class="courses_title">
-                                                                <h3><a href="#">Make Better Decisions</a></h3>
-                                                                <div class="teachers_name">Teacher - <a href="#"
-                                                                        title="">Jhonthan Smith</a></div>
-                                                            </div>
-                                                            <div class="courses_info">
-                                                                <ul class="list-unstyled">
-                                                                    <li><i class="fas fa-user"></i>180 Days</li>
-                                                                    <li><i class="fas fa-calendar-alt"></i>30 Students
-                                                                    </li>
-                                                                </ul>
-                                                                <a href="#" class="cart_btn">Add to Cart</a>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- Ends: .single courses -->
-                                                </div><!-- Ends: . -->
-
-
-
-                                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div class="single-courses">
-                                                        <div class="courses_banner_wrapper">
-                                                            <div class="courses_banner"><a href="#"><img
-                                                                        src="images/courses/courses_2.jpg" alt=""
-                                                                        class="img-fluid"></a></div>
-                                                            <div class="purchase_price">
-                                                                <a href="#" class="read_more-btn">Free</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="courses_info_wrapper">
-                                                            <div class="courses_title">
-                                                                <h3><a href="#">How To Be A Speaker</a></h3>
-                                                                <div class="teachers_name">Teacher - <a href="#"
-                                                                        title="">Denise Wood</a></div>
-                                                            </div>
-                                                            <div class="courses_info">
-                                                                <ul class="list-unstyled">
-                                                                    <li><i class="fa fa-user"></i> 180 Days</li>
-                                                                    <li><i class="fa fa-comment"></i>50 Students</li>
-                                                                </ul>
-                                                                <a href="#" class="cart_btn">Add to Cart</a>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- Ends: .single courses -->
-                                                </div><!-- Ends: . -->
-
-                                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div class="single-courses">
-                                                        <div class="courses_banner_wrapper">
-                                                            <div class="courses_banner"><a href="#"><img
-                                                                        src="images/courses/courses_3.jpg" alt=""
-                                                                        class="img-fluid"></a></div>
-                                                            <div class="purchase_price">
-                                                                <a href="#" class="read_more-btn">120$</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="courses_info_wrapper">
-                                                            <div class="courses_title">
-                                                                <h3><a href="#">Network Introductions</a></h3>
-                                                                <div class="teachers_name">Teacher - <a href="#"
-                                                                        title="">Preston Marshall</a></div>
-                                                            </div>
-                                                            <div class="courses_info">
-                                                                <ul class="list-unstyled">
-                                                                    <li><i class="fa fa-user"></i> 140 Days</li>
-                                                                    <li><i class="fa fa-comment"></i>60 Students</li>
-                                                                </ul>
-                                                                <a href="#" class="cart_btn">Add to Cart</a>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- Ends: .single courses -->
-                                                </div><!-- Ends: . -->
-
-                                                <div class="col-12 col-sm-6 col-md-6 col-lg-6">
-                                                    <div class="single-courses">
-                                                        <div class="courses_banner_wrapper">
-                                                            <div class="courses_banner"><a href="#"><img
-                                                                        src="images/courses/courses_4.jpg" alt=""
-                                                                        class="img-fluid"></a></div>
-                                                            <div class="purchase_price">
-                                                                <a href="#" class="read_more-btn">250$</a>
-                                                            </div>
-                                                        </div>
-                                                        <div class="courses_info_wrapper">
-                                                            <div class="courses_title">
-                                                                <h3><a href="#">Brand Management</a></h3>
-                                                                <div class="teachers_name">Teacher - <a href="#"
-                                                                        title="">John Porter</a></div>
-                                                            </div>
-                                                            <div class="courses_info">
-                                                                <ul class="list-unstyled">
-                                                                    <li><i class="fa fa-user"></i> 130 Days</li>
-                                                                    <li><i class="fa fa-comment"></i>45 Students</li>
-                                                                </ul>
-                                                                <a href="#" class="cart_btn">Add to Cart</a>
-                                                            </div>
-                                                        </div>
-                                                    </div><!-- Ends: .single courses -->
-                                                </div><!-- Ends: . -->
-                                            </div>
-
-                                        </div><!-- Ends: . -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div><!-- Ends: .teacher-detail-right -->
-            </div>
-        </div>
-    </section><!-- Ends: .teacher-details-wrapper -->
-
-
-
-    <!--Start Courses Area Section-->
-    <section class="popular_courses">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="sub_title">
-                        <h2>Related Courses</h2>
-                        <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                            Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
-                    </div><!-- ends: .section-header -->
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single-courses">
-                        <div class="courses_banner_wrapper">
-                            <div class="courses_banner"><a href="#"><img src="images/courses/courses_1.jpg" alt=""
-                                        class="img-fluid"></a></div>
-                            <div class="purchase_price">
-                                <a href="#" class="read_more-btn">$150</a>
-                            </div>
-                        </div>
-                        <div class="courses_info_wrapper">
-                            <div class="courses_title">
-                                <h3><a href="#">Make Better Decisions</a></h3>
-                                <div class="teachers_name">Teacher - <a href="#" title="">Jhonthan Smith</a></div>
-                            </div>
-                            <div class="courses_info">
-                                <ul class="list-unstyled">
-                                    <li><i class="fas fa-user"></i>180 Days</li>
-                                    <li><i class="fas fa-calendar-alt"></i>30 Students</li>
-                                </ul>
-                                <a href="#" class="cart_btn">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div><!-- Ends: .single courses -->
-                </div><!-- Ends: . -->
-
-
-
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single-courses">
-                        <div class="courses_banner_wrapper">
-                            <div class="courses_banner"><a href="#"><img src="images/courses/courses_2.jpg" alt=""
-                                        class="img-fluid"></a></div>
-                            <div class="purchase_price">
-                                <a href="#" class="read_more-btn">Free</a>
-                            </div>
-                        </div>
-                        <div class="courses_info_wrapper">
-                            <div class="courses_title">
-                                <h3><a href="#">How To Be A Speaker</a></h3>
-                                <div class="teachers_name">Teacher - <a href="#" title="">Denise Wood</a></div>
-                            </div>
-                            <div class="courses_info">
-                                <ul class="list-unstyled">
-                                    <li><i class="fa fa-user"></i> 180 Days</li>
-                                    <li><i class="fa fa-comment"></i>50 Students</li>
-                                </ul>
-                                <a href="#" class="cart_btn">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div><!-- Ends: .single courses -->
-                </div><!-- Ends: . -->
-
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single-courses">
-                        <div class="courses_banner_wrapper">
-                            <div class="courses_banner"><a href="#"><img src="images/courses/courses_3.jpg" alt=""
-                                        class="img-fluid"></a></div>
-                            <div class="purchase_price">
-                                <a href="#" class="read_more-btn">120$</a>
-                            </div>
-                        </div>
-                        <div class="courses_info_wrapper">
-                            <div class="courses_title">
-                                <h3><a href="#">Network Introductions</a></h3>
-                                <div class="teachers_name">Teacher - <a href="#" title="">Preston Marshall</a></div>
-                            </div>
-                            <div class="courses_info">
-                                <ul class="list-unstyled">
-                                    <li><i class="fa fa-user"></i> 140 Days</li>
-                                    <li><i class="fa fa-comment"></i>60 Students</li>
-                                </ul>
-                                <a href="#" class="cart_btn">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div><!-- Ends: .single courses -->
-                </div><!-- Ends: . -->
-            </div>
-
-        </div>
-    </section><!-- ./ End Courses Area section -->
 
 
     <!-- Footer -->
@@ -555,19 +149,21 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img src="images/logo2.png" alt="" class="f_logo">
-                            <p>About School goes in here.</p>
+                            <img src="../../images/logo2.png" alt="" class="f_logo">
+                            <p>
+                                <%= school_obj.about %>
+                            </p>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-2">
                         <div class="footer_single_col">
                             <h3>Useful Links</h3>
                             <ul class="location_info quick_inf0">
-                                <li><a href="school">Home</a></li>
+                                <li><a href="home">Home</a></li>
                                 <li><a href="admissions">Admissions</a></li>
                                 <li><a href="fees">Fees</a></li>
-                                <li><a href="s_contact">Contact</a></li>
-                                <li><a href="s_about">About</a></li>
+                                <li><a href="follow">Follow Up</a></li>
+                                <li><a href="about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -585,8 +181,12 @@
                             <h3>Contact Us</h3>
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
-                                <span>+000 124 325</span>
-                                <span class="email">info@yourdomain.com</span>
+                                <span>
+                                    <%= school_obj.phone %>
+                                </span>
+                                <span class="email">
+                                    <%= school_obj.email %>
+                                </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">
                                 <li><a href="#"><i class="fab fa-facebook-f fb-icon"></i></a></li>
@@ -606,8 +206,8 @@
             </div>
         </div>
         <div class="shapes_bg">
-            <img src="images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
-            <img src="images/shapes/footer_2.png" alt="" class="shape_1">
+            <img src="../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
+            <img src="../../images/shapes/footer_2.png" alt="" class="shape_1">
         </div>
     </footer><!-- End Footer -->
 
@@ -619,18 +219,18 @@
     </section>
 
     <!-- JavaScript -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/slick.min.js"></script>
-    <script src="js/jquery.meanmenu.min.js"></script>
-    <script src="js/wow.min.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/popper.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/jquery.magnific-popup.min.js"></script>
+    <script src="../../js/owl.carousel.min.js"></script>
+    <script src="../../js/slick.min.js"></script>
+    <script src="../../js/jquery.meanmenu.min.js"></script>
+    <script src="../../js/wow.min.js"></script>
     <!-- Counter Script -->
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/jquery.counterup.min.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="../../js/waypoints.min.js"></script>
+    <script src="../../js/jquery.counterup.min.js"></script>
+    <script src="../../js/custom.js"></script>
 
 
 </body>

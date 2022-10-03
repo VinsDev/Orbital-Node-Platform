@@ -75,27 +75,33 @@
   <!-- Page Content -->
   <!-- Banner Starts Here -->
   <div class="banner">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-6 offset-md-3">
       <div class="header-text caption">
         <h2>Visit your school Website</h2>
         <div id="search-section">
-          <form id="suggestion_form" name="gs" method="get" action="school">
+          <form id="suggestion_form" name="gs" method="post">
             <div class="search-wrapper">
-              <input type="text" name="q" id="search-field" class="searchText" placeholder="Enter your School name"
-                autocomplete="on" onkeyup="sendData(this)">
+              <input type="text" id="search-field" class="searchText" placeholder="Enter your School name"
+                autocomplete="on" onkeyup="sendData(this)" required />
               <section id="searchResults"></section>
               <div class="icon">
-                <input type="submit" name="school" value="Go" class="gradient-button" placeholder="go">
+                <input type="button" name="school" value="Go" class="gradient-button" placeholder="go"
+                  onclick="submitForm()" />
               </div>
               <script>
+
+                var suggestion_hidden = true;
+
                 function sendData(e) {
                   const searchResults = document.getElementById('searchResults');
 
                   if (e.value.length === 0) {
                     searchResults.classList.add("hide");
+                    suggestion_hidden = true;
                   }
                   else {
                     searchResults.classList.remove("hide");
+                    suggestion_hidden = false;
                   }
 
                   let match = e.value.match(/^[a-zA-Z ]*/);
@@ -127,12 +133,42 @@
                   searchResults.innerHTML = '';
                 }
 
+
                 function select(element) {
                   let box = document.getElementById('search-field');
                   let result_wrapper = document.getElementById('searchResults');
                   let selectedItem = element.textContent;
                   box.value = selectedItem;
                   result_wrapper.classList.add("hide");
+                  suggestion_hidden = true;
+                }
+
+                function submitForm() {
+                  var myForm = document.getElementById("suggestion_form");
+                  var myInput = document.getElementById("search-field");
+
+                  let match = myInput.value.match(/^[a-zA-Z ]*/);
+                  let match2 = myInput.value.match(/\s*/);
+                  if (myInput.value) {
+                    if (match[0] === myInput.value) {
+                      if (suggestion_hidden) {
+                        var inputValue = myInput.value;
+                        let url = "schools/" + inputValue + "/home";
+                        console.log(url);
+                        myForm.action = url;
+                        window.location = myForm.action;
+                        myForm.submit();
+                      } else {
+                        alert("Please ensure that sure you click your school name from the names provided in the search suggestions.")
+                      }
+                    }
+                    else {
+                      alert("You need to type in a valid school name in the field provided!")
+                    }
+                  }
+                  else {
+                    alert("You need to type in your school name in the field provided!")
+                  }
                 }
               </script>
 
@@ -206,7 +242,7 @@
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
         </div>
-        <div class="col-md-4 col-sm-6 col-xs-12">
+        <div class="col-md-6 offset-md-3">
           <div class="pricing-item">
 
             <div class="price price-gradient">
@@ -216,13 +252,13 @@
             <p>Suitable for all Schools</p>
             <div class="dev"></div>
             <ul>
-              <li><i class="fa fa-check"></i>School Website</li>
-              <li><i class="fa fa-check"></i>Managed Admissions Applications</li>
-              <li><i class="fa fa-check"></i>Managed Fees Payments</li>
-              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li>
-              <li><i class="fa fa-check"></i>Students Portal</li>
-              <li><i class="fa fa-check"></i>Automatic Results Computation</li>
-              <li><i class="fa fa-check"></i>Admin Panel</li>
+              <li><i class="fa fa-check"></i>School Website</li><br />
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li><br />
+              <li><i class="fa fa-check"></i>Managed Fees Payments</li><br />
+              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li><br />
+              <li><i class="fa fa-check"></i>Students Portal</li><br />
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li><br />
+              <li><i class="fa fa-check"></i>Admin Panel</li><br />
             </ul>
             <a href="/register" class="gradient-button">Subscribe</a>
           </div>
@@ -384,13 +420,10 @@
         <div class="col-md-3 col-sm-6 col-xs-12">
           <div class="footer-item">
             <div class="footer-heading">
-              <h2>Service Plans</h2>
+              <h2>Our Services</h2>
             </div>
             <ul class="footer-list">
-              <li><a href="#">ONS Basic</a></li>
-              <li><a href="#">ONS Intermediate</a></li>
-              <li><a href="#">ONS Advanced</a></li>
-              <li><a href="#">Special Plans</a></li>
+              <li><a href="#">Universal Plan</a></li>
             </ul>
           </div>
         </div>
@@ -402,8 +435,8 @@
               <h2>Useful Links</h2>
             </div>
             <ul class="footer-list">
-              <li><a href="#">Register School</a></li>
-              <li><a href="#">Agent Program</a></li>
+              <li><a href="register">Register School</a></li>
+              <li><a href="agent">Agent Program</a></li>
               <li><a href="#">Customer Support</a></li>
               <li><a href="#">Latest News</a></li>
             </ul>

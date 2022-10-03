@@ -9,30 +9,31 @@
     <meta name="keywords" content="HTML,CSS,XML,JavaScript">
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>School Name</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <title>
+        <%= school_obj.name %>
+    </title>
+    <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
     <!-- Goole Font -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="css/assets/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/assets/bootstrap.min.css">
     <!-- Font awsome CSS -->
-    <link rel="stylesheet" href="css/assets/font-awesome.min.css">
-    <link rel="stylesheet" href="css/assets/flaticon.css">
-    <link rel="stylesheet" href="css/assets/magnific-popup.css">
+    <link rel="stylesheet" href="../../css/assets/font-awesome.min.css">
+    <link rel="stylesheet" href="../../css/assets/flaticon.css">
+    <link rel="stylesheet" href="../../css/assets/magnific-popup.css">
     <!-- owl carousel -->
-    <link rel="stylesheet" href="css/assets/owl.carousel.css">
-    <link rel="stylesheet" href="css/assets/owl.theme.css">
-    <link rel="stylesheet" href="css/assets/animate.css">
+    <link rel="stylesheet" href="../../css/assets/owl.carousel.css">
+    <link rel="stylesheet" href="../../css/assets/owl.theme.css">
+    <link rel="stylesheet" href="../../css/assets/animate.css">
     <!-- Slick Carousel -->
-    <link rel="stylesheet" href="css/assets/slick.css">
+    <link rel="stylesheet" href="../../css/assets/slick.css">
     <!-- Mean Menu-->
-    <link rel="stylesheet" href="css/assets/meanmenu.css">
+    <link rel="stylesheet" href="../../css/assets/meanmenu.css">
     <!-- main style-->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="stylesheet" href="css/demo.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/responsive.css">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -54,8 +55,12 @@
                         <div class="info_wrapper">
                             <div class="contact_info">
                                 <ul class="list-unstyled">
-                                    <li><i class="flaticon-phone-receiver"></i>+000-2356-222</li>
-                                    <li><i class="flaticon-mail-black-envelope-symbol"></i>school@gmail.com</li>
+                                    <li><i class="flaticon-phone-receiver"></i>
+                                        <%= school_obj.phone %>
+                                    </li>
+                                    <li><i class="flaticon-mail-black-envelope-symbol"></i>
+                                        <%= school_obj.email %>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="login_info">
@@ -75,15 +80,15 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="school"><img src="images/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="home"><img src="../../images/logo.png" alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
-                            <li class="nav-item"><a href="school" class="nav-link">Home</a></li>
+                            <li class="nav-item"><a href="home" class="nav-link">Home</a></li>
                             <li class="nav-item"><a href="admissions" class="nav-link">Admissions</a></li>
                             <li class="nav-item"><a href="portal" class="nav-link">Portal</a></li>
                             <li class="nav-item"><a href="fees" class="nav-link active">Fees</a></li>
-                            <li class="nav-item"><a href="s_contact" class="nav-link">Contact</a></li>
-                            <li class="nav-item"><a href="s_about" class="nav-link">About</a></li>
+                            <li class="nav-item"><a href="follow" class="nav-link">Follow Up</a></li>
+                            <li class="nav-item"><a href="about" class="nav-link">About</a></li>
                         </ul>
                     </div>
                     <div class="mr-auto search_area ">
@@ -105,320 +110,41 @@
         <div class="intro_wrapper">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-12 col-md-8 col-lg-8">
-                        <div class="intro_text">
-                            <h1>Become A Teacher</h1>
-                            <div class="pages_links">
-                                <a href="#" title="">Home</a>
-                                <a href="#" title="" class="active">Become a teacher</a>
+                    <div class="col-md-8 offset-md-2">
+                        <p id="description" class="hdd text-center">
+                            Pay your school Fees
+                        </p>
+                        <form id="survey-form" method="POST" action="/register">
+                            <div class="form-group">
+                                <!-- <label for="name" id="name-label">School Name</label> -->
+                                <input type="text" name="name" id="name" class="form-control"
+                                    placeholder="Register Number" required />
                             </div>
-                        </div>
+
+                            <div class="form-group">
+                                <select id="dropdown" name="role" class="form-control" required>
+                                    <option disabled selected value>Select your class</option>
+                                    <option value="student">JSS 1</option>
+                                    <option value="job">JSS 2</option>
+                                    <option value="learner">JSS 3</option>
+                                    <option value="learner">SSS 1</option>
+                                    <option value="learner">SSS 2</option>
+                                    <option value="learner">SSS 3</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" id="submit" class="submit-button">
+                                    Make Payments
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
             </div>
         </div>
     </header> <!-- End header -->
-
-
-
-    <section class="login_signup_option">
-        <div class="l-modal is-hidden--off-flow js-modal-shopify">
-            <div class="l-modal__shadow js-modal-hide"></div>
-            <div class="login_popup login_modal_body">
-                <div class="Popup_title d-flex justify-content-between">
-                    <h2 class="hidden">&nbsp;</h2>
-                    <!-- Nav tabs -->
-                    <div class="row">
-                        <div class="col-12 col-lg-12 col-md-12 col-lg-12 login_option_btn">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#login"
-                                        role="tab">Login</a></li>
-                                <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#panel2"
-                                        role="tab">Register</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                            <!-- Tab panels -->
-                            <div class="tab-content card">
-                                <!--Login-->
-                                <div class="tab-pane fade in show active" id="login" role="tabpanel">
-                                    <form action="#">
-                                        <div class="row">
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Email</label>
-                                                    <input type="email" class="form-control" placeholder="Username">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Password</label>
-                                                    <input type="password" class="form-control" placeholder="Password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option">
-                                                <a href="forgot-password.html" title="" class="forget_pass">Forget
-                                                    Password ?</a>
-                                                <button type="submit" class="btn btn-default login_btn">Login</button>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="social_login">
-                                                    <div class="social_items">
-                                                        <button class="google_login google">Login Google</button>
-                                                        <button class="google_login facebook">Login Facebook</button>
-                                                        <button class="google_login twitter">Login Twitter</button>
-                                                        <button class="google_login linkdin">Login Linkdin</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!--/.Panel 1-->
-                                <!--Panel 2-->
-                                <div class="tab-pane fade" id="panel2" role="tabpanel">
-                                    <form action="#" class="register">
-                                        <div class="row">
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Name</label>
-                                                    <input type="text" class="form-control" placeholder="Username">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Email</label>
-                                                    <input type="email" class="form-control" placeholder="Email">
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                                <div class="form-group">
-                                                    <label class="control-label">Password</label>
-                                                    <input type="password" class="form-control" placeholder="Password">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-12 col-lg-12 col-md-12 col-lg-12 d-flex justify-content-between login_option">
-                                                <button type="submit"
-                                                    class="btn btn-default login_btn">Register</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!--/.Panel 2-->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> <!-- End Login Signup Option -->
-
-
-
-
-    <section class="become_a_instructor">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-10 col-md-8 col-lg-8">
-                    <div class="video_img wow fadeIn" data-wow-duration="2s" data-wow-delay=".2s">
-                        <img src="images/banner/instructor.jpg" alt="" class="img-fluid">
-                        <div class="video_wrapper  wow fadeIn" data-wow-duration="2s" data-wow-delay=".5s">
-                            <div class="video-play-btn">
-                                <span><a href="https://www.youtube.com/watch?v=s3qN4Ea2xVU" class="video-iframe"><i
-                                            class="fa fa-play"></i></a></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-10 col-md-4 col-lg-4">
-                    <div class="apply_instructor">
-                        <div class="form_title">
-                            <h3>Fill This Form To Apply</h3>
-                        </div>
-                        <form action="#">
-                            <div class="row">
-                                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Name</label>
-                                        <input type="text" class="form-control" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Email</label>
-                                        <input type="email" class="form-control" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Phone</label>
-                                        <input type="text" class="form-control" placeholder="">
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                    <div class="form-group">
-                                        <label class="control-label">Message</label>
-                                        <textarea class="form-control" placeholder=""></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-12 col-md-12 col-lg-12">
-                                    <button type="submit" class="btn btn-default submit_btn">Send</button>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!-- End Become A Instructor -->
-
-
-    <section class="meet_our_team" id="become_instructorr">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="meet_team_wrapper">
-                        <div class="sub_title">
-                            <h2>Meet Our Instructor</h2>
-                            <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                                Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
-                        </div><!-- ends: .section-header -->
-                        <div class="envent_all_view">
-                            <a href="#" title="">View All</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_1.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Stephen Patterson</a></span>
-                                <span>Graphic Teacher</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_2.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Janes Smith</a></span>
-                                <span>Senior Lecturer</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_3.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Patricia Roberts</a></span>
-                                <span>Biology Professor</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_4.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Dolores Galloway</a></span>
-                                <span>English Lecturer</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_5.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Henry Norman</a></span>
-                                <span>Language Teacher </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_6.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Matthew Reck</a></span>
-                                <span>Marketing Teacher</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_4.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Dolores Galloway</a></span>
-                                <span>English Lecturer</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_5.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Henry Norman</a></span>
-                                <span>Language Teacher </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-6 col-lg-4">
-                    <div class="testimonial_single">
-                        <div class="reviewer_info">
-                            <div class="pro_pic_teacher">
-                                <img src="images/team/team_6.jpg" alt="2" class="img-fluid">
-                            </div>
-                            <div class="name_position">
-                                <span class="name"><a href="#" title="">Matthew Reck</a></span>
-                                <span>Marketing Teacher</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!-- End Meet Our Team -->
-
 
 
     <!-- Footer -->
@@ -428,19 +154,21 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img src="images/logo2.png" alt="" class="f_logo">
-                            <p>About School goes in here.</p>
+                            <img src="../../images/logo2.png" alt="" class="f_logo">
+                            <p>
+                                <%= school_obj.about %>
+                            </p>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-2">
                         <div class="footer_single_col">
                             <h3>Useful Links</h3>
                             <ul class="location_info quick_inf0">
-                                <li><a href="school">Home</a></li>
+                                <li><a href="home">Home</a></li>
                                 <li><a href="admissions">Admissions</a></li>
                                 <li><a href="portal">Portal</a></li>
-                                <li><a href="s_contact">Contact</a></li>
-                                <li><a href="s_about">About</a></li>
+                                <li><a href="follow">Follow Up</a></li>
+                                <li><a href="about">About</a></li>
                             </ul>
                         </div>
                     </div>
@@ -458,8 +186,12 @@
                             <h3>Contact Us</h3>
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
-                                <span>+000 124 325</span>
-                                <span class="email">info@yourdomain.com</span>
+                                <span>
+                                    <%= school_obj.phone %>
+                                </span>
+                                <span class="email">
+                                    <%= school_obj.email %>
+                                </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">
                                 <li><a href="#"><i class="fab fa-facebook-f fb-icon"></i></a></li>
@@ -479,8 +211,8 @@
             </div>
         </div>
         <div class="shapes_bg">
-            <img src="images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
-            <img src="images/shapes/footer_2.png" alt="" class="shape_1">
+            <img src="../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
+            <img src="../../images/shapes/footer_2.png" alt="" class="shape_1">
         </div>
     </footer><!-- End Footer -->
 
@@ -492,18 +224,18 @@
     </section>
 
     <!-- JavaScript -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.magnific-popup.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/slick.min.js"></script>
-    <script src="js/jquery.meanmenu.min.js"></script>
-    <script src="js/wow.min.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/popper.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/jquery.magnific-popup.min.js"></script>
+    <script src="../../js/owl.carousel.min.js"></script>
+    <script src="../../js/slick.min.js"></script>
+    <script src="../../js/jquery.meanmenu.min.js"></script>
+    <script src="../../js/wow.min.js"></script>
     <!-- Counter Script -->
-    <script src="js/waypoints.min.js"></script>
-    <script src="js/jquery.counterup.min.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="../../js/waypoints.min.js"></script>
+    <script src="../../js/jquery.counterup.min.js"></script>
+    <script src="../../js/custom.js"></script>
 
 
 </body>

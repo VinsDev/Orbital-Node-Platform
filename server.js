@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const app = express();
 const server = require("http").Server(app);
 const bodyParser = require("body-parser");
+const path = require("path");
 
 
 let uri =
@@ -11,7 +12,7 @@ let uri =
 
 let url = "mongodb://localhost:27017/orbital";
 
-mongoose.connect(uri, {
+mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }, (err) => err ? console.log(err) : console.log("Connected to Database"));
@@ -55,7 +56,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.set("view engine", "ejs");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 
 
@@ -79,6 +80,9 @@ app.post("/register", urlencodedParser, (req, res) => {
     schoolData(req.body);
     res.render("success", { name: req.body.name });
 });
+app.get('/agent', (req, res) => {
+    res.render("agent");
+});
 app.post('/getSchools', async (req, res) => {
     let payload = req.body.payload.trim();
     let search = School.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } }).exec();
@@ -90,24 +94,29 @@ app.post('/getSchools', async (req, res) => {
 // $regex: new RegExp('^' + payload + '.*', 'i')
 
 // School . . .
-app.get('/school', async (req, res) => {
-    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.query.q + '.*', 'i') } }).exec();
-    res.render("../school/index", { school_obj: school_data});
+app.all('/schools/:sname/home', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/index", { school_obj: school_data });
 });
-app.get('/admissions', (req, res) => {
-    res.render("../school/admissions", { school_obj: school_data});
+app.get('/schools/:sname/admissions', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/admissions", { school_obj: school_data });
 });
-app.get('/portal', (req, res) => {
-    res.render("../school/portal", { school_obj: school_data});
+app.get('/schools/:sname/portal', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/portal", { school_obj: school_data });
 });
-app.get('/fees', (req, res) => {
-    res.render("../school/fees", { school_obj: school_data});
+app.get('/schools/:sname/fees', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/fees", { school_obj: school_data });
 });
-app.get('/s_contact', (req, res) => {
-    res.render("../school/contact", { school_obj: school_data});
+app.get('/schools/:sname/follow', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/contact", { school_obj: school_data });
 });
-app.get('/s_about', (req, res) => {
-    res.render("../school/about", { school_obj: school_data});
+app.get('/schools/:sname/about', async (req, res) => {
+    let school_data = await School.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } }).exec();
+    res.render("../school/about", { school_obj: school_data });
 });
 
 
