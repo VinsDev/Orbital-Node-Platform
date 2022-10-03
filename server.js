@@ -12,7 +12,7 @@ let uri =
 
 let url = "mongodb://localhost:27017/orbital";
 
-mongoose.connect(uri, {
+mongoose.connect(url, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }, (err) => err ? console.log(err) : console.log("Connected to Database"));
