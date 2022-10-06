@@ -5,7 +5,7 @@ let url = "mongodb://localhost:27017/";
 
 
 module.exports = {
-  url: url,
+  url: uri,
   database: "orbital",
   imgBucket: "photos",
 };
