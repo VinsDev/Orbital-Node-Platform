@@ -111,18 +111,17 @@
                     return;
                   }
                   if (match[0] === e.value) {
-                    fetch('getSchools', {
+                    fetch('/getSchools', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({ payload: e.value })
                     }).then(res => res.json()).then(data => {
-                      let payload = data.payload;
+                      var payload = data.payload;
                       searchResults.innerHTML = '';
-                      if (payload.length < 1) {
-                        searchResults.innerHTML = '<p> Sorry. Nothing Found.</p>';
+                      if (payload < 1) {
+                        searchResults.innerHTML = '<p> Sorry school not found. Check your spelling</p>';
                         return;
                       }
-                      console.log(payload);
                       payload.forEach((item, index) => {
                         if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p><p></p>`; }
                         else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p>`; }
@@ -174,6 +173,11 @@
 
             </div>
           </form>
+        </div>
+        <div class="col-md-6 offset-md-3">
+          <div class="wrapper">
+            <a class="reg" id="regnow" href="register">Sign Up</a>
+          </div>
         </div>
       </div>
     </div>
@@ -241,13 +245,32 @@
           </div>
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
-        </div>
-        <div class="col-md-6 offset-md-3">
           <div class="pricing-item">
 
             <div class="price price-gradient">
               <h6>₦16,680</h6>
-              <span>termly</span>
+              <span>per term</span>
+            </div>
+            <p>Suitable for all Schools</p>
+            <div class="dev"></div>
+            <ul>
+              <li><i class="fa fa-check"></i>School Website</li><br />
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li><br />
+              <li><i class="fa fa-check"></i>Managed Fees Payments</li><br />
+              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li><br />
+              <li><i class="fa fa-check"></i>Students Portal</li><br />
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li><br />
+              <li><i class="fa fa-check"></i>Admin Panel</li><br />
+            </ul>
+            <a href="/register" class="gradient-button">Register</a>
+          </div>
+        </div>
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="pricing-item">
+
+            <div class="price price-gradient">
+              <h6>₦50,040</h6>
+              <span>per session</span>
             </div>
             <p>Suitable for all Schools</p>
             <div class="dev"></div>
@@ -264,6 +287,25 @@
           </div>
         </div>
         <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="pricing-item">
+
+            <div class="price price-gradient">
+              <h6>₦150,120</h6>
+              <span>per three sessions</span>
+            </div>
+            <p>Suitable for all Schools</p>
+            <div class="dev"></div>
+            <ul>
+              <li><i class="fa fa-check"></i>School Website</li><br />
+              <li><i class="fa fa-check"></i>Managed Admissions Applications</li><br />
+              <li><i class="fa fa-check"></i>Managed Fees Payments</li><br />
+              <li><i class="fa fa-check"></i>Electronic Students Attendance Registers</li><br />
+              <li><i class="fa fa-check"></i>Students Portal</li><br />
+              <li><i class="fa fa-check"></i>Automatic Results Computation</li><br />
+              <li><i class="fa fa-check"></i>Admin Panel</li><br />
+            </ul>
+            <a href="/register" class="gradient-button">Register Your School</a>
+          </div>
         </div>
 
       </div>
@@ -372,9 +414,9 @@
               <div class="icon">
                 <i class="fa fa-quote-right"></i>
               </div>
-              <p>"Orbital Node is a great platform and we hope to serve you all through our tireless efforts."</p>
-              <h4>Jesse Jobs Aondoaseer Avachia</h4>
-              <span>Founder</span>
+              <p>"Our goal is to improve the world through technology."</p>
+              <h4>Jesse Jobs Aondoaseer Avaachia</h4>
+              <span>Founder and C.E.O</span>
             </div>
             <div class="testimonial-item">
               <div class="icon">
@@ -382,16 +424,17 @@
               </div>
               <p>"Our target is ensuring a fully organized and efficient educational system through out the country by
                 providing quality services. Enjoy your visit to our website."</p>
-              <h4>Vincent Dominic</h4>
-              <span>Co-Founder</span>
+              <h4>Dominic Omaku Vincent</h4>
+              <span>Co-Founder and C.T.O</span>
             </div>
             <div class="testimonial-item">
               <div class="icon">
                 <i class="fa fa-quote-right"></i>
               </div>
-              <p>"Orbital Node is a great platform and we hope to serve you all through our tireless efforts."</p>
-              <h4>Unum Elijah</h4>
-              <span>Co-Founder</span>
+              <p>"Streamlinig the service provision in the Nigerian and African Educational system to meet global best
+                practices by incorporating technology into the daily school administration and management"</p>
+              <h4>Unum Shater Elijah</h4>
+              <span>Co-Founder and Marketing Director</span>
             </div>
           </div>
         </div>
@@ -410,10 +453,11 @@
             <div class="footer-heading">
               <h2>About Us</h2>
             </div>
-            <p>Orbital Node is a subsidiary of Orbital Technologies. We Provide a platform solve real-time educational
+            <p>Orbital Node is a subsidiary of Orbital Technologies. We Provide a platform to solve real-time
+              educational
               problems in lower institutions of learning ranging from School Websites, Portal, Fees Payment Platforms,
               Electronic Attendance Registers, Results Computation Database and so much more. Our Mobile App is
-              available for download at google Play Store.</p>
+              available for download on google Play Store.</p>
           </div>
         </div>
 
@@ -423,7 +467,7 @@
               <h2>Our Services</h2>
             </div>
             <ul class="footer-list">
-              <li><a href="#">Universal Plan</a></li>
+              <li><a href="services">Check it out</a></li>
             </ul>
           </div>
         </div>
@@ -437,8 +481,8 @@
             <ul class="footer-list">
               <li><a href="register">Register School</a></li>
               <li><a href="agent">Agent Program</a></li>
-              <li><a href="#">Customer Support</a></li>
-              <li><a href="#">Latest News</a></li>
+              <!-- <li><a href="#">Customer Support</a></li>
+              <li><a href="#">Latest News</a></li> -->
             </ul>
           </div>
         </div>
@@ -449,11 +493,9 @@
               <h2>More Information</h2>
             </div>
             <ul class="footer-list">
-              <li>Phone: <a href="#">08117805406</a></li>
-              <li>Email: <a href="#">orbitalnode@gmail.com</a></li>
-              <!--               <li>Support: <a href="#">support@orbitalnode.com</a></li>
- -->
-              <li>Website: <a href="#">www.orital.com</a></li>
+              <li>Phone: <a href="#">+2349043081668</a></li>
+              <li>Email: <a href="#">orbitalnode39@gmail.com</a></li>
+              <li>Website: <a href="#">www.orbital.com</a></li>
             </ul>
           </div>
         </div>

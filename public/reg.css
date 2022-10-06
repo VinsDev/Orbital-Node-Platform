@@ -22,9 +22,7 @@ body::before {
   height: 100%;
   width: 100%;
   z-index: -1;
-  background: #1b2021;
-  /* coolors.co */
-  background-image: linear-gradient(145deg, rgba(114, 2, 187, 1) 0%, rgba(50, 100, 245, 1) 100%);
+  background-image: url(assets/images/footer-bg.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -35,7 +33,8 @@ h1 {
 }
 
 p {
-  font-size: 1.125rem;
+  font-size: 1.15rem;
+  font-weight: 500;
 }
 
 h1,
@@ -49,6 +48,13 @@ label {
   align-items: center;
   font-size: 1.125rem;
   margin-bottom: 0.5rem;
+}
+
+.form-group img {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 15px;
+  margin-top: 10px;
 }
 
 input,
@@ -88,7 +94,7 @@ button {
 }
 
 .description {
-  font-style: italic;
+  /* font-style: italic; */
   font-weight: 400;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.787);
 }
@@ -104,9 +110,9 @@ button {
 }
 
 form {
-  background-color: #4803b891;
+  background-color: #4803b875;
   padding: 2.5rem 0.625rem;
-  border-radius: 3rem;
+  border-radius: 1.5rem;
   margin: 10px;
 }
 

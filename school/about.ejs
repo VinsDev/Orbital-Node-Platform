@@ -132,7 +132,7 @@
                 <div class="col-12 col-sm-12 col-md-7 col-lg-7">
                     <div class="about_title">
                         <span>About Us</span>
-                        <h2>Orbital Node is the best.</h2>
+                        <h2><%= school_obj.name %> is the best.</h2>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
@@ -149,11 +149,9 @@
                 </div>
                 <div class="col-12 col-sm-12 col-md-7 col-lg-7">
                     <div class="about_content">
-                        <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                            Etiam maecenas vel vici quis dictum rutrum nec nisi et.Lorem ipsum dolor sit amet mollis
-                            felis dapibus arcu donec viverra. Pede phasellus eget. Etiam maecenas vel vici quis dictum
-                            rutrum nec nisi et.Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede
-                            phasellus eget. Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
+                        <p>
+                            <%= school_obj.d_about %>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -165,13 +163,7 @@
     <section class="unlimited_possibilities" id="about_unlimited_possibilities">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="sub_title">
-                        <h2>Unlimited Possibilities</h2>
-                        <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                            Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
-                    </div><!-- ends: .section-header -->
-                </div>
+
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="single_item single_item_first">
                         <div class="icon_wrapper">
@@ -202,13 +194,13 @@
                             <i class="flaticon-diploma"></i>
                         </div>
                         <div class="blog_title">
-                            <h3><a href="#" title="">Ethics</a></h3>
+                            <h3><a href="#" title="">School Anthem</a></h3>
                             <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
                                 nt ut laboris ut aliquip ex commodo conquat.</p>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                <!--                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="single_item single_item_center">
                         <div class="icon_wrapper">
                             <i class="flaticon-atom"></i>
@@ -243,7 +235,7 @@
                                 nt ut laboris ut aliquip ex commodo conquat.</p>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
     </section><!-- End Popular Courses -->
@@ -254,9 +246,7 @@
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="sub_title">
-                        <h2>Meet Our Teachers</h2>
-                        <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                            Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
+                        <h2>Meet Some Of Our Teachers</h2>
                     </div><!-- ends: .section-header -->
                 </div>
                 <div class="single-wrappe col-12 col-sm-6 col-md-4 col-lg-4">
@@ -270,7 +260,7 @@
                             <figcaption>
                                 <div class="member-name">
                                     <h4><a href="#" title="">Jesse Avachia</a></h4>
-                                    <span>Professor</span>
+                                    <span>Labour Master</span>
                                 </div>
                             </figcaption>
                         </figure>
@@ -288,7 +278,7 @@
                             <figcaption>
                                 <div class="member-name">
                                     <h4><a href="#" title="">Shedrack</a></h4>
-                                    <span>Lecturer</span>
+                                    <span>Games Master</span>
                                 </div>
                             </figcaption>
                         </figure>
@@ -306,59 +296,7 @@
                             <figcaption>
                                 <div class="member-name">
                                     <h4><a href="#" title="">Lawrence Somebody</a></h4>
-                                    <span>Coordinator</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-
-                <div class="single-wrapper col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/jesse.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Jesse Avachia</a></h4>
-                                    <span>Assistant</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-                <div class="single-wrapper col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/shedrack.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Shedrack Somebody</a></h4>
-                                    <span>Teacher</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-                <div class="single-wrapper col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/larry.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Larry</a></h4>
-                                    <span>Asistant</span>
+                                    <span>Compound Master</span>
                                 </div>
                             </figcaption>
                         </figure>
@@ -367,26 +305,6 @@
             </div>
         </div>
     </section><!-- ./ End Our Instructiors -->
-
-
-    <!-- 
-    <section class="teamgroup">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 p-0">
-                    <div class="teamgroup_info_wrapper">
-                        <h2>Lorem ipsum dolor sit amet mollis felis dapibus arcu donect.</h2>
-                        <a href="#" title="" class="srtarte_btn">Get Started Now</a>
-                    </div>
-                    <div class="teamgroup_info_banner">
-                        <img src="../../images/banner/teamgroup.png" alt="" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
- -->
-
 
     <!-- Footer -->
     <footer class="footer_2">
