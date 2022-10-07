@@ -7,7 +7,9 @@ const GridFSBucket = require("mongodb").GridFSBucket;
 
 const url = dbConfig.url;
 
-const baseUrl = "http://orbital-node.herokuapp.com/files/";
+const local = "http://localhost:8080/files/";
+const web = "http://orbital-node.herokuapp.com/files/";
+const baseUrl = web;
 
 const mongoClient = new MongoClient(url);
 
