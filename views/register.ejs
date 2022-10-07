@@ -20,7 +20,7 @@
       To the Orbital Node Platform
     </p>
 
-    <form id="reg-form" action="/register" method="post" enctype="multipart/form-data" >
+    <form id="reg-form" action="register" method="post" enctype="multipart/form-data" >
       <div class="form-group">
         <label for="name" id="name-label">School Name</label>
         <input type="text" name="name" id="name" class="form-control" placeholder="Enter your School name" required />
@@ -194,75 +194,6 @@
     </form>
 
   </div>
-
- <!--  <script>
-    const form = document.getElementById("reg-form");
-
-    form.addEventListener("submit", submitForm);
-
-    function submitForm(e) {
-      e.preventDefault();
-      const name = document.getElementById("name");
-      const logo = document.getElementById("logo");
-      const email = document.getElementById("email");
-      const phone = document.getElementById("phone");
-      const adress = document.getElementById("adress");
-      const about = document.getElementById("about");
-      const d_about = document.getElementById("d_about");
-      const category = document.getElementById("category");
-      const p_name = document.getElementById("p_name");
-      const ppic = document.getElementById("ppic");
-      const vpname = document.getElementById("vpname");
-      const vppic = document.getElementById("vppic");
-      const mission = document.getElementById("mission");
-      const vision = document.getElementById("vision");
-      const anthem = document.getElementById("anthem");
-      const gmname = document.getElementById("gmname");
-      const gmpic = document.getElementById("gmpic");
-      const mtname = document.getElementById("mtname");
-      const mtpic = document.getElementById("mtpic");
-      const etname = document.getElementById("etname");
-      const etpic = document.getElementById("etpic");
-      const fees = document.getElementById("fees");
-      const e_register = document.getElementById("e_register");
-      const agent = document.getElementById("agent");
-
-      const formData = new FormData();
-
-      formData.append("name", name.value);
-      formData.append("images", logo.file);
-      formData.append("email", email.value);
-      formData.append("phone", phone.value);
-      formData.append("adress", adress.value);
-      formData.append("about", about.value);
-      formData.append("d_about", d_about.value);
-      formData.append("category", category.value);
-      formData.append("p_name", p_name.value);
-      formData.append("images", ppic.file);
-      formData.append("vpname", vpname.value);
-      formData.append("images", vppic.file);
-      formData.append("mission", mission.value);
-      formData.append("vision", vision.value);
-      formData.append("anthem", anthem.value);
-      formData.append("gmname", gmname.value);
-      formData.append("images", gmpic.file);
-      formData.append("mtname", mtname.value);
-      formData.append("images", mtpic.file);
-      formData.append("etname", etname.value);
-      formData.append("images", etpic.file);
-      formData.append("fees", fees.value);
-      formData.append("e_register", e_register.value);
-      formData.append("agent", agent.value);
-
-      fetch("/register", {
-        method: 'POST',
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
-      }).then((res) => console.log(res)).catch((err) => ("Error occured", err));
-    }
-  </script> -->
 </body>
 
 </html>
