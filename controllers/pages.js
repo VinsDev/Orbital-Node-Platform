@@ -5,7 +5,7 @@ const dbConfig = require("../config/db");
 const url = dbConfig.url;
 const mongoClient = new MongoClient(url);
 
-// LANDING . . .
+// ORBITAL NODE . . .
 const about = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/about.html`));
 };
@@ -25,6 +25,7 @@ const register = (req, res) => {
 const agent = (req, res) => {
     return res.render("agent");
 };
+
 
 // SCHOOL . . .
 const s_home = async (req, res) => {
@@ -118,6 +119,7 @@ const follow_up = async (req, res) => {
     }
 
 };
+
 const s_about = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -138,6 +140,194 @@ const s_about = async (req, res) => {
 };
 
 
+// SCHOOL ADMIN . . .
+const admin = (req, res) => {
+    return res.sendFile(path.join(`${__dirname}/../admin/index.html`));
+};
+const dashboard = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/dashboard", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const school_info = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/school-info", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const upcoming_news = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/upcoming-news", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const fees_info = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/fees-info", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const student_info = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/student-info", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const student_fees = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/student-fees", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const student_register = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/student-register", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const subject_results = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/subject-results", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const student_results = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/student-results", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const parents = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/parents", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const sessions = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/sessions", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const classes = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/classes", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const subjects = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/subjects", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+
+
 module.exports = {
     about,
     services,
@@ -149,5 +339,19 @@ module.exports = {
     portal,
     fees,
     follow_up,
-    s_about
+    s_about,
+    admin,
+    dashboard,
+    school_info,
+    upcoming_news,
+    fees_info,
+    student_info,
+    student_fees,
+    student_register,
+    subject_results,
+    student_results,
+    parents,
+    sessions,
+    classes,
+    subjects
 };

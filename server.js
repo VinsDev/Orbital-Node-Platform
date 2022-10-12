@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 initRoutes(app);
 
-let port = 8080;
+let port = 3000;
 app.listen(process.env.PORT || port, () => {
   console.log(`Running at localhost:${port}`);
 });

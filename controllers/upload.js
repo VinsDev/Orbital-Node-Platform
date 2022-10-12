@@ -148,6 +148,30 @@ const getSchools = async (req, res) => {
     }
 }
 
+
+const login = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.body.username.trim() });
+        if (school_data) {
+            res.send({
+                status: "accepted",
+                school: school_data.name
+            });
+        }
+        else {
+            res.send({ status: "declined" });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
 const getListFiles = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -214,4 +238,5 @@ module.exports = {
     getSchools,
     getListFiles,
     download,
+    login,
 };

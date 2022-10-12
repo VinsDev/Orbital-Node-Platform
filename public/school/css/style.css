@@ -1,11 +1,3 @@
-/*
-* ----------------------------------------------------------------------------------------
-Author       : EcologyTheme
-Author  Uri  : www.ecologytheme
-Template Name: Eduwise - Education Template
-Version      : 1.0                                          
-* ----------------------------------------------------------------------------------------
-*/
 /*====================================
 ===[ Style Map ]===
 
@@ -3825,7 +3817,7 @@ footer .shapes1_footer {
 }
 
 .header_3 .intro_wrapper {
-  background: url("../images/banner/banner_3.png") no-repeat center center;
+  background: url("../../images/banner/banner_3.png") no-repeat center center;
   min-height: 990px;
   background-size: cover;
   position: relative;
@@ -4936,7 +4928,7 @@ footer .shapes1_footer {
 }
 
 .header_inner .intro_wrapper {
-  background: url("../images/banner/banner_3.png") no-repeat center center;
+  background: url("../../images/banner/banner_3.png") no-repeat center center;
   min-height: 300px;
   background-size: cover;
   position: relative;
@@ -5046,7 +5038,7 @@ footer .shapes1_footer {
 
 /*=======[ Blog Signle ]========*/
 .blog_page .intro_wrapper {
-  background: url("../images/banner/inner_banner_2.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_2.jpg") no-repeat center center !important;
 }
 
 .blog_wrapper {
@@ -6168,7 +6160,7 @@ footer .shapes1_footer {
 }
 
 .contact_page .intro_wrapper {
-  background: url("../images/banner/inner_banner_3.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_3.jpg") no-repeat center center !important;
 }
 
 .contact_info_wrapper {
@@ -6360,7 +6352,7 @@ footer .shapes1_footer {
 }
 
 .about_page .intro_wrapper {
-  background: url("../images/banner/inner_banner_1.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_1.jpg") no-repeat center center !important;
 }
 
 .about_us {
@@ -6638,7 +6630,7 @@ footer .shapes1_footer {
 }
 
 .become_a_teacher .intro_wrapper {
-  background: url("../images/banner/inner_banner_1.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_1.jpg") no-repeat center center !important;
 }
 
 .become_a_instructor {
@@ -7121,7 +7113,7 @@ footer .shapes1_footer {
 }
 
 .courses_page .intro_wrapper {
-  background: url("../images/banner/inner_banner_4.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_4.jpg") no-repeat center center !important;
 }
 
 .courses_page .popular_courses {
@@ -8171,7 +8163,7 @@ footer .shapes1_footer {
 }
 
 .event_page .intro_wrapper {
-  background: url("../images/banner/inner_banner_5.jpg") no-repeat center center !important;
+  background: url("../../images/banner/inner_banner_5.jpg") no-repeat center center !important;
 }
 
 .event_details_wrapper {
