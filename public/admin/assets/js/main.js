@@ -1,9 +1,3 @@
-/**
-* Template Name: NiceAdmin - v2.4.0
-* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
-* Author: BootstrapMade.com
-* License: https://bootstrapmade.com/license/
-*/
 (function () {
   "use strict";
 
@@ -46,14 +40,6 @@
     })
   }
 
-  /**
-   * Search bar toggle
-   */
-  if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function (e) {
-      select('.search-bar').classList.toggle('search-bar-show')
-    })
-  }
 
   /**
    * Navbar links active state on scroll

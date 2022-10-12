@@ -326,6 +326,20 @@ const subjects = async (req, res) => {
         });
     }
 };
+const assessment = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ name: req.params.sname });
+        return res.render("../admin/assessment", { school_obj: school_data });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
 
 
 module.exports = {
@@ -353,5 +367,6 @@ module.exports = {
     parents,
     sessions,
     classes,
-    subjects
+    subjects,
+    assessment
 };

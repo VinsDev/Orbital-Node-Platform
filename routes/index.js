@@ -49,6 +49,7 @@ let routes = app => {
   router.get("/admin/:sname/sessions", pagesController.sessions);
   router.get("/admin/:sname/classes", pagesController.classes);
   router.get("/admin/:sname/subjects", pagesController.subjects);
+  router.get("/admin/:sname/assessment", pagesController.assessment);
 
 
   return app.use("/", router);
