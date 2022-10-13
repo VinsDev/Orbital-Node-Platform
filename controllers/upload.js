@@ -7,70 +7,55 @@ const GridFSBucket = require("mongodb").GridFSBucket;
 
 const url = dbConfig.url;
 
-const local = "http://localhost:8080/files/";
+const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
 const baseUrl = web;
 
 const mongoClient = new MongoClient(url);
 
-/* const uploadFiles = async (req, res) => {
-  try {
-    await upload(req, res);
-    console.log(req.file);
-
-    if (req.file == undefined) {
-      return res.send({
-        message: "You must select a file.",
-      });
-    }
-
-    return res.send({
-      message: "File has been uploaded.",
-    });
-  } catch (error) {
-    console.log(error);
-
-    return res.send({
-      message: "Error when trying upload image: ${error}",
-    });
-  }
-}; */
 
 const sendForm = async (req, res, url) => {
     try {
 
-        var data = {
-            name: req.body.name,
-            logo: baseUrl + url[0].filename,
-            email: req.body.email,
-            phone: req.body.phone,
-            adress: req.body.adress,
-            pic1: baseUrl + url[1].filename,
-            about: req.body.about,
-            d_about: req.body.d_about,
-            category: req.body.category,
-            p_name: req.body.p_name,
-            ppic: baseUrl + url[2].filename,
-            vpname: req.body.vpname,
-            vppic: baseUrl + url[3].filename,
-            mission: req.body.mission,
-            vision: req.body.vision,
-            anthem: req.body.anthem,
-            gmname: req.body.gmname,
-            gmpic: baseUrl + url[4].filename,
-            mtname: req.body.mtname,
-            mtpic: baseUrl + url[5].filename,
-            etname: req.body.etname,
-            etpic: baseUrl + url[6].filename,
-            fees: req.body.fees,
-            e_register: req.body.e_register,
-            agent: req.body.agent
+        var school_model = {
+            school_info: {
+                name: req.body.name,
+                logo: baseUrl + url[0].filename,
+                email: req.body.email,
+                phone: req.body.phone,
+                adress: req.body.adress,
+                pic1: baseUrl + url[1].filename,
+                about: req.body.about,
+                d_about: req.body.d_about,
+                category: req.body.category,
+                p_name: req.body.p_name,
+                ppic: baseUrl + url[2].filename,
+                vpname: req.body.vpname,
+                vppic: baseUrl + url[3].filename,
+                mission: req.body.mission,
+                vision: req.body.vision,
+                anthem: req.body.anthem,
+                fees: req.body.fees,
+                e_register: req.body.e_register,
+                agent: req.body.agent,
+                admin_username: "",
+                admin_password: ""
+            },
+            news: [],
+            fees_info: {
+                bank_name: "",
+                ac_num: "",
+                fees: "",
+            },
+            feedbacks: [],
+            classes: [],
+            sessions: []
         }
 
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        database.collection("schools").insertOne(data)
+        database.collection("schools").insertOne(school_model)
     } catch (error) {
         console.log(error);
     }
@@ -134,7 +119,7 @@ const getSchools = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        var cursor = schools.find({ name: { $regex: new RegExp('^' + payload + '.*', 'i') } });
+        var cursor = schools.find({ 'school_info.name': { $regex: new RegExp('^' + payload + '.*', 'i') } });
 
 
         cursor.forEach(school => schoolList.push(school)).then(() => {

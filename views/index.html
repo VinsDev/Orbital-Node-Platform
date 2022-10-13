@@ -122,8 +122,8 @@
                         return;
                       }
                       payload.forEach((item, index) => {
-                        if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p><p></p>`; }
-                        else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.name}</p>`; }
+                        if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.school_info.name}</p><p></p>`; }
+                        else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.school_info.name}</p>`; }
                       });
                     });
                     return;
@@ -145,7 +145,7 @@
                   var myForm = document.getElementById("suggestion_form");
                   var myInput = document.getElementById("search-field");
 
-                  let match = myInput.value.match(/^[a-zA-Z ]*/);
+                  let match = myInput.value.match(/^[a-zA-Z. ]*/);
                   let match2 = myInput.value.match(/\s*/);
                   if (myInput.value) {
                     if (match[0] === myInput.value) {
@@ -210,7 +210,8 @@
             <i class="fa fa-database"></i>
             <h4>Students Portal</h4>
             <p>We also provide a student portal integrated in the school website where every information about a student
-              such as class attendance and behavioural activities shall be accessed, school fees shall be paid and students
+              such as class attendance and behavioural activities shall be accessed, school fees shall be paid and
+              students
               results shall also be checked.</p>
           </div>
         </div>

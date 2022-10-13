@@ -34,7 +34,7 @@ const s_home = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/index", { school_obj: school_data });
 
 
@@ -52,7 +52,7 @@ const admissions = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/admissions", { school_obj: school_data });
 
 
@@ -70,7 +70,7 @@ const portal = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/portal", { school_obj: school_data });
 
 
@@ -88,7 +88,7 @@ const fees = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/fees", { school_obj: school_data });
 
 
@@ -107,7 +107,7 @@ const follow_up = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/contact", { school_obj: school_data });
 
 
@@ -126,7 +126,7 @@ const s_about = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
         return res.render("../school/about", { school_obj: school_data });
 
 
@@ -150,7 +150,7 @@ const dashboard = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/dashboard", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -164,7 +164,7 @@ const school_info = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/school-info", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -178,7 +178,7 @@ const upcoming_news = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/upcoming-news", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -192,7 +192,7 @@ const fees_info = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/fees-info", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -206,7 +206,7 @@ const student_info = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/student-info", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -220,7 +220,7 @@ const student_fees = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/student-fees", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -234,7 +234,7 @@ const student_register = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/student-register", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -248,7 +248,7 @@ const subject_results = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/subject-results", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -262,7 +262,7 @@ const student_results = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/student-results", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -276,7 +276,7 @@ const parents = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/parents", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -290,7 +290,7 @@ const sessions = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/sessions", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -304,7 +304,7 @@ const classes = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/classes", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -318,7 +318,7 @@ const subjects = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/subjects", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({
@@ -332,7 +332,7 @@ const assessment = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../admin/assessment", { school_obj: school_data });
     } catch (error) {
         return res.status(500).send({

@@ -10,7 +10,7 @@
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= school_obj.name %>
+        <%= school_obj.school_info.name %>
     </title>
     <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
     <!-- Goole Font -->
@@ -56,20 +56,22 @@
                             <div class="contact_info">
                                 <ul class="list-unstyled">
                                     <li><i class="flaticon-phone-receiver"></i>
-                                        <%= school_obj.phone %>
+                                        <%= school_obj.school_info.phone %>
                                     </li>
                                     <li><i class="flaticon-mail-black-envelope-symbol"></i>
-                                        <%= school_obj.email %>
+                                        <%= school_obj.school_info.email %>
                                     </li>
                                 </ul>
                             </div>
                             <div class="login_info">
-                                <ul class="d-flex">
-                                    <li class="nav-item"><i
-                                            class="flaticon-user-male-black-shape-with-plus-sign"></i>Orbital Node
-                                        Platforms</li>
+                                <ul class="list-unstyled">
+                                    <li class="nav-item">
+                                        <p style="color:#fff;margin-top: 15px;">
+                                            <%=school_obj.school_info.name%>
+                                        </p>
+                                    </li>
                                 </ul>
-                                <a href="/" title="" class="apply_btn">Register</a>
+                                <!-- <a href="/" title="" class="apply_btn">Register</a> -->
                             </div>
                         </div>
                     </div>
@@ -80,7 +82,8 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="home"><img src="../../images/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="home"><img style="max-height: 45px;" src="<%=school_obj.school_info.logo%>"
+                            alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
                             <li class="nav-item"><a href="home" class="nav-link">Home</a></li>
@@ -132,25 +135,27 @@
                 <div class="col-12 col-sm-12 col-md-7 col-lg-7">
                     <div class="about_title">
                         <span>About Us</span>
-                        <h2><%= school_obj.name %> is the best.</h2>
+                        <h2>
+                            <%= school_obj.school_info.name %> is the best.
+                        </h2>
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
                     <div class="banner_about">
-                        <img src="../../images/officials/shedrack.jpg" alt="" class="img-fluid">
+                        <img src="<%=school_obj.school_info.pic1%>" alt="" class="img-fluid">
                     </div>
                 </div>
             </div>
             <div class="row about_content_wrapper">
                 <div class="col-12 col-sm-12 col-md-5 col-lg-5 p-0">
                     <div class="about_banner_down">
-                        <img src="../../images/officials/shedrack.jpg" alt="" class="img-fluid">
+                        <img src="<%=school_obj.school_info.pic1%>" alt="" class="img-fluid">
                     </div>
                 </div>
                 <div class="col-12 col-sm-12 col-md-7 col-lg-7">
                     <div class="about_content">
                         <p>
-                            <%= school_obj.d_about %>
+                            <%= school_obj.school_info.d_about %>
                         </p>
                     </div>
                 </div>
@@ -159,7 +164,6 @@
     </section>
 
 
-    <!--========={ Popular Courses }========-->
     <section class="unlimited_possibilities" id="about_unlimited_possibilities">
         <div class="container">
             <div class="row">
@@ -171,8 +175,9 @@
                         </div>
                         <div class="blog_title">
                             <h3><a href="#" title="">Our Mission</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
+                            <p>
+                                <%= school_obj.school_info.mission %>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -183,8 +188,9 @@
                         </div>
                         <div class="blog_title">
                             <h3><a href="#" title="">Our Vision</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
+                            <p>
+                                <%= school_obj.school_info.vision %>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -195,116 +201,16 @@
                         </div>
                         <div class="blog_title">
                             <h3><a href="#" title="">School Anthem</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
+                            <p>
+                                <%= school_obj.school_info.anthem %>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <!--                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single_item single_item_center">
-                        <div class="icon_wrapper">
-                            <i class="flaticon-atom"></i>
-                        </div>
-                        <div class="blog_title">
-                            <h3><a href="#" title="">Physical Activities</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single_item single_item_last">
-                        <div class="icon_wrapper">
-                            <i class="flaticon-open-book"></i>
-                        </div>
-                        <div class="blog_title">
-                            <h3><a href="#" title="">Book Library</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single_item single_item_first item_6">
-                        <div class="icon_wrapper">
-                            <i class="flaticon-care"></i>
-                        </div>
-                        <div class="blog_title">
-                            <h3><a href="#" title="">Relationships</a></h3>
-                            <p>Lorem ipsum dolor consectetur sed do tempor incididunt ut laboris ut aliquip ex commodo
-                                nt ut laboris ut aliquip ex commodo conquat.</p>
-                        </div>
-                    </div>
-                </div> -->
             </div>
         </div>
     </section><!-- End Popular Courses -->
 
-    <!--========={ Our Instructiors }========-->
-    <section class="our_instructors" id="about_our_instructors">
-        <div class="container">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12">
-                    <div class="sub_title">
-                        <h2>Meet Some Of Our Teachers</h2>
-                    </div><!-- ends: .section-header -->
-                </div>
-                <div class="single-wrappe col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/eli.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Jesse Avachia</a></h4>
-                                    <span>Labour Master</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-
-                <div class="single-wrapper col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/shedrack.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Shedrack</a></h4>
-                                    <span>Games Master</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-
-                <div class="single-wrapper  col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="team-single-item ">
-                        <figure>
-                            <div class="member-img">
-                                <div class="teachars_pro">
-                                    <img src="../../images/officials/shedrack.jpg" alt="member img" class="img-fluid">
-                                </div>
-                            </div>
-                            <figcaption>
-                                <div class="member-name">
-                                    <h4><a href="#" title="">Lawrence Somebody</a></h4>
-                                    <span>Compound Master</span>
-                                </div>
-                            </figcaption>
-                        </figure>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section><!-- ./ End Our Instructiors -->
 
     <!-- Footer -->
     <footer class="footer_2">
@@ -313,9 +219,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img src="../../images/logo2.png" alt="" class="f_logo">
+                            <img style="max-height: 55px;" src="<%=school_obj.school_info.logo%>" alt="logo">
                             <p>
-                                <%= school_obj.about %>
+                                <%= school_obj.school_info.about %>
                             </p>
                         </div>
                     </div>
@@ -346,10 +252,10 @@
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
                                 <span>
-                                    <%= school_obj.phone %>
+                                    <%= school_obj.school_info.phone %>
                                 </span>
                                 <span class="email">
-                                    <%= school_obj.email %>
+                                    <%= school_obj.school_info.email %>
                                 </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">

@@ -10,7 +10,7 @@
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= school_obj.name %>
+        <%= school_obj.school_info.name %>
     </title>
     <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
     <!-- Goole Font -->
@@ -56,20 +56,22 @@
                             <div class="contact_info">
                                 <ul class="list-unstyled">
                                     <li><i class="flaticon-phone-receiver"></i>
-                                        <%= school_obj.phone %>
+                                        <%= school_obj.school_info.phone %>
                                     </li>
                                     <li><i class="flaticon-mail-black-envelope-symbol"></i>
-                                        <%= school_obj.email %>
+                                        <%= school_obj.school_info.email %>
                                     </li>
                                 </ul>
                             </div>
                             <div class="login_info">
-                                <ul class="d-flex">
-                                    <li class="nav-item"><i
-                                            class="flaticon-user-male-black-shape-with-plus-sign"></i>Orbital Node
-                                        Platforms</li>
+                                <ul class="list-unstyled">
+                                    <li class="nav-item">
+                                        <p style="color:#fff;margin-top: 15px;">
+                                            <%=school_obj.school_info.name%>
+                                        </p>
+                                    </li>
                                 </ul>
-                                <a href="/" title="" class="apply_btn">Register</a>
+                                <!-- <a href="/" title="" class="apply_btn">Register</a> -->
                             </div>
                         </div>
                     </div>
@@ -80,7 +82,8 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="home"><img src="../../images/logo.png" alt="logo"></a>
+                    <a class="navbar-brand" href="home"><img style="max-height: 45px;"
+                        src="<%=school_obj.school_info.logo%>" alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
                             <li class="nav-item"><a href="home" class="nav-link">Home</a></li>
@@ -145,7 +148,7 @@
                                     <h4 class="info_title">Phone Numbers :</h4>
                                     <ul class="list-unstyled">
                                         <li>
-                                            <%= school_obj.phone %>
+                                            <%= school_obj.school_info.phone %>
                                         </li>
                                     </ul>
                                 </li>
@@ -153,7 +156,7 @@
                                     <h4 class="info_title">Our E-mails :</h4>
                                     <ul class="list-unstyled">
                                         <li>
-                                            <%= school_obj.email %>
+                                            <%= school_obj.school_info.email %>
                                         </li>
                                     </ul>
                                 </li>
@@ -210,9 +213,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img src="../../images/logo2.png" alt="" class="f_logo">
+                            <img style="max-height: 55px;" src="<%=school_obj.school_info.logo%>" alt="logo">
                             <p>
-                                <%= school_obj.about %>
+                                <%= school_obj.school_info.about %>
                             </p>
                         </div>
                     </div>
@@ -243,10 +246,10 @@
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
                                 <span>
-                                    <%= school_obj.phone %>
+                                    <%= school_obj.school_info.phone %>
                                 </span>
                                 <span class="email">
-                                    <%= school_obj.email %>
+                                    <%= school_obj.school_info.email %>
                                 </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">
