@@ -10,11 +10,11 @@ const url = dbConfig.url;
 
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = local;
+const baseUrl = web;
 
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nlocal;
+const nbaseUrl = nweb;
 
 const mongoClient = new MongoClient(url);
 
