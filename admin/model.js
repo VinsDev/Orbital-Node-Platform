@@ -19,8 +19,6 @@ var school_model = {
         fees: req.body.fees,
         e_register: req.body.e_register,
         agent: req.body.agent,
-        admin_username: "",
-        admin_password: ""
     },
     news: [],
     fees_info: {
@@ -30,13 +28,19 @@ var school_model = {
     },
     feedbacks: [],
     classes: [],
-    sessions: []
+    sessions: [],
+    admin: {
+        admin_username: "",
+        admin_password: "",
+    }
 }
 
 
 
 var session_model = {
     name: "",
+    sdate: req.body.sdate,
+    edate: req.body.edate,
     terms: [
         {
             name: "first",
@@ -93,7 +97,9 @@ class_model = {
 }
 
 class_subject = {
-    name: ""
+    name: "",
+    class: "",
+    teacher: "",
 }
 
 

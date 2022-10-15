@@ -60,6 +60,7 @@
     </div>
 
 
+
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
@@ -101,13 +102,17 @@
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="../../admin/assets/img/favicon.png" alt="Profile">
-            <span class="d-none d-md-block dropdown-toggle ps-2">Shekinah Academy Lafia</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+              <%= school_obj.name %>
+            </span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Shekinah Academy Lafia</h6>
-              <span>../../admin Account</span>
+              <h6>
+                <%= school_obj.name %>
+              </h6>
+              <span>Admin Account</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -119,7 +124,7 @@
               </a>
             </li> -->
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -263,20 +268,19 @@
 
     <section class="section">
       <div class="columns">
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">PRI 1</h5>
+        <% for(var i=0; i < class_data.length; i++){ %>
+          <div class="col-md-10 offset-md-1">
+            <div class="card">
+              <h5 class="session">
+                <%= class_data[i].name %>
+              </h5>
+            </div>
           </div>
-        </div>
+          <% } %>
 
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">PRI 2</h5>
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary" onclick="openForm()">Add Class</button>
-        </div>
+            <div class="text-center">
+              <button class="btn btn-primary" onclick="openForm()">Create Class</button>
+            </div>
       </div>
     </section>
 
@@ -287,17 +291,17 @@
           <div class="card-body">
             <div class="pt-4 pb-2">
               <h5 class="card-title text-center pb-0 fs-4">Add Class</h5>
-              <!-- <p class="text-center small">Add Session</p> -->
             </div>
-            <form class="row g-3 needs-validation" novalidate>
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/classes"
+              novalidate>
               <div class="col-12">
                 <label for="yourName" class="form-label">Class Name</label>
-                <input type="text" name="name" class="form-control" id="yourName" required>
+                <input type="text" name="name" class="form-control" id="name" required>
                 <div class="invalid-feedback">Please, enter the class name!</div>
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Add Class</button>
+                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Create Class</button>
               </div>
             </form>
             <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close

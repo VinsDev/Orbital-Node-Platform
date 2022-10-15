@@ -10,9 +10,9 @@
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= school_obj.school_info.name %>
+        <%= school_obj.name %>
     </title>
-    <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<%= school_obj.logo %>" type="image/x-icon">
     <!-- Goole Font -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
@@ -57,18 +57,18 @@
                             <div class="contact_info">
                                 <ul class="list-unstyled">
                                     <li><i class="flaticon-phone-receiver"></i>
-                                        <%= school_obj.school_info.phone %>
+                                        <%= school_obj.phone %>
                                     </li>
                                     <li><i class="flaticon-mail-black-envelope-symbol"></i>
-                                        <%= school_obj.school_info.email %>
+                                        <%= school_obj.email %>
                                     </li>
                                 </ul>
                             </div>
                             <div class="login_info">
                                 <ul class="list-unstyled">
                                     <li class="nav-item">
-                                        <p style="color:#fff;margin-top: 15px;">
-                                            <%=school_obj.school_info.name%>
+                                        <p style="color:#fff;margin-top: 15px;font-size: 18px;">
+                                            <%=school_obj.name%>
                                         </p>
                                     </li>
                                 </ul>
@@ -82,7 +82,7 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="home"><img style="max-height: 45px;" src="<%=school_obj.school_info.logo%>"
+                    <a class="navbar-brand" href="home"><img style="max-height: 45px;" src="<%=school_obj.logo%>"
                             alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
@@ -143,7 +143,7 @@
                                     <h4 class="info_title">School Address : </h4>
                                     <ul class="list-unstyled">
                                         <li>
-                                            <%=school_obj.school_info.adress%>
+                                            <%=school_obj.adress%>
                                         </li>
                                     </ul>
                                 </li>
@@ -151,7 +151,7 @@
                                     <h4 class="info_title">Phone Numbers :</h4>
                                     <ul class="list-unstyled">
                                         <li>
-                                            <%= school_obj.school_info.phone %>
+                                            <%= school_obj.phone %>
                                         </li>
                                     </ul>
                                 </li>
@@ -159,7 +159,7 @@
                                     <h4 class="info_title">School E-mail :</h4>
                                     <ul class="list-unstyled">
                                         <li>
-                                            <%= school_obj.school_info.email %>
+                                            <%= school_obj.email %>
                                         </li>
                                     </ul>
                                 </li>
@@ -212,9 +212,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img style="max-height: 55px;" src="<%=school_obj.school_info.logo%>" alt="logo">
+                            <img style="max-height: 55px;" src="<%=school_obj.logo%>" alt="logo">
                             <p>
-                                <%= school_obj.school_info.about %>
+                                <%= school_obj.about %>
                             </p>
                         </div>
                     </div>
@@ -245,10 +245,10 @@
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
                                 <span>
-                                    <%= school_obj.school_info.phone %>
+                                    <%= school_obj.phone %>
                                 </span>
                                 <span class="email">
-                                    <%= school_obj.school_info.email %>
+                                    <%= school_obj.email %>
                                 </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">
@@ -262,7 +262,7 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="copyright">
                             <p>Copyright &copy; 2022 Orbital Node
-                                - Powered by <a rel="nofollow" href="#">Orbital Technologies</a></p>
+                                - Powered by <a rel="nofollow" href="/">Orbital Node Technologies</a></p>
                         </div>
                     </div>
                 </div>

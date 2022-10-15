@@ -10,9 +10,9 @@
     <meta name="author" content="Ecology Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <%= school_obj.school_info.name %>
+        <%= school_obj.name %>
     </title>
-    <link rel="shortcut icon" href="../../images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<%= school_obj.logo %>" type="image/x-icon">
     <!-- Goole Font -->
     <link href="https://fonts.googleapis.com/css?family=Rubik:400,500,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
@@ -62,18 +62,18 @@
                             <div class="contact_info">
                                 <ul class="list-unstyled">
                                     <li><i class="flaticon-phone-receiver"></i>
-                                        <%= school_obj.school_info.phone %>
+                                        <%= school_obj.phone %>
                                     </li>
                                     <li><i class="flaticon-mail-black-envelope-symbol"></i>
-                                        <%= school_obj.school_info.email %>
+                                        <%= school_obj.email %>
                                     </li>
                                 </ul>
                             </div>
                             <div class="login_info">
                                 <ul class="list-unstyled">
                                     <li class="nav-item">
-                                        <p style="color:#fff;margin-top: 15px;">
-                                            <%=school_obj.school_info.name%>
+                                        <p style="color:#fff;margin-top: 15px;font-size: 18px;">
+                                            <%=school_obj.name%>
                                         </p>
                                     </li>
                                 </ul>
@@ -88,7 +88,7 @@
         <div class="edu_nav">
             <div class="container">
                 <nav class="navbar navbar-expand-md navbar-light bg-faded">
-                    <a class="navbar-brand" href="home"><img style="max-height: 45px;" src="<%=school_obj.school_info.logo%>"
+                    <a class="navbar-brand" href="home"><img style="max-height: 45px;" src="<%=school_obj.logo%>"
                             alt="logo"></a>
                     <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
                         <ul class="navbar-nav nav lavalamp ml-auto menu">
@@ -131,7 +131,7 @@
 
                         <div class="slider-overlay"></div>
                         <!-- SLIDE'S MAIN BACKGROUND IMAGE -->
-                        <img src="<%=school_obj.school_info.pic1%>" alt="Sky" class="rev-slidebg" data-bgposition="center center"
+                        <img src="<%=school_obj.pic1%>" alt="Sky" class="rev-slidebg" data-bgposition="center center"
                             data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg"
                             data-no-retina>
                         <!-- LAYER NR. 1 -->
@@ -153,7 +153,7 @@
                             data-responsive_offset="on"
                             data-frames='[{"from":"z:0;rX:0;rY:0;rZ:0;sX:0.9;sY:0.9;skX:0;skY:0;opacity:0;","speed":400,"to":"o:1;","delay":100,"split":"chars","splitdelay":0.05,"ease":"Power3.easeInOut"},{"delay":"wait","speed":100,"to":"y:[100%];","mask":"x:inherit;y:inherit;s:inherit;e:inherit;","ease":"Power2.easeInOut"}]'
                             style="z-index: 7; color:#fff; font-family:'Rubik', sans-serif; max-width: auto; max-height: auto; white-space: nowrap; font-weight:500;">
-                            <%= school_obj.school_info.name %>
+                            <%= school_obj.name %>
                         </div>
                         <!-- LAYER NR. 2 -->
                         <div class="tp-caption NotGeneric-Title   tp-resizeme" id="slide-3045-layer-1"
@@ -192,7 +192,7 @@
                         data-param1="" data-param2="" data-param3="" data-param4="" data-param5="" data-param6=""
                         data-param7="" data-param8="" data-param9="" data-param10="" data-description="">
                         <div class="slider-overlay"></div>
-                        <img src="<%= school_obj.school_info.pic2 %>" alt="Sky" class="rev-slidebg" data-bgposition="center center"
+                        <img src="<%= school_obj.pic2 %>" alt="Sky" class="rev-slidebg" data-bgposition="center center"
                             data-bgfit="cover" data-bgrepeat="no-repeat" data-bgparallax="10" class="rev-slidebg"
                             data-no-retina>
                         <!-- LAYER NR. 1 -->
@@ -249,87 +249,56 @@
                 <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="event_title_wrapper">
                         <div class="sub_title">
-                            <h2>Upcoming Events and News</h2>
-                            <!-- <p>Lorem ipsum dolor sit amet mollis felis dapibus arcu donec viverra. Pede phasellus eget.
-                                Etiam maecenas vel vici quis dictum rutrum nec nisi et.</p>
-                        -->
+                            <h2>Upcoming News and Events</h2>
                         </div><!-- ends: .section-header -->
-                        <!--    <div class="envent_all_view">
-                            <a href="#" title="">View All</a>
-                        </div> -->
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-sm-12 events_full_box">
-                    <div class="events_single">
-                        <div class="event_banner">
-                            <a href="#"><img src="../../images/officials/shedrack.jpg" alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="event_info">
-                            <h3><a href="#" title="">OneNote for Windows 10 Essential<br> Training</a></h3>
-                            <div class="events_time">
-                                <span class="time"><i class="flaticon-clock-circular-outline"></i>8.00 Am - 5.00
-                                    Pm</span>
-                                <span><i class="fas fa-map-marker-alt"></i>Hall - A | Broklyn Audiitorium</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet mollis dapibus arcur donec viverra to phasellus<br> eget.
-                                Etiam maecenas vel vici quis dictum rutrum nec nisi et. Ac pena<br> tibus aenean
-                                laoreet.</p>
-                            <div class="event_dete">
-                                <span class="date">09</span>
-                                <span>Jan</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12 events_full_box">
-                    <div class="events_single events_single_left">
-                        <div class="event_info">
-                            <h3><a href="#" title="">Magazine Design Start to Finish:<br> The Inside Pages</a></h3>
-                            <div class="events_time">
-                                <span class="time"><i class="flaticon-clock-circular-outline"></i>8.00 Am - 5.00
-                                    Pm</span>
-                                <span><i class="fas fa-map-marker-alt"></i>Hall - A | Broklyn Audiitorium</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet mollis dapibus arcur donec viverra to phasellus<br> eget.
-                                Etiam maecenas vel vici quis dictum rutrum nec nisi et. Ac pena<br> tibus aenean
-                                laoreet.</p>
-                        </div>
-                        <div class="event_banner">
-                            <a href="#"><img src="../../images/officials/eli.jpg" alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="event_dete">
-                            <span class="date">15</span>
-                            <span>Jan</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-12 events_full_box">
-                    <div class="events_single">
-                        <div class="event_banner">
-                            <a href="#"><img src="../../images/officials/shedrack.jpg" alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="event_info">
-                            <h3><a href="#" title="">Robotic Process Automation Tech<br> Primer</a></h3>
-                            <div class="events_time">
-                                <span class="time"><i class="flaticon-clock-circular-outline"></i>8.00 Am - 5.00
-                                    Pm</span>
-                                <span><i class="fas fa-map-marker-alt"></i>Hall - A | Broklyn Audiitorium</span>
-                            </div>
-                            <p>Lorem ipsum dolor sit amet mollis dapibus arcur donec viverra to phasellus<br> eget.
-                                Etiam maecenas vel vici quis dictum rutrum nec nisi et. Ac pena<br> tibus aenean
-                                laoreet.</p>
-                            <div class="event_dete">
-                                <span class="date">20</span>
-                                <span>Jan</span>
+                <% for(var i=0; i < news.length; i++){ %>
+                    <% if(i===0 || i===2 || i===4){ %>
+                        <div class="col-sm-12 events_full_box">
+                            <div class="events_single">
+                                <div class="event_banner">
+                                    <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
+                                </div>
+                                <div class="event_info">
+                                    <h3>
+                                        <%= news[i].header %>
+                                    </h3>
+                                    <p>
+                                        <%= news[i].details %>
+                                    </p>
+                                    <div class="event_dete">
+                                        <span class="date">.</span>
+                                        <span>News</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                        <% } %>
+                            <% if(i===1 || i===3 || i===5){ %>
+                                <div class="col-sm-12 events_full_box">
+                                    <div class="events_single events_single_left">
+                                        <div class="event_info">
+                                            <h3>"<%= news[i].header %>
+                                            </h3>
+                                            <p>
+                                                <%= news[i].details %>
+                                            </p>
+                                        </div>
+                                        <div class="event_banner">
+                                            <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
+                                        </div>
+                                        <div class="event_dete">
+                                            <span class="date">.</span>
+                                            <span>News</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% } %>
 
             </div>
         </div>
@@ -348,14 +317,14 @@
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="single_item single_item_first">
                         <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.school_info.ppic %>" alt="" class="img-fluid"></a>
+                            <a href="#" title=""><img src="<%= school_obj.ppic %>" alt="" class="img-fluid"></a>
                         </div>
                         <div class="blog_title">
 
                             <h3>Principal</h3>
                             <div class="post_bloger">
                                 <span class="bloger_name">
-                                    <%= school_obj.school_info.p_name %>
+                                    <%= school_obj.p_name %>
                                 </span>
                             </div>
                         </div>
@@ -364,13 +333,13 @@
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="single_item single_item_center">
                         <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.school_info.vppic %>" alt="" class="img-fluid"></a>
+                            <a href="#" title=""><img src="<%= school_obj.vp1pic %>" alt="" class="img-fluid"></a>
                         </div>
                         <div class="blog_title">
                             <h3>Vice Principal Admin</h3>
                             <div class="post_bloger">
                                 <span class="bloger_name">
-                                    <%= school_obj.school_info.vpname %>
+                                    <%= school_obj.vp1name %>
                                 </span>
                             </div>
                         </div>
@@ -379,13 +348,13 @@
                 <div class="col-12 col-sm-6 col-md-4 col-lg-4">
                     <div class="single_item single_item_center">
                         <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.school_info.vppic %>" alt="" class="img-fluid"></a>
+                            <a href="#" title=""><img src="<%= school_obj.vp2pic %>" alt="" class="img-fluid"></a>
                         </div>
                         <div class="blog_title">
                             <h3>Vice Principal Academics</h3>
                             <div class="post_bloger">
                                 <span class="bloger_name">
-                                    <%= school_obj.school_info.vpname %>
+                                    <%= school_obj.vp2name %>
                                 </span>
                             </div>
                         </div>
@@ -403,9 +372,9 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="footer_single_col footer_intro">
-                            <img style="max-height: 55px;" src="<%=school_obj.school_info.logo%>" alt="logo">
+                            <img style="max-height: 55px;" src="<%=school_obj.logo%>" alt="logo">
                             <p>
-                                <%= school_obj.school_info.about %>
+                                <%= school_obj.about %>
                             </p>
                         </div>
                     </div>
@@ -436,10 +405,10 @@
                             <p>Feel free to contact us through the following channels</p>
                             <div class="contact_info">
                                 <span>
-                                    <%= school_obj.school_info.phone %>
+                                    <%= school_obj.phone %>
                                 </span>
                                 <span class="email">
-                                    <%= school_obj.school_info.email %>
+                                    <%= school_obj.email %>
                                 </span>
                             </div>
                             <ul class="social_items d-flex list-unstyled">
@@ -453,7 +422,7 @@
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="copyright">
                             <p>Copyright &copy; 2022 Orbital Node
-                                - Powered by <a rel="nofollow" href="#">Orbital Technologies</a></p>
+                                - Powered by <a rel="nofollow" href="/">Orbital Node Technologies</a></p>
                         </div>
                     </div>
                 </div>

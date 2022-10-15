@@ -40,7 +40,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="/admin/<%= school_obj.name %>/dashboard" class="logo d-flex align-items-center">
         <img src="../../admin/assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Orbital Admin</span>
       </a>
@@ -59,6 +59,7 @@
         <div class="pad">Manage the contents of your school Website and Database</div>
       </span>
     </div>
+
 
 
     <nav class="header-nav ms-auto">
@@ -102,13 +103,17 @@
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="../../admin/assets/img/favicon.png" alt="Profile">
-            <span class="d-none d-md-block dropdown-toggle ps-2">Shekinah Academy Lafia</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+              <%= school_obj.name %>
+            </span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Shekinah Academy Lafia</h6>
-              <span>../../admin Account</span>
+              <h6>
+                <%= school_obj.name %>
+              </h6>
+              <span>Admin Account</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -120,7 +125,7 @@
               </a>
             </li> -->
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -263,20 +268,17 @@
 
     <section class="section">
       <div class="columns">
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">2022 / 2023</h5>
+        <% for(var i=0; i < session_data.length; i++){ %>
+          <div class="col-md-10 offset-md-1">
+            <div class="card">
+              <h5 class="session"><%= session_data[i].name %></h5>
+            </div>
           </div>
-        </div>
+          <% } %>
 
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">2023 / 2024</h5>
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary" onclick="openForm()">Add Session</button>
-        </div>
+            <div class="text-center">
+              <button class="btn btn-primary" onclick="openForm()">Create Session</button>
+            </div>
       </div>
     </section>
 
@@ -289,27 +291,28 @@
               <h5 class="card-title text-center pb-0 fs-4">Add Session</h5>
               <!-- <p class="text-center small">Add Session</p> -->
             </div>
-            <form class="row g-3 needs-validation" novalidate>
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/sessions"
+              novalidate>
               <div class="col-12">
                 <label for="yourName" class="form-label">Session Name</label>
-                <input type="text" name="name" class="form-control" id="yourName" required>
+                <input type="text" name="name" class="form-control" id="sess-name" required>
                 <div class="invalid-feedback">Please, enter the session name!</div>
               </div>
 
               <div class="col-12">
                 <label for="yourEmail" class="form-label">Starting Date</label>
-                <input type="date" name="email" class="form-control" id="date" required>
+                <input type="date" name="sdate" class="form-control" id="sdate" required>
                 <div class="invalid-feedback">Please enter Starting Date!</div>
               </div>
 
               <div class="col-12">
                 <label for="yourEmail" class="form-label">Finishing Date</label>
-                <input type="date" name="email" class="form-control" id="date" required>
+                <input type="date" name="edate" class="form-control" id="edate" required>
                 <div class="invalid-feedback">Please enter Finishing Date!</div>
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Add Session</button>
+                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Create Session</button>
               </div>
             </form>
             <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close

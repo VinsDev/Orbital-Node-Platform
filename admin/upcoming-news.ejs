@@ -40,7 +40,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="/admin/<%= school_obj.name %>/dashboard" class="logo d-flex align-items-center">
         <img src="../../admin/assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Orbital Admin</span>
       </a>
@@ -59,6 +59,7 @@
         <div class="pad">Manage the contents of your school Website and Database</div>
       </span>
     </div>
+
 
 
     <nav class="header-nav ms-auto">
@@ -102,13 +103,17 @@
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
             <img src="../../admin/assets/img/favicon.png" alt="Profile">
-            <span class="d-none d-md-block dropdown-toggle ps-2">Shekinah Academy Lafia</span>
+            <span class="d-none d-md-block dropdown-toggle ps-2">
+              <%= school_obj.name %>
+            </span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Shekinah Academy Lafia</h6>
-              <span>../../admin Account</span>
+              <h6>
+                <%= school_obj.name %>
+              </h6>
+              <span>Admin Account</span>
             </li>
             <li>
               <hr class="dropdown-divider">
@@ -120,7 +125,7 @@
               </a>
             </li> -->
             <li>
-              <a class="dropdown-item d-flex align-items-center" href="#">
+              <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Sign Out</span>
               </a>
@@ -255,7 +260,7 @@
       <h1>Upcoming News and Events</h1>
       <nav>
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+          <li class="breadcrumb-item"><a href="#">Home</a></li>
           <li class="breadcrumb-item">Website</li>
           <li class="breadcrumb-item active">Upcoming News and Events</li>
         </ol>
@@ -267,19 +272,23 @@
 
         <div class="col-md-8 offset-md-2">
 
-          <!-- Card with an image on bottom -->
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Termly inter-house competition (2031/2032 Session)</h5>
-              <p class="card-text">The Termly inter-house competition comes up on the 21st September 2031 to 21st August
-                2032. All students are expected to participate in one activity or the other. Parents are urged to
-                provide sport shoes for their children.</p>
-            </div>
-            <img src="../../admin/assets/img/card.jpg" class="card-img-bottom" alt="...">
-          </div><!-- End Card with an image on bottom -->
-          <div class="text-center">
-            <button class="btn btn-primary" onclick="openForm()">Upload News</button>
-          </div>
+          <% for(var i=0; i < news.length; i++){ %>
+            <!-- Card with an image on bottom -->
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <%= news[i].header %>
+                </h5>
+                <p class="card-text">
+                  <%= news[i].details %>
+                </p>
+              </div>
+              <img src="<%= news[i].image %>" class="card-img-bottom" alt="...">
+            </div><!-- End Card with an image on bottom -->
+            <% } %>
+              <div class="text-center">
+                <button class="btn btn-primary" onclick="openForm()">Upload News</button>
+              </div>
         </div>
 
       </div>
@@ -294,25 +303,26 @@
               <h5 class="card-title text-center pb-0 fs-4">Upload News / Event</h5>
               <p class="text-center small">Publish your school news / event to the school website</p>
             </div>
-            <form class="row g-3 needs-validation" novalidate>
+            <form class="row g-3 needs-validation" novalidate method="post"
+              action="/admin/<%= school_obj.name %>/upcoming-news" enctype="multipart/form-data">
               <div class="col-12">
-                <label for="yourName" class="form-label">Heading</label>
-                <input type="text" name="name" class="form-control" id="yourName" required>
+                <label for="heading" class="form-label">Heading</label>
+                <input type="text" name="heading" class="form-control" id="heading" required>
                 <div class="invalid-feedback">Please, enter the news heading!</div>
               </div>
               <div class="row g-3">
-                <label for="inputPassword" class="col-sm-2 col-form-label">Details</label>
+                <label for="details" class="col-sm-2 col-form-label">Details</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" style="height: 100px"></textarea>
+                  <textarea class="form-control" name="details" id="details" style="height: 100px" required></textarea>
                 </div>
               </div>
 
               <div class="row g-3">
                 <div class="form-group">
-                  <label for="logo" id="logo-label">News Image</label>
-                  <input type="file" name="images" id="logo" accept="image/*"
-                    onchange="loadFile(event, 'logo-i')"><br />
-                  <img id="logo-i" />
+                  <label for="image" id="logo-label">News Image</label>
+                  <input type="file" name="image" id="image" accept="image/*"
+                    onchange="loadFile(event, 'image-i')"><br />
+                  <img id="image-i" />
                 </div>
               </div>
 

@@ -1,4 +1,5 @@
 const upload = require("../middleware/upload");
+const newsImages = require("../middleware/newsImages");
 const dbConfig = require("../config/db");
 const db = require("../config/db");
 
@@ -9,10 +10,36 @@ const url = dbConfig.url;
 
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
+const baseUrl = local;
+
+const nlocal = "http://localhost:3000/news/";
+const nweb = "http://orbital-node.herokuapp.com/news/";
+const nbaseUrl = nlocal;
 
 const mongoClient = new MongoClient(url);
 
+// LANDING . . .
+const getSchools = async (req, res) => {
+    try {
+        let schoolList = [];
+        let payload = req.body.payload.trim();
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        var cursor = schools.find({ 'school_info.name': { $regex: new RegExp('^' + payload + '.*', 'i') } });
+
+
+        cursor.forEach(school => schoolList.push(school)).then(() => {
+            res.status(200).send({ payload: schoolList.slice(0, 10) });
+        });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 const sendForm = async (req, res, url) => {
     try {
@@ -25,21 +52,22 @@ const sendForm = async (req, res, url) => {
                 phone: req.body.phone,
                 adress: req.body.adress,
                 pic1: baseUrl + url[1].filename,
+                pic2: baseUrl + url[2].filename,
                 about: req.body.about,
                 d_about: req.body.d_about,
                 category: req.body.category,
                 p_name: req.body.p_name,
-                ppic: baseUrl + url[2].filename,
-                vpname: req.body.vpname,
-                vppic: baseUrl + url[3].filename,
+                ppic: baseUrl + url[3].filename,
+                vp1name: req.body.vp1name,
+                vp1pic: baseUrl + url[4].filename,
+                vp2name: req.body.vp2name,
+                vp2pic: baseUrl + url[5].filename,
                 mission: req.body.mission,
                 vision: req.body.vision,
                 anthem: req.body.anthem,
                 fees: req.body.fees,
                 e_register: req.body.e_register,
                 agent: req.body.agent,
-                admin_username: "",
-                admin_password: ""
             },
             news: [],
             fees_info: {
@@ -49,7 +77,11 @@ const sendForm = async (req, res, url) => {
             },
             feedbacks: [],
             classes: [],
-            sessions: []
+            sessions: [],
+            admin: {
+                admin_username: req.body.email,
+                admin_password: req.body.name + "-ons!",
+            }
         }
 
         await mongoClient.connect();
@@ -57,30 +89,6 @@ const sendForm = async (req, res, url) => {
         const database = mongoClient.db(dbConfig.database);
         database.collection("schools").insertOne(school_model)
     } catch (error) {
-        console.log(error);
-    }
-}
-
-const regAgent = async (req, res) => {
-    try {
-
-        var data = {
-            name: req.body.name,
-            email: req.body.email,
-            phone: req.body.phone,
-            account: req.body.account,
-            bank: req.body.bank,
-            about: req.body.about,
-            state: req.body.state,
-        }
-
-        await mongoClient.connect();
-
-        const database = mongoClient.db(dbConfig.database);
-        database.collection("agents").insertOne(data);
-
-        return res.status(200).render("success_agent", { name: req.body.name });
-    } catch {
         console.log(error);
     }
 }
@@ -111,51 +119,89 @@ const uploadRegForm = async (req, res) => {
     }
 };
 
-const getSchools = async (req, res) => {
+const regAgent = async (req, res) => {
     try {
-        let schoolList = [];
-        let payload = req.body.payload.trim();
+
+        var data = {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+            account: req.body.account,
+            bank: req.body.bank,
+            about: req.body.about,
+            state: req.body.state,
+        }
+
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        const schools = database.collection("schools");
-        var cursor = schools.find({ 'school_info.name': { $regex: new RegExp('^' + payload + '.*', 'i') } });
+        database.collection("agents").insertOne(data);
+
+        return res.status(200).render("success_agent", { name: req.body.name });
+    } catch {
+        console.log(error);
+    }
+}
 
 
-        cursor.forEach(school => schoolList.push(school)).then(() => {
-            res.status(200).send({ payload: schoolList.slice(0, 10) });
+// SCHOOL . . .
+const downloadImage = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const bucket = new GridFSBucket(database, {
+            bucketName: dbConfig.imgBucket,
         });
 
+        let downloadStream = bucket.openDownloadStreamByName(req.params.name);
+
+        downloadStream.on("data", function (data) {
+            return res.status(200).write(data);
+        });
+
+        downloadStream.on("error", function (err) {
+            return res.status(404).send({ message: "Cannot download the Image!" });
+        });
+
+        downloadStream.on("end", () => {
+            return res.end();
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
         });
     }
-}
+};
 
-
-const login = async (req, res) => {
+const downloadNewsImage = async (req, res) => {
     try {
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        const schools = database.collection("schools");
-        let school_data = await schools.findOne({ name: req.body.username.trim() });
-        if (school_data) {
-            res.send({
-                status: "accepted",
-                school: school_data.name
-            });
-        }
-        else {
-            res.send({ status: "declined" });
-        }
+        const bucket = new GridFSBucket(database, {
+            bucketName: dbConfig.newsBucket,
+        });
+
+        let downloadStream = bucket.openDownloadStreamByName(req.params.name);
+
+        downloadStream.on("data", function (data) {
+            return res.status(200).write(data);
+        });
+
+        downloadStream.on("error", function (err) {
+            return res.status(404).send({ message: "Cannot download the Image!" });
+        });
+
+        downloadStream.on("end", () => {
+            return res.end();
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
         });
     }
-}
+};
 
 const getListFiles = async (req, res) => {
     try {
@@ -188,40 +234,145 @@ const getListFiles = async (req, res) => {
     }
 };
 
-const download = async (req, res) => {
+
+// ADMIN . . .
+const login = async (req, res) => {
     try {
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        const bucket = new GridFSBucket(database, {
-            bucketName: dbConfig.imgBucket,
-        });
-
-        let downloadStream = bucket.openDownloadStreamByName(req.params.name);
-
-        downloadStream.on("data", function (data) {
-            return res.status(200).write(data);
-        });
-
-        downloadStream.on("error", function (err) {
-            return res.status(404).send({ message: "Cannot download the Image!" });
-        });
-
-        downloadStream.on("end", () => {
-            return res.end();
-        });
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'admin.admin_username': req.body.username.trim() });
+        if (school_data) {
+            if (school_data.admin.admin_password === req.body.password.trim()) {
+                res.send({
+                    status: "accepted",
+                    school: school_data.school_info.name
+                });
+            } else {
+                res.send({ status: "declined" });
+            }
+        }
+        else {
+            res.send({ status: "declined" });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
         });
     }
-};
+}
+
+const upload_news = async (req, res) => {
+    try {
+        await newsImages(req, res);
+
+        var news_model = {
+            header: req.body.heading,
+            details: req.body.details,
+            image: nbaseUrl + req.file.filename
+        }
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
+            { $push: { news: news_model } }
+        );
+
+        return res.status(200).send({ message: "Success" });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const createSession = async (req, res) => {
+    try {
+
+        var session_model = {
+            name: req.body.name,
+            sdate: req.body.sdate,
+            edate: req.body.edate,
+            terms: [
+                {
+                    name: "first",
+                    students: []
+                },
+                {
+                    name: "second",
+                    students: []
+                },
+                {
+                    name: "third",
+                    students: []
+                },
+            ]
+        }
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
+            { $push: { sessions: session_model } }
+        );
+
+        return res.status(200).send({ message: "Success" });
+    } catch {
+        console.log(error);
+    }
+}
+
+const createClass = async (req, res) => {
+    try {
+
+        class_model = {
+            name: req.body.name,
+            subjects: []
+        }
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
+            { $push: { classes: class_model } }
+        );
+
+        return res.status(200).send({ message: "Success" });
+    } catch {
+        console.log(error);
+    }
+}
+
+const createSubject = async (req, res) => {
+    try {
+
+        class_subject = {
+            name: req.body.name,
+            class: req.body.class_name,
+            teacher: req.body.teacher,
+        }
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "classes.$[t].subjects": class_subject } }, { arrayFilters: [{ "t.name": req.body.class_name }] })
+        return res.status(200).send({ message: "Success" });
+    } catch {
+        console.log(error);
+    }
+}
+
 
 module.exports = {
     uploadRegForm,
     regAgent,
     getSchools,
     getListFiles,
-    download,
+    downloadImage,
+    downloadNewsImage,
     login,
+    upload_news,
+    createSession,
+    createClass,
+    createSubject,
 };

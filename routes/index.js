@@ -22,9 +22,14 @@ let routes = app => {
   router.post("/register", uploadController.uploadRegForm);
   router.post("/agent", uploadController.regAgent);
   router.get("/files", uploadController.getListFiles);
-  router.get("/files/:name", uploadController.download);
+  router.get("/files/:name", uploadController.downloadImage);
+  router.get("/news/:name", uploadController.downloadNewsImage);
   router.post("/getSchools", uploadController.getSchools);
   router.post("/login", urlencodedParser, uploadController.login);
+  router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
+  router.post("/admin/:sname/sessions", uploadController.createSession);
+  router.post("/admin/:sname/classes", uploadController.createClass);
+  router.post("/admin/:sname/subjects", uploadController.createSubject);
 
   // SCHOOL PAGES . . .
   router.all("/schools/:sname/home", pagesController.s_home);
