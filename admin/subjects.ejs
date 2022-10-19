@@ -101,7 +101,7 @@
 
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="../../admin/assets/img/favicon.png" alt="Profile">
+            <img src="<%= school_obj.logo %>" alt="Profile">
             <span class="d-none d-md-block dropdown-toggle ps-2">
               <%= school_obj.name %>
             </span>
@@ -266,15 +266,16 @@
       </nav>
     </div><!-- End Page Title -->
 
+    <!-- REFERENCE SELECTOR -->
     <div class="card">
       <div class="internal">
         <div class="rrr">
           <div class="row md-3">
             <label class="col-sm-5 col-form-label">Class</label>
             <div class="col-sm-12">
-              <select class="form-select" aria-label="Session">
+              <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
                 <% for(var i=0; i < class_data.length; i++){ %>
-                  <option value="student">
+                  <option>
                     <%= class_data[i].name %>
                   </option>
                   <% } %>
@@ -286,23 +287,23 @@
     </div>
 
     <section class="section">
-      <div class="columns">
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">English</h5>
+      <div class="columns" id="subject-field">
+        <% for(var j=0; j < class_data[0].subjects.length; j++){ %>
+          <div class="col-md-10 offset-md-1">
+            <div class="card">
+              <h5 class="session">
+                <%= class_data[0].subjects[j].name %>
+              </h5>
+            </div>
           </div>
-        </div>
-
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">Mathematics</h5>
-          </div>
-        </div>
-        <div class="text-center">
-          <button class="btn btn-primary" onclick="openForm()">Add Subject</button>
-        </div>
+          <% } %>
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary" onclick="openForm()">Add Subject</button>
       </div>
     </section>
+
+
 
     <!-- Add Subject Form -->
     <div class="add" id="add">
@@ -326,12 +327,12 @@
                 <div class="col-sm-10">
                   <select id="class_name" name="class_name" class="form-control">
                     <option disabled selected value>Select your class</option>
-                    <% function convert(str) { return str.replace(/\s+/g, '-' ).toLowerCase(); } %>
-                      <% for(var i=0; i < class_data.length; i++){ %>
-                        <option>
-                          <%= class_data[i].name %>
-                        </option>
-                        <% } %>
+                    <!-- <% function convert(str) { return str.replace(/\s+/g, '-' ).toLowerCase(); } %> -->
+                    <% for(var i=0; i < class_data.length; i++){ %>
+                      <option>
+                        <%= class_data[i].name %>
+                      </option>
+                      <% } %>
                   </select>
                 </div>
               </div>
@@ -343,7 +344,7 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Add Session</button>
+                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Add Subject</button>
               </div>
             </form>
             <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
@@ -371,6 +372,41 @@
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
+  <script>
+    function sendData(e) {
+      const field = document.getElementById('subject-field');
+
+      fetch('/admin/<%= school_obj.name %>/getSubjects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ payload: e.value })
+      }).then(res => res.json()).then(data => {
+        var payload = data.payload;
+        field.innerHTML = '';
+        if (payload < 1) {
+          field.innerHTML = '<p> Subjects not added yet</p>';
+          return;
+        }
+        payload.forEach((item, index) => {
+
+          if (item.name === e.value) {
+            item.subjects.forEach((item, i) => {
+              field.innerHTML += `<div class="col-md-10 offset-md-1">
+          <div class="card">
+            <h5 class="session">
+              ${item.name}
+            </h5>
+          </div>
+        </div>`
+            })
+          }
+        });
+      });
+      return;
+
+      field.innerHTML = '';
+    }
+  </script>
 
 </body>
 

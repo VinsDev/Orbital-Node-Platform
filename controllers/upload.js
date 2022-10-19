@@ -10,11 +10,11 @@ const url = dbConfig.url;
 
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
+const baseUrl = local;
 
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nweb;
+const nbaseUrl = nlocal;
 
 const mongoClient = new MongoClient(url);
 
@@ -80,7 +80,7 @@ const sendForm = async (req, res, url) => {
             sessions: [],
             admin: {
                 admin_username: req.body.email,
-                admin_password: req.body.name + "-ons!",
+                admin_password: req.body.phone,
             }
         }
 
@@ -362,11 +362,205 @@ const createSubject = async (req, res) => {
     }
 }
 
+const createStudent = async (req, res) => {
+    try {
+
+        var student_model = {
+            name: req.body.name,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            session: req.body.session,
+            term: req.body.term,
+            class: req.body.class,
+            subjects: [],
+            total: -1,
+            average: -1,
+            grade: "",
+            position: -1,
+            remarks: "",
+        }
+
+        var classIndex = -1;
+
+        var s_subjects = [];
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students": student_model } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }] })
+
+        let school_data = await database.collection("schools").findOne({ 'school_info.name': req.params.sname });
+
+        // Class index
+        for (var i = 0; i < school_data.classes.length; i++) {
+            if (school_data.classes[i].name === req.body.class.trim()) {
+                classIndex = i;
+                break;
+            }
+        }
+
+        // Assign class subjects to a subjects list
+        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
+            s_subjects.push(
+                {
+                    name: school_data.classes[classIndex].subjects[i].name,
+                    ass1: -1,
+                    ass2: -1,
+                    test1: -1,
+                    test2: -1,
+                    exams: -1,
+                    total: -1,
+                    grade: "",
+                    position: -1
+                }
+            )
+        }
+
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects } } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] })
+
+
+        return res.status(200).send({ message: "Success" });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const getSubjects = async (req, res) => {
+    try {
+        let payload = req.body.payload.trim();
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+
+        res.status(200).send({ payload: school_data.classes });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
+const getStudents = async (req, res) => {
+    try {
+        let studentsList = [];
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+        var isess = -1;
+
+        for (var i = 0; i < school_data.sessions.length; i++) {
+            if (school_data.sessions[i].name === req.body.session) isess = i;
+        }
+        var iterm = -1;
+        for (var j = 0; j < school_data.sessions[isess].terms.length; j++) {
+            if (school_data.sessions[isess].terms[j].name === req.body.term) iterm = j;
+        }
+
+        var std = school_data.sessions[isess].terms[iterm].students;
+
+        std.forEach((student) => {
+            if (student.class === req.body.class) {
+                studentsList.push(student)
+            }
+        })
+
+        res.status(200).send({ payload: studentsList });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
+const getSubjectsResultsList = async (req, res) => {
+    try {
+        let subjectsResultsList = [];
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+        for (var i = 0; i < school_data.classes.length; i++) {
+            if (school_data.classes[i].name === req.body.class) {
+                subjectsResultsList = school_data.classes[i].subjects;
+                break;
+            }
+        }
+
+        res.status(200).send({ payload: subjectsResultsList });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
+const getSubjectsResults = async (req, res) => {
+    try {
+        let subjectsResults = [];
+        await mongoClient.connect();
+        var sessionIndex = -1;
+        var termIndex = -1;
+        var classIndex = -1;
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+        for (var i = 0; i < school_data.sessions.length; i++) {
+            if (school_data.sessions[i].name === req.body.session) {
+                sessionIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
+            if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
+                termIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.classes.length; i++) {
+            if (school_data.classes[i].name === req.body.class.trim()) {
+                classIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
+            if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
+                subjectsResults.push(school_data.sessions[sessionIndex].terms[termIndex].students[i])
+                break;
+            }
+        }
+
+        res.status(200).send({ payload: subjectsResults });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
 
 module.exports = {
     uploadRegForm,
     regAgent,
     getSchools,
+    getSubjects,
+    getStudents,
     getListFiles,
     downloadImage,
     downloadNewsImage,
@@ -375,4 +569,7 @@ module.exports = {
     createSession,
     createClass,
     createSubject,
+    createStudent,
+    getSubjectsResultsList,
+    getSubjectsResults,
 };

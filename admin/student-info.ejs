@@ -28,9 +28,8 @@
   <link href="../../admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
-  <!-- Template Main CSS File -->
+  <!-- Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -46,13 +45,6 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <!--  <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- End Search Bar -->
     <div class="d-flex align-items-center justify-content-between tex">
       <span class="d-none d-lg-block">
         <div class="pad">Manage the contents of your school Website and Database</div>
@@ -63,13 +55,6 @@
 
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
-
-        <!--  <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li> -->
-        <!-- End Search Icon-->
 
         <li class="nav-item dropdown">
 
@@ -101,7 +86,7 @@
 
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="../../admin/assets/img/favicon.png" alt="Profile">
+            <img src="<%= school_obj.logo %>" alt="Profile">
             <span class="d-none d-md-block dropdown-toggle ps-2">
               <%= school_obj.name %>
             </span>
@@ -117,12 +102,6 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <!--        <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li> -->
             <li>
               <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
@@ -277,11 +256,12 @@
               <div class="row md-3">
                 <label class="col-sm-5 col-form-label">Session</label>
                 <div class="col-sm-8">
-                  <select class="form-select" aria-label="Session">
-                    <option selected>2022/2023</option>
-                    <option value="1">2023/2024</option>
-                    <option value="2">2024/2025</option>
-                    <option value="3">2025/2026</option>
+                  <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+                    <% for(var i=0; i < sessions_data.length; i++){ %>
+                      <option value="<%= sessions_data[i].name %>">
+                        <%= sessions_data[i].name %>
+                      </option>
+                      <% } %>
                   </select>
                 </div>
               </div>
@@ -289,10 +269,10 @@
               <div class="row md-1">
                 <label class="col-sm-5 col-form-label">Term</label>
                 <div class="col-sm-8">
-                  <select class="form-select" aria-label="Session">
-                    <option selected>First</option>
-                    <option value="1">Second</option>
-                    <option value="2">Third</option>
+                  <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+                    <option value="first" selected>First</option>
+                    <option value="second">Second</option>
+                    <option value="third">Third</option>
                   </select>
                 </div>
               </div>
@@ -300,11 +280,12 @@
               <div class="row md-1">
                 <label class="col-sm-5 col-form-label">Class</label>
                 <div class="col-sm-8">
-                  <select class="form-select" aria-label="Session">
-                    <option selected>PRI 1</option>
-                    <option value="1">PRI 2</option>
-                    <option value="2">PRI 3</option>
-                    <option value="3">PRI 4</option>
+                  <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
+                    <% for(var i=0; i < class_data.length; i++){ %>
+                      <option value="<%= class_data[i].name %>">
+                        <%= class_data[i].name %>
+                      </option>
+                      <% } %>
                   </select>
                 </div>
               </div>
@@ -318,56 +299,39 @@
             <h5 class="card-title">Students</h5>
 
             <!-- Table with hoverable rows -->
-            <table class="table table-hover">
+            <table class="table table-hover" id="myTable">
               <thead>
                 <tr>
                   <th scope="col">S/N</th>
                   <th scope="col">Name</th>
                   <th scope="col">Gender</th>
-                  <th scope="col">Age</th>
+                  <th scope="col">DOB</th>
                   <th scope="col">Class</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Brandon Jacob</td>
-                  <td>Male</td>
-                  <td>28</td>
-                  <td>PRI 2</td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Bridie Kessler</td>
-                  <td>Female</td>
-                  <td>35</td>
-                  <td>PRI 2</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Ashleigh Langosh</td>
-                  <td>Male</td>
-                  <td>45</td>
-                  <td>PRI 2</td>
-                </tr>
-                <tr>
-                  <th scope="row">4</th>
-                  <td>Angus Grady</td>
-                  <td>Female</td>
-                  <td>34</td>
-                  <td>PRI 2</td>
-                </tr>
-                <tr>
-                  <th scope="row">5</th>
-                  <td>Raheem Lehner</td>
-                  <td>Male</td>
-                  <td>47</td>
-                  <td>PRI 2</td>
-                </tr>
+                  <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                    <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].name %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].gender %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].dob %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].class %>
+                        </td>
+                      </tr>
+                      <% } %>
+                        <% } %>
               </tbody>
             </table>
             <!-- End Table with hoverable rows -->
-
           </div>
         </div>
         <div class="text-center">
@@ -382,6 +346,8 @@
 
     </div>
 
+
+
     <!-- Add Student Form -->
     <div class="add" id="add">
       <div class="col-md-6 offset-md-3">
@@ -391,41 +357,66 @@
               <h5 class="card-title text-center pb-0 fs-4">Add Student</h5>
               <p class="text-center small">Add a student to the database</p>
             </div>
-            <form class="row g-3 needs-validation" novalidate>
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/students"
+              novalidate>
               <div class="col-12">
                 <label for="yourName" class="form-label">Student Name</label>
                 <input type="text" name="name" class="form-control" id="yourName" required>
-                <div class="invalid-feedback">Please, enter student your name!</div>
+                <div class="invalid-feedback">Please, enter student name!</div>
               </div>
-              <fieldset class="row mb-3">
-                <legend class="col-form-label col-sm-2 pt-0">Gender</legend>
-                <div class="col-sm-10">
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1"
-                      checked>
-                    <label class="form-check-label" for="gridRadios1">
-                      Male
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                    <label class="form-check-label" for="gridRadios2">
-                      Female
-                    </label>
-                  </div>
+              <div class="row md-1">
+                <label class="col-sm-5 col-form-label">Gender</label>
+                <div class="col-sm-8">
+                  <select class="form-select" aria-label="Term" name="gender">
+                    <option value="male" selected>Male</option>
+                    <option value="female">Female</option>
+                  </select>
                 </div>
-              </fieldset>
+              </div>
+
+
 
               <div class="col-12">
                 <label for="yourEmail" class="form-label">Date of birth</label>
-                <input type="date" name="email" class="form-control" id="date" required>
+                <input type="date" name="dob" class="form-control" id="dob" required>
                 <div class="invalid-feedback">Please enter date of birth!</div>
               </div>
 
-              <div class="col-12">
-                <label for="yourPassword" class="form-label">Class</label>
-                <input type="text" name="password" class="form-control" id="yourPassword" required>
-                <div class="invalid-feedback">Please enter your student's class!</div>
+              <div class="row md-3">
+                <label class="col-sm-5 col-form-label">Session</label>
+                <div class="col-sm-8">
+                  <select class="form-select" aria-label="Session" name="session">
+                    <% for(var i=0; i < sessions_data.length; i++){ %>
+                      <option>
+                        <%= sessions_data[i].name %>
+                      </option>
+                      <% } %>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row md-1">
+                <label class="col-sm-5 col-form-label">Term</label>
+                <div class="col-sm-8">
+                  <select class="form-select" aria-label="Term" name="term">
+                    <option value="first" selected>First</option>
+                    <option value="second">Second</option>
+                    <option value="third">Third</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="row md-1">
+                <label class="col-sm-5 col-form-label">Class</label>
+                <div class="col-sm-8">
+                  <select class="form-select" aria-label="Class" name="class">
+                    <% for(var i=0; i < class_data.length; i++){ %>
+                      <option>
+                        <%= class_data[i].name %>
+                      </option>
+                      <% } %>
+                  </select>
+                </div>
               </div>
 
               <div class="col-12">
@@ -452,18 +443,60 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+
   <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="../../admin/assets/vendor/echarts/echarts.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
   <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="../../admin/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
+
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+  <script>
+    function sendData() {
+
+      fetch('/admin/<%= school_obj.name %>/getStudents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session: $("#sessionSelector").val(),
+          class: $("#classSelector").val(),
+          term: $("#termSelector").val(),
+        })
+      }).then(res => res.json()).then(data => {
+        var payload = data.payload;
+        var content = '';
+        if (payload < 1) {
+          $('#myTable tbody').html('Students not added yet');
+          return;
+        }
+
+        payload.forEach((item, index) => {
+          content += `
+                  <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>
+                      ${item.name}
+                      </td>
+                    <td>
+                      ${item.gender}
+                    </td>
+                    <td>
+                      ${item.dob}
+                    </td>
+                    <td>
+                      ${item.class}
+                    </td>
+                  </tr>`
+        });
+        $('#myTable tbody').html(content);
+      });
+      return;
+    }
+  </script>
 
 </body>
 

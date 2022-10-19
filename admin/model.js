@@ -60,10 +60,12 @@ var session_model = {
 
 
 student_model = {
-    name: "",
-    gender: "",
-    dob: "",
-    class: "",
+    name: req.body.name,
+    gender: req.body.gender,
+    dob: req.body.dob,
+    session: req.body.session,
+    term: req.body.term,
+    class: req.body.class,
     subjects: [],
     total: -1,
     average: -1,
@@ -71,6 +73,7 @@ student_model = {
     position: -1,
     remarks: "",
 }
+
 
 
 

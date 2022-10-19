@@ -25,11 +25,16 @@ let routes = app => {
   router.get("/files/:name", uploadController.downloadImage);
   router.get("/news/:name", uploadController.downloadNewsImage);
   router.post("/getSchools", uploadController.getSchools);
+  router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
+  router.post("/admin/:sname/getStudents", uploadController.getStudents);
+  router.post("/admin/:sname/getSubjectsResultsList", uploadController.getSubjectsResultsList);
+  router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
   router.post("/login", urlencodedParser, uploadController.login);
   router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
   router.post("/admin/:sname/sessions", uploadController.createSession);
   router.post("/admin/:sname/classes", uploadController.createClass);
   router.post("/admin/:sname/subjects", uploadController.createSubject);
+  router.post("/admin/:sname/students", uploadController.createStudent);
 
   // SCHOOL PAGES . . .
   router.all("/schools/:sname/home", pagesController.s_home);
@@ -54,7 +59,7 @@ let routes = app => {
   router.get("/admin/:sname/sessions", pagesController.sessions);
   router.get("/admin/:sname/classes", pagesController.classes);
   router.get("/admin/:sname/subjects", pagesController.subjects);
-  router.get("/admin/:sname/assessment", pagesController.assessment);
+  router.get("/admin/:sname/assessment/:class/:subject", pagesController.assessment);
 
 
   return app.use("/", router);

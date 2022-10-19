@@ -101,7 +101,7 @@
 
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="../../admin/assets/img/favicon.png" alt="Profile">
+            <img src="<%= school_obj.logo %>" alt="Profile">
             <span class="d-none d-md-block dropdown-toggle ps-2">
               <%= school_obj.name %>
             </span>
@@ -273,11 +273,12 @@
           <div class="row md-3">
             <label class="col-sm-5 col-form-label">Session</label>
             <div class="col-sm-8">
-              <select class="form-select" aria-label="Session">
-                <option selected>2022/2023</option>
-                <option value="1">2023/2024</option>
-                <option value="2">2024/2025</option>
-                <option value="3">2025/2026</option>
+              <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+                <% for(var i=0; i < sessions_data.length; i++){ %>
+                  <option value="<%= sessions_data[i].name %>">
+                    <%= sessions_data[i].name %>
+                  </option>
+                  <% } %>
               </select>
             </div>
           </div>
@@ -285,10 +286,10 @@
           <div class="row md-1">
             <label class="col-sm-5 col-form-label">Term</label>
             <div class="col-sm-8">
-              <select class="form-select" aria-label="Session">
-                <option selected>First</option>
-                <option value="1">Second</option>
-                <option value="2">Third</option>
+              <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+                <option value="first" selected>First</option>
+                <option value="second">Second</option>
+                <option value="third">Third</option>
               </select>
             </div>
           </div>
@@ -296,11 +297,12 @@
           <div class="row md-1">
             <label class="col-sm-5 col-form-label">Class</label>
             <div class="col-sm-8">
-              <select class="form-select" aria-label="Session">
-                <option selected>PRI 1</option>
-                <option value="1">PRI 2</option>
-                <option value="2">PRI 3</option>
-                <option value="3">PRI 4</option>
+              <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
+                <% for(var i=0; i < class_data.length; i++){ %>
+                  <option value="<%= class_data[i].name %>">
+                    <%= class_data[i].name %>
+                  </option>
+                  <% } %>
               </select>
             </div>
           </div>
@@ -315,52 +317,36 @@
             <div class="card-body">
               <h5 class="card-title">Fees Status</h5>
               <!-- Bordered Table -->
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="myTable">
                 <thead>
                   <tr>
                     <th scope="col">S/N</th>
                     <th scope="col">Name</th>
                     <th scope="col">Gender</th>
-                    <th scope="col">Fees paid ?</th>
+                    <th scope="col">DOB</th>
                     <th scope="col">Class</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td>Brandon Jacob</td>
-                    <td>Male</td>
-                    <td>Yes</td>
-                    <td>PRI 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Bridie Kessler</td>
-                    <td>Female</td>
-                    <td>No</td>
-                    <td>PRI 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Ashleigh Langosh</td>
-                    <td>Male</td>
-                    <td>No</td>
-                    <td>PRI 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td>Angus Grady</td>
-                    <td>Female</td>
-                    <td>Yes</td>
-                    <td>PRI 3</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td>Raheem Lehner</td>
-                    <td>Male</td>
-                    <td>No</td>
-                    <td>PRI 3</td>
-                  </tr>
+                  <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                    <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].name %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].gender %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].dob %>
+                        </td>
+                        <td>
+                          <%= sessions_data[0].terms[0].students[j].class %>
+                        </td>
+                      </tr>
+                      <% } %>
+                        <% } %>
                 </tbody>
               </table>
               <!-- End Bordered Table -->
@@ -382,6 +368,7 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+
   <!-- Vendor JS Files -->
   <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -395,6 +382,49 @@
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+  <script>
+    function sendData() {
+      fetch('/admin/<%= school_obj.name %>/getStudents', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session: $("#sessionSelector").val(),
+          class: $("#classSelector").val(),
+          term: $("#termSelector").val(),
+        })
+      }).then(res => res.json()).then(data => {
+        var payload = data.payload;
+        var content = '';
+        if (payload < 1) {
+          $('#myTable tbody').html('Students not added yet');
+          return;
+        }
+
+        payload.forEach((item, index) => {
+          content += `
+                  <tr>
+                    <th scope="row">${index + 1}</th>
+                    <td>
+                      ${item.name}
+                      </td>
+                    <td>
+                      ${item.gender}
+                    </td>
+                    <td>
+                      ${item.dob}
+                    </td>
+                    <td>
+                      ${item.class}
+                    </td>
+                  </tr>`
+        });
+        $('#myTable tbody').html(content);
+      });
+      return;
+    }
+  </script>
 </body>
 
 </html>

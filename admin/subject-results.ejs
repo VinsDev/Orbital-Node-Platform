@@ -64,44 +64,10 @@
     <nav class="header-nav ms-auto">
       <ul class="d-flex align-items-center">
 
-        <!--  <li class="nav-item d-block d-lg-none">
-          <a class="nav-link nav-icon search-bar-toggle " href="#">
-            <i class="bi bi-search"></i>
-          </a>
-        </li> -->
-        <!-- End Search Icon-->
-
-        <li class="nav-item dropdown">
-
-          <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-            <i class="bi bi-bell"></i>
-            <span class="badge bg-primary badge-number">1</span>
-          </a><!-- End Notification Icon -->
-
-          <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow notifications">
-            <li class="dropdown-header">
-              You have 1 new notifications
-              <a href="#"><span class="badge rounded-pill bg-primary p-2 ms-2">Close</span></a>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-
-            <li class="notification-item">
-              <i class="bi bi-exclamation-circle text-warning"></i>
-              <div>
-                <h4>Subscription</h4>
-                <p>You subscribtion will finish on the 20th of October 2022</p>
-                <p>30 min. ago</p>
-              </div>
-            </li>
-          </ul><!-- End Notification Dropdown Items -->
-
-        </li><!-- End Notification Nav -->
 
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="../../admin/assets/img/favicon.png" alt="Profile">
+            <img src="<%= school_obj.logo %>" alt="Profile">
             <span class="d-none d-md-block dropdown-toggle ps-2">
               <%= school_obj.name %>
             </span>
@@ -117,12 +83,7 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <!--        <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li> -->
+
             <li>
               <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
@@ -265,6 +226,26 @@
       </nav>
     </div><!-- End Page Title -->
 
+    <!-- REFERENCE SELECTOR -->
+    <div class="card">
+      <div class="internal">
+        <div class="rrr">
+          <div class="row md-3">
+            <label class="col-sm-5 col-form-label">Class</label>
+            <div class="col-sm-12">
+              <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
+                <% for(var i=0; i < class_data.length; i++){ %>
+                  <option value="<%= class_data[i].name %>">
+                    <%= class_data[i].name %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <section class="section">
       <div class="row">
         <div class="col-md-12 offset-md-0">
@@ -273,7 +254,7 @@
               <h5 class="card-title">Manage Subject Based Results</h5>
 
               <!-- Table with hoverable rows -->
-              <table class="table table-hover">
+              <table class="table table-hover" id="myTable">
                 <thead>
                   <tr>
                     <th scope="col">S/N</th>
@@ -283,38 +264,24 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr data-url="/admin/<%= school_obj.name %>/assessment">
-                    <div>
-                      <th scope="row">1</th>
-                      <td>English</td>
-                      <td>Jesse Avaachia</td>
-                      <td>PRI 1</td>
-                    </div>
-                  </tr>
-                  <tr data-url="/admin/<%= school_obj.name %>/assessment">
-                    <th scope="row">2</th>
-                    <td>Mathematics</td>
-                    <td>Vincent Dominic</td>
-                    <td>PRI 1</td>
-                  </tr>
-                  <tr data-url="/admin/<%= school_obj.name %>/assessment">
-                    <th scope="row">3</th>
-                    <td>Physics</td>
-                    <td>Lawrence Hon</td>
-                    <td>PRI 1</td>
-                  </tr>
-                  <tr data-url="/admin/<%= school_obj.name %>/assessment">
-                    <th scope="row">4</th>
-                    <td>Chemistry</td>
-                    <td>Shedrack Vershima</td>
-                    <td>PRI 1</td>
-                  </tr>
-                  <tr data-url="/admin/<%= school_obj.name %>/assessment">
-                    <th scope="row">5</th>
-                    <td>Biology</td>
-                    <td>Unum Elijaj</td>
-                    <td>PRI 1</td>
-                  </tr>
+                  <% for(var i=0; i<class_data[0].subjects.length; i++) { %>
+                    <tr data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
+                      <div>
+                        <th scope="row">
+                          <%= i+1 %>
+                        </th>
+                        <td>
+                          <%= class_data[0].subjects[i].name %>
+                        </td>
+                        <td>
+                          <%= class_data[0].subjects[i].teacher %>
+                        </td>
+                        <td>
+                          <%= class_data[0].subjects[i].class %>
+                        </td>
+                      </div>
+                    </tr>
+                    <% } %>
                 </tbody>
               </table>
               <!-- End Table with hoverable rows -->
@@ -325,17 +292,7 @@
       </div>
     </section>
 
-    <script>
-      var rows = document.getElementsByTagName('tr'),
-        url;
 
-      for (var i = 0, len = rows.length; i < len; i++) {
-        rows[i].onclick = function () {
-          uri = this.getAttribute('data-url');
-          window.location = uri;
-        };
-      }
-    </script>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -349,18 +306,68 @@
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="../../admin/assets/vendor/echarts/echarts.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="../../admin/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+  <script>
+    function sendData(e) {
+      fetch('/admin/<%= school_obj.name %>/getSubjectsResultsList', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ class: e.value })
+      }).then(res => res.json()).then(data => {
+        var payload = data.payload;
+        var content = '';
+        if (payload < 1) {
+          $('#myTable tbody').html('Subjects not added yet');
+          return;
+        }
+
+        payload.forEach((item, index) => {
+          content += `
+                    <tr data-url="/admin/<%= school_obj.name %>/assessment/${item.class}/${item.name}">
+                      <th scope="row">${index + 1}</th>
+                      <td>${item.name}</td>
+                      <td>${item.teacher}</td>
+                      <td>${item.class}</td>
+                  </tr>`
+        });
+        $('#myTable tbody').html(content);
+        update();
+      });
+      return;
+    }
+
+    function update() {
+      var rows = document.getElementsByTagName('tr'),
+        url;
+
+      for (var i = 0, len = rows.length; i < len; i++) {
+        rows[i].onclick = function () {
+          uri = this.getAttribute('data-url');
+          window.location = uri;
+        };
+      }
+    }
+  </script>
+
+  <script>
+    var rows = document.getElementsByTagName('tr'),
+      url;
+
+    for (var i = 0, len = rows.length; i < len; i++) {
+      rows[i].onclick = function () {
+        uri = this.getAttribute('data-url');
+        window.location = uri;
+      };
+    }
+  </script>
 </body>
 
 </html>
