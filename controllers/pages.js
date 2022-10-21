@@ -5,27 +5,22 @@ const dbConfig = require("../config/db");
 const url = dbConfig.url;
 const mongoClient = new MongoClient(url);
 
-// ORBITAL NODE . . .
+// ORBITAL NODE LANDING . . .
 const about = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/about.html`));
 };
-
 const services = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/services.html`));
 };
-
 const contact = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/contact.html`));
 };
-
 const register = (req, res) => {
     return res.render("register");
 };
-
 const agent = (req, res) => {
     return res.render("agent");
 };
-
 
 // SCHOOL . . .
 const s_home = async (req, res) => {
@@ -137,7 +132,6 @@ const s_about = async (req, res) => {
 
 };
 
-
 // SCHOOL ADMIN . . .
 const admin = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../admin/index.html`));
@@ -248,7 +242,7 @@ const student_register = async (req, res) => {
         });
     }
 };
-const subject_results = async (req, res) => {
+const continous_assessments = async (req, res) => {
     try {
         await mongoClient.connect();
 
@@ -373,7 +367,7 @@ const assessment = async (req, res) => {
         return res.render("../admin/assessment", {
             school_obj: school_data.school_info,
             sessions_data: school_data.sessions,
-            subject_data: school_data.classes[classIndex].subjects[subjectIndex]
+            subject_data: school_data.classes[classIndex].subjects[subjectIndex],
         });
     } catch (error) {
         return res.status(500).send({
@@ -381,9 +375,26 @@ const assessment = async (req, res) => {
         });
     }
 };
+const result = async (req, res) => {
+    try {
+        await mongoClient.connect();
 
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
-
+        return res.render("../admin/result", {
+            school_obj: school_data.school_info,
+            sessions_data: school_data.sessions,
+            student_name: req.params.student,
+            class_name: req.params.class
+        });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
 
 module.exports = {
     about,
@@ -405,11 +416,12 @@ module.exports = {
     student_info,
     student_fees,
     student_register,
-    subject_results,
+    continous_assessments,
     student_results,
     parents,
     sessions,
     classes,
     subjects,
-    assessment
+    assessment,
+    result
 };

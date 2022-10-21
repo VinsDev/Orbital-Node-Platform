@@ -40,7 +40,6 @@ const getSchools = async (req, res) => {
         });
     }
 }
-
 const sendForm = async (req, res, url) => {
     try {
 
@@ -92,7 +91,6 @@ const sendForm = async (req, res, url) => {
         console.log(error);
     }
 }
-
 const uploadRegForm = async (req, res) => {
     try {
         await upload(req, res);
@@ -118,7 +116,6 @@ const uploadRegForm = async (req, res) => {
         });
     }
 };
-
 const regAgent = async (req, res) => {
     try {
 
@@ -142,7 +139,6 @@ const regAgent = async (req, res) => {
         console.log(error);
     }
 }
-
 
 // SCHOOL . . .
 const downloadImage = async (req, res) => {
@@ -173,7 +169,6 @@ const downloadImage = async (req, res) => {
         });
     }
 };
-
 const downloadNewsImage = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -202,7 +197,6 @@ const downloadNewsImage = async (req, res) => {
         });
     }
 };
-
 const getListFiles = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -234,7 +228,6 @@ const getListFiles = async (req, res) => {
     }
 };
 
-
 // ADMIN . . .
 const login = async (req, res) => {
     try {
@@ -262,7 +255,6 @@ const login = async (req, res) => {
         });
     }
 }
-
 const upload_news = async (req, res) => {
     try {
         await newsImages(req, res);
@@ -285,7 +277,6 @@ const upload_news = async (req, res) => {
         console.log(error);
     }
 }
-
 const createSession = async (req, res) => {
     try {
 
@@ -321,7 +312,6 @@ const createSession = async (req, res) => {
         console.log(error);
     }
 }
-
 const createClass = async (req, res) => {
     try {
 
@@ -342,7 +332,6 @@ const createClass = async (req, res) => {
         console.log(error);
     }
 }
-
 const createSubject = async (req, res) => {
     try {
 
@@ -361,7 +350,6 @@ const createSubject = async (req, res) => {
         console.log(error);
     }
 }
-
 const createStudent = async (req, res) => {
     try {
 
@@ -424,7 +412,6 @@ const createStudent = async (req, res) => {
         console.log(error);
     }
 }
-
 const getSubjects = async (req, res) => {
     try {
         let payload = req.body.payload.trim();
@@ -443,7 +430,6 @@ const getSubjects = async (req, res) => {
         });
     }
 }
-
 const getStudents = async (req, res) => {
     try {
         let studentsList = [];
@@ -479,7 +465,6 @@ const getStudents = async (req, res) => {
         });
     }
 }
-
 const getSubjectsResultsList = async (req, res) => {
     try {
         let subjectsResultsList = [];
@@ -504,14 +489,54 @@ const getSubjectsResultsList = async (req, res) => {
         });
     }
 }
-
 const getSubjectsResults = async (req, res) => {
+    let subjectsResults = [];
+    await mongoClient.connect();
+    var sessionIndex = -1;
+    var termIndex = -1;
+    var classIndex = -1;
+
+    const database = mongoClient.db(dbConfig.database);
+    const schools = database.collection("schools");
+    let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+    for (var i = 0; i < school_data.sessions.length; i++) {
+        if (school_data.sessions[i].name === req.body.session) {
+            sessionIndex = i;
+            break;
+        }
+    }
+
+    for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
+        if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
+            termIndex = i;
+            break;
+        }
+    }
+
+    for (var i = 0; i < school_data.classes.length; i++) {
+        if (school_data.classes[i].name === req.body.class.trim()) {
+            classIndex = i;
+            break;
+        }
+    }
+
+    for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
+        if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
+            subjectsResults.push(school_data.sessions[sessionIndex].terms[termIndex].students[i])
+        }
+    }
+
+    res.status(200).send({ payload: subjectsResults });
+
+}
+const getStudentResults = async (req, res) => {
     try {
-        let subjectsResults = [];
         await mongoClient.connect();
         var sessionIndex = -1;
         var termIndex = -1;
         var classIndex = -1;
+        var std = {};
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
@@ -539,13 +564,13 @@ const getSubjectsResults = async (req, res) => {
         }
 
         for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-            if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
-                subjectsResults.push(school_data.sessions[sessionIndex].terms[termIndex].students[i])
+            if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === req.body.name && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
+                std = school_data.sessions[sessionIndex].terms[termIndex].students[i];
                 break;
             }
         }
 
-        res.status(200).send({ payload: subjectsResults });
+        res.status(200).send({ payload: std });
 
     } catch (error) {
         return res.status(500).send({
@@ -553,7 +578,73 @@ const getSubjectsResults = async (req, res) => {
         });
     }
 }
+const updateSubjectsResults = async (req, res) => {
 
+    try {
+        await mongoClient.connect();
+        var sessionIndex = -1;
+        var termIndex = -1;
+        var classIndex = -1;
+        var subjectIndex = -1;
+
+        let updatedRes = req.body.data;
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        for (var i = 0; i < school_data.sessions.length; i++) {
+            if (school_data.sessions[i].name === req.body.session) {
+                sessionIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
+            if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
+                termIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.classes.length; i++) {
+            if (school_data.classes[i].name === req.body.class.trim()) {
+                classIndex = i;
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
+            if (school_data.classes[classIndex].subjects[i].name === req.body.subname) {
+                subjectIndex = i;
+            }
+        }
+
+        for (var j = 0; j < updatedRes.length; j++) {
+            for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
+                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === updatedRes[j].name) {
+                    schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
+                        {
+                            arrayFilters:
+                                [{ "sess.name": req.body.session },
+                                { "term.name": req.body.term },
+                                { "stud.name": school_data.sessions[sessionIndex].terms[termIndex].students[i].name },
+                                { "sub.name": req.body.subname }]
+                        })
+                    break;
+                }
+            }
+        }
+
+        res.send({ info: "ok" });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 module.exports = {
     uploadRegForm,
@@ -572,4 +663,6 @@ module.exports = {
     createStudent,
     getSubjectsResultsList,
     getSubjectsResults,
+    getStudentResults,
+    updateSubjectsResults,
 };

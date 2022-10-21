@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Results / Subject Based Results</title>
+  <title>Results / Continous Assessment</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -46,13 +46,7 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <!--  <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- End Search Bar -->
+
     <div class="d-flex align-items-center justify-content-between tex">
       <span class="d-none d-lg-block">
         <div class="pad">Manage the contents of your school Website and Database</div>
@@ -161,8 +155,13 @@
       </a>
       <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="subject-results" class="active">
-            <i class="bi bi-circle"></i><span>Subject Based Results</span>
+          <a href="continous-assessments" class="active">
+            <i class="bi bi-circle"></i><span>Continous Assessment</span>
+          </a>
+        </li>
+        <li>
+          <a href="sheet-configs">
+            <i class="bi bi-circle"></i><span>Results Sheet Configs</span>
           </a>
         </li>
         <li>
@@ -216,12 +215,12 @@
   <main id="main" class="main">
 
     <div class="pagetitle">
-      <h1>Subject Based Results</h1>
+      <h1>Continous Assessment</h1>
       <nav>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item">Results</li>
-          <li class="breadcrumb-item active">Subject Based Results</li>
+          <li class="breadcrumb-item active">Continous Assessment</li>
         </ol>
       </nav>
     </div><!-- End Page Title -->
@@ -251,7 +250,7 @@
         <div class="col-md-12 offset-md-0">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Manage Subject Based Results</h5>
+              <h5 class="card-title">Manage Continous Assessment</h5>
 
               <!-- Table with hoverable rows -->
               <table class="table table-hover" id="myTable">
@@ -265,7 +264,8 @@
                 </thead>
                 <tbody>
                   <% for(var i=0; i<class_data[0].subjects.length; i++) { %>
-                    <tr data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
+                    <tr
+                      data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
                       <div>
                         <th scope="row">
                           <%= i+1 %>
@@ -349,6 +349,7 @@
         url;
 
       for (var i = 0, len = rows.length; i < len; i++) {
+        if (i === 0) { continue; }
         rows[i].onclick = function () {
           uri = this.getAttribute('data-url');
           window.location = uri;
@@ -362,6 +363,7 @@
       url;
 
     for (var i = 0, len = rows.length; i < len; i++) {
+      if (i === 0) { continue; }
       rows[i].onclick = function () {
         uri = this.getAttribute('data-url');
         window.location = uri;

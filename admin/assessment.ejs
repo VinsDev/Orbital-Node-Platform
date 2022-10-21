@@ -32,6 +32,8 @@
   <link href="../../../../admin/assets/css/style.css" rel="stylesheet">
   <link href="../../../../admin/assets/css/assessments.css" rel="stylesheet">
 
+  <!-- Jquery -->
+  <script src="../../../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -146,53 +148,138 @@
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">
-              <i id="cls">
+              <b id="cls">
                 <%=subject_data.class%>
-              </i> Term Assessments: <b>
+              </b><b>Term Assessments: </b><em id="subname">
                 <%=subject_data.name%>
-              </b>
+              </em>
             </h5>
-            <!-- Bordered Table -->
-            <table class="table table-bordered" id="myTable">
-              <thead>
-                <tr>
-                  <th scope="col">S/N</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Ass 1</th>
-                  <th scope="col">Ass 2</th>
-                  <th scope="col">Test 1</th>
-                  <th scope="col">Test 2</th>
-                  <th scope="col">Exams</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% var counter=1; %>
-                  <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                    <% if(sessions_data[0].terms[0].students[j].class===subject_data.class) { %>
-                      <tr>
-                        <th scope="row">
-                          <%=counter%>
-                        </th>
-                        <td>
-                          <%= sessions_data[0].terms[0].students[j].name %>
-                        </td>
-                        <td contenteditable="true">3</td>
-                        <td contenteditable="true">3</td>
-                        <td contenteditable="true">8</td>
-                        <td contenteditable="true">8</td>
-                        <td contenteditable="true">10</td>
-                      </tr>
-                      <%counter++%>
-                        <% } %>
-                          <% } %>
-              </tbody>
-            </table>
-            <!-- End Bordered Table -->
+
+            <!-- TABLE LOGIC -->
+            <script type="text/javascript">
+              var ajax_data = [];
+              $(document).ready(function ($) {
+                fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    session: $("#sessionSelector").val(),
+                    class: $("#cls").text().trim(),
+                    term: $("#termSelector").val(),
+                  })
+                }).then(res => res.json()).then(data => {
+                  ajax_data = data.payload;
+
+                  var subjectIndex = -1;
+                  for (var i = 0; i < ajax_data[0].subjects.length; i++) {
+                    if (ajax_data[0].subjects[i].name === $("#subname").text().trim()) {
+                      subjectIndex = i;
+                    }
+                  }
+
+                  //--->create data table > start
+                  var tbl = '';
+                  tbl += '<table class="table table-bordered">'
+                  tbl += '<thead>';
+                  tbl += '<tr>';
+                  tbl += '<th>S/N</th>';
+                  tbl += '<th>Name</th>';
+                  tbl += '<th>Ass 1</th>';
+                  tbl += '<th>Ass 2</th>';
+                  tbl += '<th>Test 1</th>';
+                  tbl += '<th>Test 2</th>';
+                  tbl += '<th>Exams</th>';
+                  tbl += '</tr>';
+                  tbl += '</thead>';
+                  tbl += '<tbody>';
+                  $.each(ajax_data, function (index, val) {
+                    var row_id = index;
+                    tbl += '<tr row_id="' + row_id + '">';
+                    tbl += '<td col_name="sn">' + (index + 1) + '</td>';
+                    tbl += '<td col_name="name">' + val['name'] + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + val.subjects[subjectIndex].ass1 + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + val.subjects[subjectIndex].ass2 + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="test1">' + val.subjects[subjectIndex].test1 + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + val.subjects[subjectIndex].test2 + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + val.subjects[subjectIndex].exams + '</td>';
+                  });
+                  tbl += '</tbody>';
+                  tbl += '</table>'
+
+                  $(document).find('.tbl_user_data').html(tbl);
+                  $(document).on('click', '.row_data', function (event) {
+                    event.preventDefault();
+                    $(this).closest('td').attr('contenteditable', 'true');
+                    $(this).focus();
+                  })
+
+                  $(document).on('focusout', '.row_data', function (event) {
+                    event.preventDefault();
+
+                    var row_id = $(this).closest('tr').attr('row_id');
+
+                    var row_div = $(this)
+                      .removeClass('bg-warning')
+                      .css('padding', '')
+
+                    var col_name = row_div.attr('col_name');
+                    var col_val = row_div.html();
+
+                    var arr = {};
+                    arr[col_name] = col_val;
+
+                    $.extend(arr, { row_id: row_id });
+
+                    switch (col_name) {
+                      case 'ass1': ajax_data[row_id].subjects[subjectIndex].ass1 = col_val;
+                        break;
+                      case 'ass2': ajax_data[row_id].subjects[subjectIndex].ass2 = col_val;
+                        break;
+                      case 'test1': ajax_data[row_id].subjects[subjectIndex].test1 = col_val;
+                        break;
+                      case 'test2': ajax_data[row_id].subjects[subjectIndex].test2 = col_val;
+                        break;
+                      case 'exams': ajax_data[row_id].subjects[subjectIndex].exams = col_val;
+                      default:
+                        break;
+                    }
+
+                    //$('.post_msg').html('<pre class="bg-success">' + JSON.stringify(ajax_data[row_id], null, 2) + '</pre>');
+                  })
+                });
+              });
+
+              function upload() {
+                fetch('/admin/<%= school_obj.name %>/updateSubjectsResults', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    session: $("#sessionSelector").val(),
+                    class: $("#cls").text().trim(),
+                    term: $("#termSelector").val(),
+                    subname: $("#subname").text().trim(),
+                    data: ajax_data,
+                  })
+                }).then((res) => {
+                  if (res.info == "ok") {
+                    alert("Ok");
+                  }
+                });
+              }
+            </script>
+
+            <!-- TABLE DIVS -->
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="tbl_user_data"></div>
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="text-center">
-          <button class="btn btn-primary" onclick="">Save Changes</button>
-          <a href="/admin/<%= school_obj.name %>/subject-results"><button class="btn btn-primary"
+          <button class="btn btn-primary" onclick="upload()">Save Changes</button>
+          <a href="/admin/<%= school_obj.name %>/continous-assessments"><button class="btn btn-primary"
               style="margin-left: 20px;">Back</button></a>
         </div>
         <div style="margin-bottom: 15px;"></div>
@@ -210,6 +297,7 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+
   <!-- Vendor JS Files -->
   <script src="../../../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../../../admin/assets/vendor/quill/quill.min.js"></script>
@@ -218,11 +306,8 @@
   <!-- Template Main JS File -->
   <script src="../../../../admin/assets/js/main.js"></script>
 
-  <!-- Jquery -->
-  <script src="../../../../admin/assets/js/jquery-3.6.1.js"></script>
   <script>
     function sendData() {
-
       fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -232,31 +317,96 @@
           term: $("#termSelector").val(),
         })
       }).then(res => res.json()).then(data => {
-        var payload = data.payload;
-        var content = '';
-        if (payload < 1) {
-          $('#myTable tbody').html('Students not added yet');
+        ajax_data = data.payload;
+
+        if (ajax_data < 1) {
+          var tbl = '';
+          tbl += '<p>No students found in your current selection</p>';
+          $(document).find('.tbl_user_data tbody').html(tbl);
           return;
         }
 
-        payload.forEach((item, index) => {
-          content += `
-            <tr>
-              <th scope="row">${index + 1}</th>
-              <td>${item.name}</td>
-              <td contenteditable="true">3</td>
-              <td contenteditable="true">3</td>
-              <td contenteditable="true">8</td>
-              <td contenteditable="true">8</td>
-              <td contenteditable="true">10</td>
-            </tr>`
+        var subjectIndex = -1;
+        for (var i = 0; i < ajax_data[0].subjects.length; i++) {
+          if (ajax_data[0].subjects[i].name === $("#subname").text().trim()) {
+            subjectIndex = i;
+          }
+        }
+
+        var tbl = '';
+        tbl += '<table class="table table-bordered">'
+        tbl += '<thead>';
+        tbl += '<tr>';
+        tbl += '<th>Name</th>';
+        tbl += '<th>Ass 1</th>';
+        tbl += '<th>Ass 2</th>';
+        tbl += '<th>Test 1</th>';
+        tbl += '<th>Test 2</th>';
+        tbl += '<th>Exams</th>';
+        tbl += '</tr>';
+        tbl += '</thead>';
+        tbl += '<tbody>';
+
+        $.each(ajax_data, function (index, val) {
+          var row_id = index;
+          tbl += '<tr row_id="' + row_id + '">';
+          tbl += '<td col_name="name">' + val['name'] + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + val.subjects[subjectIndex].ass1 + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + val.subjects[subjectIndex].ass2 + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="test1">' + val.subjects[subjectIndex].test1 + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="test2">' + val.subjects[subjectIndex].test2 + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="exams">' + val.subjects[subjectIndex].exams + '</td>';
+          tbl += '</tr>';
         });
-        $('#myTable tbody').html(content);
+        tbl += '</tbody>';
+        tbl += '</table>'
+
+        $(document).find('.tbl_user_data').html(tbl);
+        $(document).on('click', '.row_data', function (event) {
+          event.preventDefault();
+          $(this).closest('td').attr('contenteditable', 'true');
+          $(this).focus();
+        })
+
+        $(document).on('focusout', '.row_data', function (event) {
+          event.preventDefault();
+
+          var row_id = $(this).closest('tr').attr('row_id');
+
+          var row_div = $(this)
+            .removeClass('bg-warning')
+            .css('padding', '')
+
+          var col_name = row_div.attr('col_name');
+          var col_val = row_div.html();
+
+          var arr = {};
+          arr[col_name] = col_val;
+
+          $.extend(arr, { row_id: row_id });
+
+          switch (col_name) {
+            case 'ass1': ajax_data[row_id].subjects[subjectIndex].ass1 = col_val;
+              break;
+            case 'ass2': ajax_data[row_id].subjects[subjectIndex].ass2 = col_val;
+              break;
+            case 'test1': ajax_data[row_id].subjects[subjectIndex].test1 = col_val;
+              break;
+            case 'test2': ajax_data[row_id].subjects[subjectIndex].test2 = col_val;
+              break;
+            case 'exams': ajax_data[row_id].subjects[subjectIndex].exams = col_val;
+            default:
+              break;
+          }
+
+          // $('.post_msg').html('<pre class="bg-success">' + JSON.stringify(ajax_data[row_id], null, 2) + '</pre>');
+
+        })
+
       });
       return;
     }
   </script>
-
 </body>
 
 </html>

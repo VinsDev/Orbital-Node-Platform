@@ -159,8 +159,13 @@
       </a>
       <ul id="components-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
         <li>
-          <a href="subject-results">
-            <i class="bi bi-circle"></i><span>Subject Based Results</span>
+          <a href="continous-assessments">
+            <i class="bi bi-circle"></i><span>Continous Assessment</span>
+          </a>
+        </li>
+        <li>
+          <a href="sheet-configs">
+            <i class="bi bi-circle"></i><span>Results Sheet Configs</span>
           </a>
         </li>
         <li>
@@ -288,7 +293,8 @@
                   <div id="field">
                     <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
                       <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                        <tr>
+                        <tr
+                          data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
                           <th scope="row">1</th>
                           <td>
                             <%= sessions_data[0].terms[0].students[j].name %>
@@ -380,28 +386,46 @@
 
         payload.forEach((item, index) => {
           content += `
-                   <tr>
+                   <tr data-url="/admin/<%= school_obj.name %>/result/${item.class}/${item.name}">
                      <th scope="row">${index + 1}</th>
-                     <td>
-                       ${item.name}
-                       </td>
-                     <td>
-                       ${item.gender}
-                     </td>
-                     <td>
-                       ${item.dob}
-                     </td>
-                     <td>
-                       ${item.class}
-                     </td>
+                     <td>${item.name}</td>
+                     <td>${item.gender}</td>
+                     <td>${item.dob}</td>
+                     <td>${item.class}</td>
                    </tr>`
         });
         $('#myTable tbody').html(content);
+        update();
       });
       return;
     }
+
+    function update() {
+      var rows = document.getElementsByTagName('tr'),
+        url;
+
+      for (var i = 0, len = rows.length; i < len; i++) {
+        if (i === 0) { continue; }
+        rows[i].onclick = function () {
+          uri = this.getAttribute('data-url');
+          window.location = uri;
+        };
+      }
+    }
   </script>
 
+  <script>
+    var rows = document.getElementsByTagName('tr'),
+      url;
+
+    for (var i = 0, len = rows.length; i < len; i++) {
+      if (i === 0) { continue; }
+      rows[i].onclick = function () {
+        uri = this.getAttribute('data-url');
+        window.location = uri;
+      };
+    }
+  </script>
 </body>
 
 </html>

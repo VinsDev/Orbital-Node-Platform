@@ -29,6 +29,8 @@ let routes = app => {
   router.post("/admin/:sname/getStudents", uploadController.getStudents);
   router.post("/admin/:sname/getSubjectsResultsList", uploadController.getSubjectsResultsList);
   router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
+  router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
+  router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
   router.post("/login", urlencodedParser, uploadController.login);
   router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
   router.post("/admin/:sname/sessions", uploadController.createSession);
@@ -53,13 +55,14 @@ let routes = app => {
   router.get("/admin/:sname/student-info", pagesController.student_info);
   router.get("/admin/:sname/student-fees", pagesController.student_fees);
   router.get("/admin/:sname/student-register", pagesController.student_register);
-  router.get("/admin/:sname/subject-results", pagesController.subject_results);
+  router.get("/admin/:sname/continous-assessments", pagesController.continous_assessments);
   router.get("/admin/:sname/student-results", pagesController.student_results);
   router.get("/admin/:sname/parents", pagesController.parents);
   router.get("/admin/:sname/sessions", pagesController.sessions);
   router.get("/admin/:sname/classes", pagesController.classes);
   router.get("/admin/:sname/subjects", pagesController.subjects);
   router.get("/admin/:sname/assessment/:class/:subject", pagesController.assessment);
+  router.get("/admin/:sname/result/:class/:student", pagesController.result);
 
 
   return app.use("/", router);
