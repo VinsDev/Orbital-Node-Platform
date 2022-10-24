@@ -10,13 +10,15 @@ const url = dbConfig.url;
 
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = local;
+const baseUrl = web;
 
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nlocal;
+const nbaseUrl = nweb;
 
 const mongoClient = new MongoClient(url);
+
+const orbital = require("../computations/compile-results");
 
 // LANDING . . .
 const getSchools = async (req, res) => {
@@ -102,7 +104,7 @@ const uploadRegForm = async (req, res) => {
                 .send({ message: "You must select at least 1 file." });
         }
 
-        return res.status(200).render("success", { name: req.body.name });
+        return res.status(200).render("inner/success", { name: req.body.name });
     } catch (error) {
         console.log(error);
 
@@ -134,7 +136,7 @@ const regAgent = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         database.collection("agents").insertOne(data);
 
-        return res.status(200).render("success_agent", { name: req.body.name });
+        return res.status(200).render("inner/success_agent", { name: req.body.name });
     } catch {
         console.log(error);
     }
@@ -238,16 +240,17 @@ const login = async (req, res) => {
         let school_data = await schools.findOne({ 'admin.admin_username': req.body.username.trim() });
         if (school_data) {
             if (school_data.admin.admin_password === req.body.password.trim()) {
-                res.send({
-                    status: "accepted",
-                    school: school_data.school_info.name
-                });
+                if (req.xhr || req.accepts('json,html') === 'json') {
+                    return res.send({ success: true, school_name: school_data.school_info.name });
+                } else {
+                    return res.redirect(303, '/admin');
+                }
             } else {
-                res.send({ status: "declined" });
+                res.send({ success: false });
             }
         }
         else {
-            res.send({ status: "declined" });
+            res.send({ success: false });
         }
     } catch (error) {
         return res.status(500).send({
@@ -272,7 +275,7 @@ const upload_news = async (req, res) => {
             { $push: { news: news_model } }
         );
 
-        return res.status(200).send({ message: "Success" });
+        return res.redirect(303, '/admin/' + req.params.sname + '/upcoming-news');
     } catch (error) {
         console.log(error);
     }
@@ -307,7 +310,7 @@ const createSession = async (req, res) => {
             { $push: { sessions: session_model } }
         );
 
-        return res.status(200).send({ message: "Success" });
+        return res.redirect(303, '/admin/' + req.params.sname + '/sessions');
     } catch {
         console.log(error);
     }
@@ -326,8 +329,11 @@ const createClass = async (req, res) => {
         database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
             { $push: { classes: class_model } }
         );
-
-        return res.status(200).send({ message: "Success" });
+        if (req.xhr || req.accepts('json,html') === 'json') {
+            return res.send({ success: true });
+        } else {
+            return res.redirect(303, '/admin/' + req.params.sname + '/classes');
+        }
     } catch {
         console.log(error);
     }
@@ -345,7 +351,7 @@ const createSubject = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "classes.$[t].subjects": class_subject } }, { arrayFilters: [{ "t.name": req.body.class_name }] })
-        return res.status(200).send({ message: "Success" });
+        return res.redirect(303, '/admin/' + req.params.sname + '/subjects');
     } catch {
         console.log(error);
     }
@@ -355,6 +361,7 @@ const createStudent = async (req, res) => {
 
         var student_model = {
             name: req.body.name,
+            password: req.body.dob,
             gender: req.body.gender,
             dob: req.body.dob,
             session: req.body.session,
@@ -363,7 +370,6 @@ const createStudent = async (req, res) => {
             subjects: [],
             total: -1,
             average: -1,
-            grade: "",
             position: -1,
             remarks: "",
         }
@@ -392,22 +398,19 @@ const createStudent = async (req, res) => {
             s_subjects.push(
                 {
                     name: school_data.classes[classIndex].subjects[i].name,
-                    ass1: -1,
-                    ass2: -1,
-                    test1: -1,
-                    test2: -1,
-                    exams: -1,
+                    ass: [-1, -1, -1, -1, -1],
                     total: -1,
                     grade: "",
-                    position: -1
+                    position: -1,
+                    highest: -1,
+                    lowest: -1
                 }
             )
         }
 
-        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects } } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] })
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects } } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] });
 
-
-        return res.status(200).send({ message: "Success" });
+        return res.redirect(303, '/admin/' + req.params.sname + '/student-info');
     } catch (error) {
         console.log(error);
     }
@@ -439,17 +442,10 @@ const getStudents = async (req, res) => {
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
 
-        var isess = -1;
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
 
-        for (var i = 0; i < school_data.sessions.length; i++) {
-            if (school_data.sessions[i].name === req.body.session) isess = i;
-        }
-        var iterm = -1;
-        for (var j = 0; j < school_data.sessions[isess].terms.length; j++) {
-            if (school_data.sessions[isess].terms[j].name === req.body.term) iterm = j;
-        }
-
-        var std = school_data.sessions[isess].terms[iterm].students;
+        var std = school_data.sessions[sessionIndex].terms[termIndex].students;
 
         std.forEach((student) => {
             if (student.class === req.body.class) {
@@ -492,34 +488,15 @@ const getSubjectsResultsList = async (req, res) => {
 const getSubjectsResults = async (req, res) => {
     let subjectsResults = [];
     await mongoClient.connect();
-    var sessionIndex = -1;
-    var termIndex = -1;
-    var classIndex = -1;
 
     const database = mongoClient.db(dbConfig.database);
     const schools = database.collection("schools");
     let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
 
-    for (var i = 0; i < school_data.sessions.length; i++) {
-        if (school_data.sessions[i].name === req.body.session) {
-            sessionIndex = i;
-            break;
-        }
-    }
+    var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+    var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+    // var classIndex = school_data.sessions[sessionIndex].terms[termIndex].classes.findIndex(i => i.name === req.body.class.trim());
 
-    for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
-        if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
-            termIndex = i;
-            break;
-        }
-    }
-
-    for (var i = 0; i < school_data.classes.length; i++) {
-        if (school_data.classes[i].name === req.body.class.trim()) {
-            classIndex = i;
-            break;
-        }
-    }
 
     for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
         if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
@@ -533,35 +510,19 @@ const getSubjectsResults = async (req, res) => {
 const getStudentResults = async (req, res) => {
     try {
         await mongoClient.connect();
-        var sessionIndex = -1;
-        var termIndex = -1;
-        var classIndex = -1;
         var std = {};
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
+
+        orbital.computeResults(req.params.sname, req.body.session, req.body.term, req.body.class);
+
         let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
 
-        for (var i = 0; i < school_data.sessions.length; i++) {
-            if (school_data.sessions[i].name === req.body.session) {
-                sessionIndex = i;
-                break;
-            }
-        }
 
-        for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
-            if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
-                termIndex = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < school_data.classes.length; i++) {
-            if (school_data.classes[i].name === req.body.class.trim()) {
-                classIndex = i;
-                break;
-            }
-        }
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+        // var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
 
         for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
             if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === req.body.name && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
@@ -582,10 +543,6 @@ const updateSubjectsResults = async (req, res) => {
 
     try {
         await mongoClient.connect();
-        var sessionIndex = -1;
-        var termIndex = -1;
-        var classIndex = -1;
-        var subjectIndex = -1;
 
         let updatedRes = req.body.data;
 
@@ -593,32 +550,10 @@ const updateSubjectsResults = async (req, res) => {
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
-        for (var i = 0; i < school_data.sessions.length; i++) {
-            if (school_data.sessions[i].name === req.body.session) {
-                sessionIndex = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < school_data.sessions[sessionIndex].terms.length; i++) {
-            if (school_data.sessions[sessionIndex].terms[i].name === req.body.term) {
-                termIndex = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < school_data.classes.length; i++) {
-            if (school_data.classes[i].name === req.body.class.trim()) {
-                classIndex = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
-            if (school_data.classes[classIndex].subjects[i].name === req.body.subname) {
-                subjectIndex = i;
-            }
-        }
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
+        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subname);
 
         for (var j = 0; j < updatedRes.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {

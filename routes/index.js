@@ -31,7 +31,7 @@ let routes = app => {
   router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
   router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
-  router.post("/login", urlencodedParser, uploadController.login);
+  router.post("/admin/login", urlencodedParser, uploadController.login);
   router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
   router.post("/admin/:sname/sessions", uploadController.createSession);
   router.post("/admin/:sname/classes", uploadController.createClass);

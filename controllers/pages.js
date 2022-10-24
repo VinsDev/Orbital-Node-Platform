@@ -5,6 +5,8 @@ const dbConfig = require("../config/db");
 const url = dbConfig.url;
 const mongoClient = new MongoClient(url);
 
+const orbital = require("../computations/compile-results");
+
 // ORBITAL NODE LANDING . . .
 const about = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/about.html`));
@@ -16,10 +18,10 @@ const contact = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/contact.html`));
 };
 const register = (req, res) => {
-    return res.render("register");
+    return res.render("inner/register");
 };
 const agent = (req, res) => {
-    return res.render("agent");
+    return res.render("inner/agent");
 };
 
 // SCHOOL . . .
@@ -143,7 +145,15 @@ const dashboard = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/dashboard", { school_obj: school_data.school_info });
+        lses = school_data.sessions.length - 1;
+        lcls = school_data.classes.length - 1;
+        return res.render("../admin/dashboard", {
+            school_obj: school_data.school_info,
+            students: school_data.sessions[lses].terms[0].students.length,
+            teachers: school_data.classes[lcls].subjects.length,
+            subscription: 10,
+            session: school_data.sessions[lses].name
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -364,7 +374,7 @@ const assessment = async (req, res) => {
             }
         }
 
-        return res.render("../admin/assessment", {
+        return res.render("../admin/inner/assessment", {
             school_obj: school_data.school_info,
             sessions_data: school_data.sessions,
             subject_data: school_data.classes[classIndex].subjects[subjectIndex],
@@ -380,10 +390,13 @@ const result = async (req, res) => {
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
+
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
-        return res.render("../admin/result", {
+        orbital.computeResults(req.params.sname, school_data.sessions[0].name, school_data.sessions[0].terms[0].name, school_data.classes[0].name);
+
+        return res.render("../admin/inner/result", {
             school_obj: school_data.school_info,
             sessions_data: school_data.sessions,
             student_name: req.params.student,

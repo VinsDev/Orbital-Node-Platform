@@ -972,5 +972,5 @@ footer .become_techer_wrapper .become_a_teacher .shape_t_1, footer .round_shape{
     display: none;
 }
 header.header_four .header_top:before {
-    background: url(../images/shapes/shape_top.png) repeat center center;
+    background: url(../../images/shapes/shape_top.png) repeat center center;
 }

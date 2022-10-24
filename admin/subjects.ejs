@@ -276,7 +276,6 @@
           <div class="card-body">
             <div class="pt-4 pb-2">
               <h5 class="card-title text-center pb-0 fs-4">Add Subjects</h5>
-              <!-- <p class="text-center small">Add Session</p> -->
             </div>
             <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/subjects"
               novalidate>
@@ -291,7 +290,6 @@
                 <div class="col-sm-10">
                   <select id="class_name" name="class_name" class="form-control">
                     <option disabled selected value>Select your class</option>
-                    <!-- <% function convert(str) { return str.replace(/\s+/g, '-' ).toLowerCase(); } %> -->
                     <% for(var i=0; i < class_data.length; i++){ %>
                       <option>
                         <%= class_data[i].name %>
@@ -308,7 +306,7 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit" onclick="closeForm()">Add Subject</button>
+                <button class="btn btn-primary w-100" type="submit">Add Subject</button>
               </div>
             </form>
             <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close

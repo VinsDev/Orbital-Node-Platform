@@ -277,7 +277,7 @@
         <div class="col-md-12 offset-md-0">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Manage Students Results</h5>
+              <h5 class="card-title">View Students Results</h5>
               <!-- Table with hoverable rows -->
               <table class="table table-hover" id="myTable">
                 <thead>
@@ -291,26 +291,30 @@
                 </thead>
                 <tbody>
                   <div id="field">
-                    <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                      <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                        <tr
-                          data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
-                          <th scope="row">1</th>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].name %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].gender %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].dob %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].class %>
-                          </td>
-                        </tr>
-                        <% } %>
-                          <% } %>
+                    <%counter=1;%>
+                      <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                        <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                          <tr
+                            data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
+                            <th scope="row">
+                              <%=counter %>
+                            </th>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].name %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].gender %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].dob %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].class %>
+                            </td>
+                          </tr>
+                          <%counter++;%>
+                            <% } %>
+                              <% } %>
                   </div>
                 </tbody>
               </table>
