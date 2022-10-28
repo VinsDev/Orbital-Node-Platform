@@ -96,7 +96,6 @@
                       $('#loginForm').on('submit', function (evt) {
                         evt.preventDefault();
                         var form = $(this);
-                        console.log(convertFormToJSON(form))
                         var action = $(this).attr('action');
                         var $container = $(this).closest('.formContainer');
                         $.ajax({

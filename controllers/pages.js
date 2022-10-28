@@ -79,6 +79,25 @@ const portal = async (req, res) => {
     }
 
 };
+const profile = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+        var lses = school_data.sessions.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+        var stdIndex = school_data.sessions[lses].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
+
+        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex] });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+
+};
 const fees = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -145,15 +164,27 @@ const dashboard = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        lses = school_data.sessions.length - 1;
-        lcls = school_data.classes.length - 1;
-        return res.render("../admin/dashboard", {
-            school_obj: school_data.school_info,
-            students: school_data.sessions[lses].terms[0].students.length,
-            teachers: school_data.classes[lcls].subjects.length,
-            subscription: 10,
-            session: school_data.sessions[lses].name
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            lses = school_data.sessions.length - 1;
+            lcls = school_data.classes.length - 1;
+            return res.render("../admin/dashboard", {
+                school_obj: school_data.school_info,
+                students: school_data.sessions[lses].terms[0].students.length,
+                teachers: school_data.classes[lcls].subjects.length,
+                subscription: 10,
+                session: school_data.sessions[lses].name,
+                current_term: school_data.sessions[lses].current_term,
+            });
+        } else {
+            return res.render("../admin/dashboard", {
+                school_obj: school_data.school_info,
+                students: "0",
+                teachers: "0",
+                subscription: "Unknown",
+                session: "Unknown",
+                current_term: "first"
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -436,5 +467,6 @@ module.exports = {
     classes,
     subjects,
     assessment,
-    result
+    result,
+    profile
 };

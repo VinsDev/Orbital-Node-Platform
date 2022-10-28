@@ -1,24 +1,22 @@
 const upload = require("../middleware/upload");
 const newsImages = require("../middleware/newsImages");
 const dbConfig = require("../config/db");
-const db = require("../config/db");
 
 const MongoClient = require("mongodb").MongoClient;
 const GridFSBucket = require("mongodb").GridFSBucket;
+var PdfPrinter = require('pdfmake');
 
 const url = dbConfig.url;
-
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
-
+const baseUrl = local;
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nweb;
-
+const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
-
 const orbital = require("../computations/compile-results");
+
+// var fs = require('fs');
 
 // LANDING . . .
 const getSchools = async (req, res) => {
@@ -142,6 +140,7 @@ const regAgent = async (req, res) => {
     }
 }
 
+
 // SCHOOL . . .
 const downloadImage = async (req, res) => {
     try {
@@ -165,6 +164,131 @@ const downloadImage = async (req, res) => {
         downloadStream.on("end", () => {
             return res.end();
         });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
+const downloadPdf = async (req, res) => {
+    try {
+
+        const fetch = require('node-fetch');
+        var url = "http://localhost:3000/files/1666703606204-orbitalnode-0.jpeg";
+        var rest = await fetch(url, { encoding: null });
+        imageBuffer = await rest.buffer();
+        img = new Buffer.from(imageBuffer, 'base64');
+
+        var Roboto = require('../fonts/Roboto');
+
+        var docDefinition = {
+            content: [
+                {
+                    image: img,
+                    fit: [60, 60],
+                    style: {
+                        alignment: 'center',
+                    },
+                },
+                {
+                    text: 'Government Secondary School',
+                    style: 'subheader', 
+                    alignment: 'center'
+                },
+                {
+                    text: 'Nasarawa State Nigeria',
+                    style: 'subheader', 
+                    alignment: 'center'
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            text: 'This is a star-sized column. It should get the remaining space divided by the number of all star-sized columns.'
+                        },
+                        {
+                            width: 50,
+                            text: 'this one has specific width set to 50'
+                        },
+                        {
+                            width: 'auto',
+                            text: 'another auto column'
+                        },
+                        {
+                            width: '*',
+                            text: 'This is a star-sized column. It should get the remaining space divided by the number of all star-sized columns.'
+                        },
+                    ]
+                },
+                {
+                    style: 'tableExample',
+                    color: '#444',
+                    table: {
+                        widths: [200, 'auto', 'auto'],
+                        headerRows: 2,
+                        // keepWithHeaderRows: 1,
+                        body: [
+                            [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                            [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
+                            ['Sample value 1', 'Sample value 2', 'Sample value 3'],
+                            [{ rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3'],
+                            ['', 'Sample value 2', 'Sample value 3'],
+                            ['Sample value 1', 'Sample value 2', 'Sample value 3'],
+                            ['Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, ''],
+                            ['Sample value 1', '', ''],
+                        ]
+                    }
+                },
+            ],
+            styles: {
+                header: {
+                    fontSize: 18,
+                    bold: true,
+                    margin: [0, 0, 0, 10]
+                },
+                subheader: {
+                    fontSize: 16,
+                    bold: true,
+                    margin: [0, 10, 0, 5]
+                },
+                tableExample: {
+                    margin: [0, 5, 0, 15]
+                },
+                tableOpacityExample: {
+                    margin: [0, 5, 0, 15],
+                    fillColor: 'blue',
+                    fillOpacity: 0.3
+                },
+                tableHeader: {
+                    bold: true,
+                    fontSize: 13,
+                    color: 'black'
+                }
+            },
+            defaultStyle: {
+                // alignment: 'justify'
+            },
+            patterns: {
+                stripe45d: {
+                    boundingBox: [1, 1, 4, 4],
+                    xStep: 3,
+                    yStep: 3,
+                    pattern: '1 w 0 1 m 4 5 l s 2 0 m 5 3 l s'
+                }
+            }
+        };
+
+        var options = {
+            // ...
+        }
+        var printer = new PdfPrinter(Roboto);
+
+        var pdfDoc = printer.createPdfKitDocument(docDefinition);
+        // pdfDoc.pipe(fs.createWriteStream('document.pdf'));
+        pdfDoc.pipe(res);
+        pdfDoc.end();
+
+
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -229,6 +353,36 @@ const getListFiles = async (req, res) => {
         });
     }
 };
+const portaLogin = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var lses = school_data.sessions.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+
+        for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
+            if (school_data.sessions[lses].terms[currTermIndex].students[i].name === req.body.name) {
+                if (school_data.sessions[lses].terms[currTermIndex].students[i].password === req.body.password) {
+                    return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
+                    break;
+                } else {
+                    res.send({ success: false });
+                }
+            }
+            else {
+                res.send({ success: false });
+            }
+        }
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 // ADMIN . . .
 const login = async (req, res) => {
@@ -285,8 +439,6 @@ const createSession = async (req, res) => {
 
         var session_model = {
             name: req.body.name,
-            sdate: req.body.sdate,
-            edate: req.body.edate,
             terms: [
                 {
                     name: "first",
@@ -300,7 +452,8 @@ const createSession = async (req, res) => {
                     name: "third",
                     students: []
                 },
-            ]
+            ],
+            current_term: 'first'
         }
 
         await mongoClient.connect();
@@ -580,6 +733,30 @@ const updateSubjectsResults = async (req, res) => {
         });
     }
 }
+const updateCurrentTerm = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        console.log(req.body.sess)
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var lses = school_data.sessions.length - 1;
+        var session = school_data.sessions[lses].name;
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "sessions.$[sess].current_term": req.body.current_term } },
+            {
+                arrayFilters:
+                    [{ "sess.name": session }]
+            }).then(res.send({ success: true }));
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 module.exports = {
     uploadRegForm,
@@ -589,8 +766,10 @@ module.exports = {
     getStudents,
     getListFiles,
     downloadImage,
+    downloadPdf,
     downloadNewsImage,
     login,
+    portaLogin,
     upload_news,
     createSession,
     createClass,
@@ -600,4 +779,5 @@ module.exports = {
     getSubjectsResults,
     getStudentResults,
     updateSubjectsResults,
+    updateCurrentTerm,
 };

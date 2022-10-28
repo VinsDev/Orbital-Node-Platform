@@ -23,6 +23,7 @@ let routes = app => {
   router.post("/agent", uploadController.regAgent);
   router.get("/files", uploadController.getListFiles);
   router.get("/files/:name", uploadController.downloadImage);
+  router.get("/pdf", uploadController.downloadPdf);
   router.get("/news/:name", uploadController.downloadNewsImage);
   router.post("/getSchools", uploadController.getSchools);
   router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
@@ -31,7 +32,9 @@ let routes = app => {
   router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
   router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
+  router.post("/admin/:sname/updateCurrentTerm", uploadController.updateCurrentTerm);
   router.post("/admin/login", urlencodedParser, uploadController.login);
+  router.post("/schools/:sname/portal/login", urlencodedParser, uploadController.portaLogin);
   router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
   router.post("/admin/:sname/sessions", uploadController.createSession);
   router.post("/admin/:sname/classes", uploadController.createClass);
@@ -43,6 +46,7 @@ let routes = app => {
   router.get("/schools/:sname/admissions", pagesController.admissions);
   router.get("/schools/:sname/fees", pagesController.fees);
   router.get("/schools/:sname/portal", pagesController.portal);
+  router.get("/schools/:sname/portal/:studname", pagesController.profile);
   router.get("/schools/:sname/follow", pagesController.follow_up);
   router.get("/schools/:sname/about", pagesController.s_about);
 
