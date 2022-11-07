@@ -16,8 +16,6 @@ const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
 
-// var fs = require('fs');
-
 // LANDING . . .
 const getSchools = async (req, res) => {
     try {
@@ -50,6 +48,7 @@ const sendForm = async (req, res, url) => {
                 email: req.body.email,
                 phone: req.body.phone,
                 adress: req.body.adress,
+                state: req.body.state,
                 pic1: baseUrl + url[1].filename,
                 pic2: baseUrl + url[2].filename,
                 about: req.body.about,
@@ -172,14 +171,55 @@ const downloadImage = async (req, res) => {
 };
 const downloadPdf = async (req, res) => {
     try {
+        await mongoClient.connect();
+        var student_data;
+        var stdNumber = 0;
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var lses = school_data.sessions.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+
+        for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
+            if (school_data.sessions[lses].terms[currTermIndex].students[i].name === req.params.stdname && school_data.sessions[lses].terms[currTermIndex].students[i].class === req.params.stdclass) {
+                student_data = school_data.sessions[lses].terms[currTermIndex].students[i];
+                break;
+            }
+        }
+
+        for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
+            if (school_data.sessions[lses].terms[currTermIndex].students[i].class === req.params.stdclass) {
+                stdNumber++;
+            }
+        }
+
+
 
         const fetch = require('node-fetch');
-        var url = "http://localhost:3000/files/1666703606204-orbitalnode-0.jpeg";
+        var url = school_data.school_info.logo;
         var rest = await fetch(url, { encoding: null });
         imageBuffer = await rest.buffer();
         img = new Buffer.from(imageBuffer, 'base64');
 
         var Roboto = require('../fonts/Roboto');
+
+        let tableItems = [
+            [{ rowSpan: 2, text: 'Subjects', alignment: 'center', style: 'tableHeader' }, { text: 'C. Assessments', style: 'tableHeader', colSpan: 5, alignment: 'center' }, {}, {}, {}, {}, { text: 'Total', style: 'tableHeader', alignment: 'center' }, { text: 'Average', style: 'tableHeader', alignment: 'center' }, { text: 'Highest', style: 'tableHeader', alignment: 'center' }, { text: 'Lowest', style: 'tableHeader', alignment: 'center' }, { text: 'Rank', style: 'tableHeader', alignment: 'center' }, { text: 'Grade', style: 'tableHeader', alignment: 'center' }],
+            ['', { text: '1ST\nCA', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nCA', style: 'tableHeader', alignment: 'center' }, { text: '1ST\nTEST', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nTEST', style: 'tableHeader', alignment: 'center' }, { text: 'EXAMS', style: 'tableHeader', alignment: 'center' }, '', '', '', '', '', ''],
+        ];
+
+        for (var i = 0; i < student_data.subjects.length; i++) {
+            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].position, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].grade, style: 'tableHeader', alignment: 'center' }])
+        }
+
+        var dt = new Date();
+        var mm = ((dt.getMonth() + 1) >= 10) ? (dt.getMonth() + 1) : '0' + (dt.getMonth() + 1);
+        var dd = ((dt.getDate()) >= 10) ? (dt.getDate()) : '0' + (dt.getDate());
+        var yyyy = dt.getFullYear();
+        var date = yyyy + "/" + mm + "/" + dd;
 
         var docDefinition = {
             content: [
@@ -191,68 +231,164 @@ const downloadPdf = async (req, res) => {
                     },
                 },
                 {
-                    text: 'Government Secondary School',
-                    style: 'subheader', 
+                    text: school_data.school_info.name,
+                    style: 'header',
                     alignment: 'center'
                 },
                 {
-                    text: 'Nasarawa State Nigeria',
-                    style: 'subheader', 
+                    text: `${school_data.school_info.state} Nigeria`,
+                    style: 'subheader',
                     alignment: 'center'
                 },
                 {
                     columns: [
                         {
                             width: '*',
-                            text: 'This is a star-sized column. It should get the remaining space divided by the number of all star-sized columns.'
-                        },
-                        {
-                            width: 50,
-                            text: 'this one has specific width set to 50'
+                            style: 'top',
+                            text: `Name of Student: ${student_data.name}`
                         },
                         {
                             width: 'auto',
-                            text: 'another auto column'
+                            style: 'top',
+                            text: `Session: ${school_data.sessions[lses].name}`
                         },
+                    ]
+                },
+                {
+                    columns: [
                         {
                             width: '*',
-                            text: 'This is a star-sized column. It should get the remaining space divided by the number of all star-sized columns.'
+                            style: 'top',
+                            text: `School: ${school_data.school_info.name}`
+                        },
+                        {
+                            width: 'auto',
+                            style: 'top',
+                            text: `Sex: ${student_data.gender}`
+                        },
+                    ]
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            style: 'top',
+                            text: `Term: ${school_data.sessions[lses].terms[currTermIndex].name}`
+                        },
+                        {
+                            width: 'auto',
+                            style: 'top',
+                            text: `Date of Birth: ${student_data.dob}`
+                        },
+                    ]
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            style: 'top',
+                            text: `Class: ${student_data.class}`
+                        },
+                        {
+                            width: 'auto',
+                            style: 'top',
+                            text: `Number in Class: ${stdNumber}`
                         },
                     ]
                 },
                 {
                     style: 'tableExample',
-                    color: '#444',
+                    color: '#000',
                     table: {
-                        widths: [200, 'auto', 'auto'],
-                        headerRows: 2,
-                        // keepWithHeaderRows: 1,
-                        body: [
-                            [{ text: 'Header with Colspan = 2', style: 'tableHeader', colSpan: 2, alignment: 'center' }, {}, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
-                            [{ text: 'Header 1', style: 'tableHeader', alignment: 'center' }, { text: 'Header 2', style: 'tableHeader', alignment: 'center' }, { text: 'Header 3', style: 'tableHeader', alignment: 'center' }],
-                            ['Sample value 1', 'Sample value 2', 'Sample value 3'],
-                            [{ rowSpan: 3, text: 'rowSpan set to 3\nLorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor' }, 'Sample value 2', 'Sample value 3'],
-                            ['', 'Sample value 2', 'Sample value 3'],
-                            ['Sample value 1', 'Sample value 2', 'Sample value 3'],
-                            ['Sample value 1', { colSpan: 2, rowSpan: 2, text: 'Both:\nrowSpan and colSpan\ncan be defined at the same time' }, ''],
-                            ['Sample value 1', '', ''],
-                        ]
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        // headerRows: 2,
+                        body: tableItems
                     }
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: `NUMBER OF SUBJECTS: ${student_data.subjects.length}`
+                        },
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: `TOTAL OBTAINABLE MARKS: ${student_data.subjects.length * 100}`
+                        },
+                        {
+                            width: 'auto',
+                            style: 'bottom',
+                            text: `MARKS OBTAINED: ${student_data.total}`
+                        },
+                    ]
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: `CLASS AVERAGE: ${student_data.average}`
+                        },
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: `POSITION IN CLASS: ${student_data.position}`
+                        },
+                        {
+                            width: 'auto',
+                            style: 'bottom',
+                            text: `OUT OF CLASS: ${stdNumber}`
+                        },
+                    ]
+                },
+                {
+                    style: 'bottom',
+                    text: `PRINCIPAL\'S REMARKS: ${htremarkHelper(student_data.average)}`,
+                },
+                {
+                    columns: [
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: `NAME OF PRINCIPAL: ${school_data.school_info.p_name}`
+                        },
+                        {
+                            width: '*',
+                            style: 'bottom',
+                            text: 'SIGNATURE/STAMP:'
+                        },
+                        {
+                            width: 'auto',
+                            style: 'bottom',
+                            text: `DATE: ${date}`
+                        },
+                    ]
                 },
             ],
             styles: {
                 header: {
-                    fontSize: 18,
+                    fontSize: 15,
+                    bold: true,
+                    margin: [0, 5, 0, 3]
+                },
+                subheader: {
+                    fontSize: 13,
                     bold: true,
                     margin: [0, 0, 0, 10]
                 },
-                subheader: {
-                    fontSize: 16,
+                top: {
                     bold: true,
-                    margin: [0, 10, 0, 5]
+                    fontSize: 11,
+                    color: 'black',
+                    margin: [0, 0, 0, 5]
                 },
-                tableExample: {
-                    margin: [0, 5, 0, 15]
+                bottom: {
+                    bold: false,
+                    fontSize: 10,
+                    color: 'black',
+                    margin: [0, 5, 0, 0]
                 },
                 tableOpacityExample: {
                     margin: [0, 5, 0, 15],
@@ -261,7 +397,7 @@ const downloadPdf = async (req, res) => {
                 },
                 tableHeader: {
                     bold: true,
-                    fontSize: 13,
+                    fontSize: 9.5,
                     color: 'black'
                 }
             },
@@ -365,22 +501,17 @@ const portaLogin = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
-            if (school_data.sessions[lses].terms[currTermIndex].students[i].name === req.body.name) {
-                if (school_data.sessions[lses].terms[currTermIndex].students[i].password === req.body.password) {
+            if (req.body.name === school_data.sessions[lses].terms[currTermIndex].students[i].name) {
+                if (req.body.password === school_data.sessions[lses].terms[currTermIndex].students[i].password) {
                     return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
-                    break;
                 } else {
-                    res.send({ success: false });
+                    return res.send({ success: false });
                 }
             }
-            else {
-                res.send({ success: false });
-            }
         }
+        return res.send({ success: false });
     } catch (error) {
-        return res.status(500).send({
-            message: error.message,
-        });
+        return res.send({ message: error });
     }
 }
 
@@ -442,14 +573,17 @@ const createSession = async (req, res) => {
             terms: [
                 {
                     name: "first",
+                    results: 'false',
                     students: []
                 },
                 {
                     name: "second",
+                    results: 'false',
                     students: []
                 },
                 {
                     name: "third",
+                    results: 'false',
                     students: []
                 },
             ],
@@ -593,7 +727,7 @@ const getStudents = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
         var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
         var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
@@ -606,7 +740,7 @@ const getStudents = async (req, res) => {
             }
         })
 
-        res.status(200).send({ payload: studentsList });
+        res.status(200).send({ payload: studentsList, results_status: school_data.sessions[sessionIndex].terms[termIndex].results });
 
     } catch (error) {
         return res.status(500).send({
@@ -739,7 +873,6 @@ const updateCurrentTerm = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        console.log(req.body.sess)
 
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         var lses = school_data.sessions.length - 1;
@@ -750,6 +883,31 @@ const updateCurrentTerm = async (req, res) => {
             {
                 arrayFilters:
                     [{ "sess.name": session }]
+            }).then(res.send({ success: true }));
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const updateResultStatus = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var lses = school_data.sessions.length - 1;
+        var session = school_data.sessions[lses].name;
+        // var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "sessions.$[sess].terms.$[term].results": req.body.results_status } },
+            {
+                arrayFilters:
+                    [{ "sess.name": session }, { "term.name": school_data.sessions[lses].current_term }]
             }).then(res.send({ success: true }));
     } catch (error) {
         return res.status(500).send({
@@ -780,4 +938,31 @@ module.exports = {
     getStudentResults,
     updateSubjectsResults,
     updateCurrentTerm,
+    updateResultStatus
 };
+
+function htremarkHelper(score) {
+    if (score <= 100 && score >= 80) {
+        return "Wonderful performance. Keep it up.";
+    } else {
+        if (score < 80 && score >= 70) {
+            return "An Amazing Result. Keep it up";
+        } else {
+            if (score < 70 && score >= 60) {
+                return "Good Result. You can more";
+            } else {
+                if (score < 60 && score >= 50) {
+                    return "Satisfactory Result. You can better.";
+                } else {
+                    if (score < 50 && score >= 40) {
+                        return "Average Result, Work harder";
+                    } else if (score < 40 && score >= 0) {
+                        return "Poor performance. Do better next time.";
+                    } else {
+                        return "Your Scores are not within the stipulated range.";
+                    }
+                }
+            }
+        }
+    }
+}

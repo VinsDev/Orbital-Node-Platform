@@ -90,7 +90,7 @@ const profile = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
         var stdIndex = school_data.sessions[lses].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
 
-        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex] });
+        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex], results_status: school_data.sessions[0].terms[0].results });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -164,9 +164,11 @@ const dashboard = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        
         if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
             lses = school_data.sessions.length - 1;
             lcls = school_data.classes.length - 1;
+            var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
                 students: school_data.sessions[lses].terms[0].students.length,
@@ -174,6 +176,7 @@ const dashboard = async (req, res) => {
                 subscription: 10,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
+                results_status: school_data.sessions[lses].terms[currTermIndex].results
             });
         } else {
             return res.render("../admin/dashboard", {
@@ -312,7 +315,7 @@ const student_results = async (req, res) => {
         return res.render("../admin/student-results", {
             school_obj: school_data.school_info,
             sessions_data: school_data.sessions,
-            class_data: school_data.classes
+            class_data: school_data.classes,
         });
     } catch (error) {
         return res.status(500).send({

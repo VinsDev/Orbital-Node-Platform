@@ -30,6 +30,9 @@
 
   <!-- Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
+
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -316,30 +319,23 @@
           </div>
         </div>
         <div class="text-center">
-          <button type="submit" class="btn btn-primary" onclick="openForm()">Add Student</button>
+          <button type="submit" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Add
+            Student</button>
         </div>
       </div>
       </div>
     </section>
 
-
-    <div class="">
-
-    </div>
-
-
-
-    <!-- Add Student Form -->
-    <div class="add" id="add">
-      <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="pt-4 pb-2">
-              <h5 class="card-title text-center pb-0 fs-4">Add Student</h5>
-              <p class="text-center small">Add a student to the database</p>
-            </div>
-            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/students"
-              novalidate>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/students">
               <div class="col-12">
                 <label for="yourName" class="form-label">Student Name</label>
                 <input type="text" name="name" class="form-control" id="yourName" required>
@@ -401,15 +397,24 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit">Add Student</button>
+                <button id="btnSubmit" type="submit" style="display: none;"></button>
               </div>
             </form>
-            <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
-                form</a></label>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create">Create</button>
+          </div>
+
         </div>
       </div>
     </div>
+    <script>
+      $("#create").on("click", function (e) {
+        console.log('hi')
+        $('#btnSubmit').click()
+      });
+    </script>
 
 
   </main><!-- End #main -->
@@ -434,8 +439,7 @@
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
-  <!-- Jquery -->
-  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+
   <script>
     function sendData() {
 

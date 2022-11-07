@@ -31,7 +31,7 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
-
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -244,22 +244,23 @@
             </div><!-- End Card with an image on bottom -->
             <% } %>
               <div class="text-center">
-                <button class="btn btn-primary" onclick="openForm()">Upload News</button>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Upload News</button>
               </div>
         </div>
 
       </div>
     </section>
 
-    <!-- Add News Form -->
-    <div class="add" id="add">
-      <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="pt-4 pb-2">
-              <h5 class="card-title text-center pb-0 fs-4">Upload News / Event</h5>
-              <p class="text-center small">Publish your school news / event to the school website</p>
-            </div>
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Create News</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
             <form class="row g-3 needs-validation" novalidate method="post"
               action="/admin/<%= school_obj.name %>/upcoming-news" enctype="multipart/form-data">
               <div class="col-12">
@@ -284,15 +285,25 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit">Upload</button>
+                <button id="btnSubmit" type="submit" style="display: none;"></button>
               </div>
             </form>
-            <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
-                form</a></label>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create">Add News</button>
+          </div>
+
         </div>
       </div>
     </div>
+    <script>
+      $("#create").on("click", function (e) {
+        console.log('hi')
+        $('#btnSubmit').click()
+      });
+    </script>
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -306,14 +317,9 @@
       class="bi bi-arrow-up-short"></i></a>
 
   <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="../../admin/assets/vendor/echarts/echarts.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="../../admin/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>

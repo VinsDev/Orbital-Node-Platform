@@ -33,6 +33,7 @@
 
   <!-- <script src="../../../admin/assets/js/jquery-3.6.1.js"></script> -->
 
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -239,21 +240,24 @@
           <% } %>
 
             <div class="text-center">
-              <button class="btn btn-primary" onclick="openForm()">Create Class</button>
+              <button class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#exampleModalCenter">Create</button>
             </div>
       </div>
     </section>
 
-    <!-- Add Class Form -->
-    <div class="add" id="add">
-      <div class="col-md-10 offset-md-4">
-        <div class="card mb-3">
-          <div class="card-body formContainer">
-            <div class="pt-4 pb-2">
-              <h5 class="card-title text-center pb-0 fs-4">Add Class</h5>
-            </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Create Class</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
             <form class="row g-3 needs-validation class-form" method="post"
-              action="/admin/<%= school_obj.name %>/classes" novalidate>
+              action="/admin/<%= school_obj.name %>/classes">
               <div class="col-12">
                 <label for="yourName" class="form-label">Class Name</label>
                 <input type="text" name="name" class="form-control" id="name" required>
@@ -261,41 +265,26 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit">Create Class</button>
+                <button id="btnSubmit" type="submit" style="display: none;"></button>
               </div>
             </form>
-            <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
-                form</a></label>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create">Create</button>
+          </div>
+
         </div>
       </div>
     </div>
-  </main><!-- End #main -->
-
-  <!--   <script>
-    $(document).ready(function () {
-      $('.class-form').on('submit', function (evt) {
-        evt.preventDefault();
-        var action = $(this).attr('action');
-        var $container = $(this).closest('.formContainer');
-        $.ajax({
-          url: action,
-          type: 'POST',
-          success: function (data) {
-            if (data.success) {
-              $container.html('<h2>Class Added successfuly!</h2>');
-            } else {
-              $container.html('There was a problem.');
-            }
-          },
-          error: function () {
-            $container.html('There was a problem.');
-          }
-        });
+    <script>
+      $("#create").on("click", function (e) {
+        console.log('hi')
+        $('#btnSubmit').click()
       });
-    });
-  </script> -->
+    </script>
 
+  </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">

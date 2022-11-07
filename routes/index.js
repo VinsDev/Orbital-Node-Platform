@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const homeController = require("../controllers/home");
-const uploadController = require("../controllers/upload");
+const uploadController = require("../controllers/operations");
 const pagesController = require("../controllers/pages");
 
 const bodyParser = require("body-parser");
@@ -23,7 +23,7 @@ let routes = app => {
   router.post("/agent", uploadController.regAgent);
   router.get("/files", uploadController.getListFiles);
   router.get("/files/:name", uploadController.downloadImage);
-  router.get("/pdf", uploadController.downloadPdf);
+  router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", uploadController.downloadPdf);
   router.get("/news/:name", uploadController.downloadNewsImage);
   router.post("/getSchools", uploadController.getSchools);
   router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
@@ -33,6 +33,7 @@ let routes = app => {
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
   router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
   router.post("/admin/:sname/updateCurrentTerm", uploadController.updateCurrentTerm);
+  router.post("/admin/:sname/updateResultStatus", uploadController.updateResultStatus);
   router.post("/admin/login", urlencodedParser, uploadController.login);
   router.post("/schools/:sname/portal/login", urlencodedParser, uploadController.portaLogin);
   router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
@@ -46,7 +47,7 @@ let routes = app => {
   router.get("/schools/:sname/admissions", pagesController.admissions);
   router.get("/schools/:sname/fees", pagesController.fees);
   router.get("/schools/:sname/portal", pagesController.portal);
-  router.get("/schools/:sname/portal/:studname", pagesController.profile);
+  router.get("/schools/:sname/portal/:stdclass/:studname", pagesController.profile);
   router.get("/schools/:sname/follow", pagesController.follow_up);
   router.get("/schools/:sname/about", pagesController.s_about);
 

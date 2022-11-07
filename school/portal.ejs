@@ -149,7 +149,7 @@
                     success: function (data) {
                         if (data.success) {
                             $container.html('<h2>Login Successful</h2>');
-                            var uri = window.location.href += '/' + data.student_info.name;
+                            var uri = window.location.href += '/' + data.student_info.class + '/' + data.student_info.name;
                             $.ajax({
                                 url: uri,
                                 type: 'GET',

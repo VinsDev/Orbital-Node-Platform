@@ -18,23 +18,23 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../../school/css/assets/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/bootstrap.min.css">
     <!-- Font awsome CSS -->
-    <link rel="stylesheet" href="../../../school/css/assets/font-awesome.min.css">
-    <link rel="stylesheet" href="../../../school/css/assets/flaticon.css">
-    <link rel="stylesheet" href="../../../school/css/assets/magnific-popup.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/flaticon.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/magnific-popup.css">
     <!-- owl carousel -->
-    <link rel="stylesheet" href="../../../school/css/assets/owl.carousel.css">
-    <link rel="stylesheet" href="../../../school/css/assets/owl.theme.css">
-    <link rel="stylesheet" href="../../../school/css/assets/animate.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/owl.carousel.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/owl.theme.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/animate.css">
     <!-- Slick Carousel -->
-    <link rel="stylesheet" href="../../../school/css/assets/slick.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/slick.css">
 
     <!-- Mean Menu-->
-    <link rel="stylesheet" href="../../../school/css/assets/meanmenu.css">
+    <link rel="stylesheet" href="../../../../school/css/assets/meanmenu.css">
     <!-- main style-->
-    <link rel="stylesheet" href="../../../school/css/style.css">
-    <link rel="stylesheet" href="../../../school/css/responsive.css">
+    <link rel="stylesheet" href="../../../../school/css/style.css">
+    <link rel="stylesheet" href="../../../../school/css/responsive.css">
 
 </head>
 
@@ -136,7 +136,13 @@
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <p class="m-b-10 f-w-600">Current Term Result</p>
-                                            <h6 class="text-muted f-w-400"><a href="/pdf">Download first term result</a></h6>
+                                            <% if(results_status==='true' ){ %>
+                                                <h6 class="text-muted f-w-400"><a id="termres"
+                                                        href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/term-result">Download
+                                                        Term result</a></h6>
+                                                <% } else { %>
+                                                    <h6 class="text-muted f-w-400">Not Ready Yet</h6>
+                                                    <% } %>
                                         </div>
                                         <div class="col-sm-6">
                                             <p class="m-b-10 f-w-600">Annual Result</p>
@@ -351,8 +357,8 @@
             </div>
         </div>
         <div class="shapes_bg">
-            <img src="../../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
-            <img src="../../../images/shapes/footer_2.png" alt="" class="shape_1">
+            <img src="../../../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
+            <img src="../../../../images/shapes/footer_2.png" alt="" class="shape_1">
         </div>
     </footer><!-- End Footer -->
 
@@ -364,19 +370,19 @@
     </section>
 
     <!--  JavaScript -->
-    <script src="../../../school/js/jquery-3.2.1.min.js"></script>
-    <script src="../../../school/js/popper.min.js"></script>
-    <script src="../../../school/js/bootstrap.min.js"></script>
-    <script src="../../../school/js/jquery.magnific-popup.min.js"></script>
-    <script src="../../../school/js/owl.carousel.min.js"></script>
-    <script src="../../../school/js/map-helper.js"></script>
-    <script src="../../../school/js/slick.min.js"></script>
-    <script src="../../../school/js/jquery.meanmenu.min.js"></script>
-    <script src="../../../school/js/wow.min.js"></script>
+    <script src="../../../../school/js/jquery-3.2.1.min.js"></script>
+    <script src="../../../../school/js/popper.min.js"></script>
+    <script src="../../../../school/js/bootstrap.min.js"></script>
+    <script src="../../../../school/js/jquery.magnific-popup.min.js"></script>
+    <script src="../../../../school/js/owl.carousel.min.js"></script>
+    <script src="../../../../school/js/map-helper.js"></script>
+    <script src="../../../../school/js/slick.min.js"></script>
+    <script src="../../../../school/js/jquery.meanmenu.min.js"></script>
+    <script src="../../../../school/js/wow.min.js"></script>
     <!-- Counter Script -->
-    <script src="../../../school/js/waypoints.min.js"></script>
-    <script src="../../../school/js/jquery.counterup.min.js"></script>
-    <script src="../../../school/js/custom.js"></script>
+    <script src="../../../../school/js/waypoints.min.js"></script>
+    <script src="../../../../school/js/jquery.counterup.min.js"></script>
+    <script src="../../../../school/js/custom.js"></script>
 
 </body>
 

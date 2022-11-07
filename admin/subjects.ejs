@@ -31,6 +31,7 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -263,22 +264,20 @@
           <% } %>
       </div>
       <div class="text-center">
-        <button class="btn btn-primary" onclick="openForm()">Add Subject</button>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Add Subject</button>
       </div>
     </section>
 
-
-
-    <!-- Add Subject Form -->
-    <div class="add" id="add">
-      <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="pt-4 pb-2">
-              <h5 class="card-title text-center pb-0 fs-4">Add Subjects</h5>
-            </div>
-            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/subjects"
-              novalidate>
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Add Subject</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/subjects">
               <div class="col-12">
                 <label for="yourName" class="form-label">Subject Name</label>
                 <input type="text" name="name" class="form-control" id="name" required>
@@ -306,15 +305,25 @@
               </div>
 
               <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit">Add Subject</button>
+                <button id="btnSubmit" type="submit" style="display: none;"></button>
               </div>
             </form>
-            <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
-                form</a></label>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create">Add</button>
+          </div>
+
         </div>
       </div>
     </div>
+    <script>
+      $("#create").on("click", function (e) {
+        console.log('hi')
+        $('#btnSubmit').click()
+      });
+    </script>
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->

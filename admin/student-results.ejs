@@ -31,6 +31,8 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
+  <script src="../../school/js/jquery-3.2.1.min.js"></script>
+
 </head>
 
 <body>
@@ -322,26 +324,7 @@
 
             </div>
           </div>
-          <fieldset class="row mb-3">
-            <legend class="col-form-label col-sm-2 pt-0">Result Status</legend>
-            <div class="col-sm-10">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1" value="option1" checked>
-                <label class="form-check-label" for="gridRadios1">
-                  Not Released
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2" value="option2">
-                <label class="form-check-label" for="gridRadios2">
-                  Released
-                </label>
-              </div>
-            </div>
-          </fieldset>
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </div>
+
         </div>
       </div>
     </section>
@@ -381,6 +364,7 @@
           term: $("#termSelector").val(),
         })
       }).then(res => res.json()).then(data => {
+
         var payload = data.payload;
         var content = '';
         if (payload < 1) {
@@ -400,6 +384,7 @@
         });
         $('#myTable tbody').html(content);
         update();
+
       });
       return;
     }

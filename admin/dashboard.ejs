@@ -362,7 +362,9 @@
                               current_term: $(this).val(),
                             },
                             success: function (data) {
-                              if (data.success) { } else {
+                              if (data.success) {
+                                location.reload();
+                              } else {
                                 alert("Network Error");
                               }
                             },
@@ -379,7 +381,9 @@
                               current_term: $(this).val(),
                             },
                             success: function (data) {
-                              if (data.success) { } else {
+                              if (data.success) {
+                                location.reload();
+                              } else {
                                 alert("Network Error");
                               }
                             },
@@ -396,7 +400,9 @@
                               current_term: $(this).val(),
                             },
                             success: function (data) {
-                              if (data.success) { } else {
+                              if (data.success) {
+                                location.reload();
+                              } else {
                                 alert("Network Error");
                               }
                             },
@@ -407,6 +413,68 @@
                         });
                       });
                     </script>
+
+                    <% var e1="" %>
+                      <% var e2="" %>
+                        <% if(results_status==='true' ) e1='checked' ; %>
+                          <% if(results_status==='false' ) e2='checked' ; %>
+                            <fieldset class="row mb-3">
+                              <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
+                              <div class="col-sm-10">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="status" id="released"
+                                    value="released" <%=e1 %>>
+                                  <label class="form-check-label" for="gridRadios1">
+                                    Released
+                                  </label>
+                                </div>
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="status" id="not-released"
+                                    value="not-released" <%=e2 %>>
+                                  <label class="form-check-label" for="gridRadios2">
+                                    Not Released
+                                  </label>
+                                </div>
+                              </div>
+                            </fieldset>
+                            <script>
+                              $(document).ready(function () {
+                                $("#released").click(function () {
+                                  $.ajax({
+                                    url: '/admin/<%= school_obj.name %>/updateResultStatus',
+                                    type: 'POST',
+                                    data: {
+                                      results_status: true
+                                    },
+                                    success: function (data) {
+                                      if (data.success) { } else {
+                                        alert("Network Error");
+                                      }
+                                    },
+                                    error: function (error) {
+                                      alert('There was a problem.');
+                                    }
+                                  });
+                                });
+                                $("#not-released").click(function () {
+                                  $.ajax({
+                                    url: '/admin/<%= school_obj.name %>/updateResultStatus',
+                                    type: 'POST',
+                                    data: {
+                                      results_status: false
+                                    },
+                                    success: function (data) {
+                                      if (data.success) { } else {
+                                        alert("Network Error");
+                                      }
+                                    },
+                                    error: function (error) {
+                                      alert('There was a problem.');
+                                    }
+                                  })
+                                });
+                              })
+                            </script>
 
     </section>
 

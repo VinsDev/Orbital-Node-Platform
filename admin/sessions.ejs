@@ -25,13 +25,11 @@
   <link href="../../admin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
-
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -47,13 +45,7 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <!--  <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- End Search Bar -->
+ 
     <div class="d-flex align-items-center justify-content-between tex">
       <span class="d-none d-lg-block">
         <div class="pad">Manage the contents of your school Website and Database</div>
@@ -83,12 +75,7 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <!--        <li>
-              <a class="dropdown-item d-flex align-items-center" href="users-profile.html">
-                <i class="bi bi-gear"></i>
-                <span>Account Settings</span>
-              </a>
-            </li> -->
+
             <li>
               <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
@@ -249,22 +236,24 @@
           <% } %>
 
             <div class="text-center">
-              <button class="btn btn-primary" onclick="openForm()">Create Session</button>
+              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Create
+                Session</button>
             </div>
       </div>
     </section>
 
-    <!-- Add Session Form -->
-    <div class="add" id="add">
-      <div class="col-md-6 offset-md-3">
-        <div class="card mb-3">
-          <div class="card-body">
-            <div class="pt-4 pb-2">
-              <h5 class="card-title text-center pb-0 fs-4">Add Session</h5>
-              <!-- <p class="text-center small">Add Session</p> -->
-            </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Create Session</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
             <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/sessions"
-              novalidate>
+              id="sessionForm">
               <div class="col-12">
                 <label for="yourName" class="form-label">Session Name</label>
                 <input type="text" name="name" class="form-control" id="sess-name" required>
@@ -283,16 +272,25 @@
                 <div class="invalid-feedback">Please enter Finishing Date!</div>
               </div> -->
 
-              <div class="col-12">
-                <button class="btn btn-primary w-100" type="submit">Create Session</button>
-              </div>
+              <button type="submit" id="btnSubmit" style="display: none;"></button>
             </form>
-            <label class="form-check-label" for="acceptTerms"><a href="#" onclick="closeForm()">Close
-                form</a></label>
           </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create">Create</button>
+          </div>
+
         </div>
       </div>
     </div>
+    <script>
+      $("#create").on("click", function (e) {
+        console.log('hi')
+        $('#btnSubmit').click()
+      });
+    </script>
+
+
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -304,18 +302,15 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+
   <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="../../admin/assets/vendor/echarts/echarts.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="../../admin/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
+
 
 </body>
 
