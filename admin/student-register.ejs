@@ -170,11 +170,11 @@
             <i class="bi bi-circle"></i><span>Continous Assessment</span>
           </a>
         </li>
-        <li>
+        <!-- <li>
           <a href="sheet-configs">
             <i class="bi bi-circle"></i><span>Results Sheet Configs</span>
           </a>
-        </li>
+        </li> -->
         <li>
           <a href="student-results">
             <i class="bi bi-circle"></i><span>Students Results</span>
@@ -241,9 +241,31 @@
         <div class="col-md-12 offset-md-0">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Electronic Attendance Register</h5>
-              <p>Feature Coming Soon . . .</p>
+              <h5 class="card-title">Current Term: <%= current_term %>
+              </h5>
+              <% if(start_date==="null" || stop_date==="null" ) { %>
+                <form action="/admin/<%= school_obj.name %>/updateTermDates" method="post">
+                  <div class="row">
+                    <div class="col-xxl-4">
+                      <label for="yourEmail" class="form-label">Starting Date</label>
+                      <input type="date" name="start_date" class="form-control" id="start_date" required>
+                      <div class="invalid-feedback">Please enter Starting Date!</div>
+                    </div>
+
+                    <div class="col-xxl-4">
+                      <label for="yourEmail" class="form-label">Finishing Date</label>
+                      <input type="date" name="stop_date" class="form-control" id="stop_date" required>
+                      <div class="invalid-feedback">Please enter Finishing Date!</div>
+                    </div>
+                  </div>
             </div>
+            <div class="text-center" style="margin-bottom: 20px;">
+              <button class="btn btn-primary" type="submit">Save</button>
+            </div>
+            </form>
+            <% } else { %>
+
+              <% } %>
           </div>
         </div>
       </div>

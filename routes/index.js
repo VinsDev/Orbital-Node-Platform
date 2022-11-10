@@ -15,11 +15,13 @@ let routes = app => {
   router.get("/about", pagesController.about);
   router.get("/services", pagesController.services);
   router.get("/contact", pagesController.contact);
-  router.get("/register", pagesController.register);
+  router.get("/register-pri", pagesController.register_pri);
+  router.get("/register-sec", pagesController.register_sec);
   router.get("/agent", pagesController.agent);
 
-  // UPLOADS AND DOWNLOADS . . .
+  // OPERATIONS . . .
   router.post("/register", uploadController.uploadRegForm);
+  router.get("/verify_transaction", uploadController.verifyTransaction);
   router.post("/agent", uploadController.regAgent);
   router.get("/files", uploadController.getListFiles);
   router.get("/files/:name", uploadController.downloadImage);
@@ -33,6 +35,7 @@ let routes = app => {
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
   router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
   router.post("/admin/:sname/updateCurrentTerm", uploadController.updateCurrentTerm);
+  router.post("/admin/:sname/updateTermDates", uploadController.updateTermDates);
   router.post("/admin/:sname/updateResultStatus", uploadController.updateResultStatus);
   router.post("/admin/login", urlencodedParser, uploadController.login);
   router.post("/schools/:sname/portal/login", urlencodedParser, uploadController.portaLogin);

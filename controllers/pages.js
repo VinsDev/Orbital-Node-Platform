@@ -17,8 +17,11 @@ const services = (req, res) => {
 const contact = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/contact.html`));
 };
-const register = (req, res) => {
-    return res.render("inner/register");
+const register_pri = (req, res) => {
+    return res.render("inner/register-pri");
+};
+const register_sec = (req, res) => {
+    return res.render("inner/register-sec");
 };
 const agent = (req, res) => {
     return res.render("inner/agent");
@@ -164,7 +167,7 @@ const dashboard = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        
+
         if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
             lses = school_data.sessions.length - 1;
             lcls = school_data.classes.length - 1;
@@ -185,7 +188,7 @@ const dashboard = async (req, res) => {
                 teachers: "0",
                 subscription: "Unknown",
                 session: "Unknown",
-                current_term: "first"
+                current_term: "Unknown"
             });
         }
     } catch (error) {
@@ -279,7 +282,29 @@ const student_register = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/student-register", { school_obj: school_data.school_info });
+        
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            lses = school_data.sessions.length - 1;
+            lcls = school_data.classes.length - 1;
+            var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+            return res.render("../admin/student-register", {
+                school_obj: school_data.school_info,
+                students: school_data.sessions[lses].terms[0].students.length,
+                session: school_data.sessions[lses].name,
+                current_term: school_data.sessions[lses].current_term,
+                start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
+                stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
+            });
+        } else {
+            return res.render("../admin/dashboard", {
+                school_obj: school_data.school_info,
+                students: "0",
+                teachers: "0",
+                subscription: "Unknown",
+                session: "Unknown",
+                current_term: "Unknown"
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -447,7 +472,8 @@ module.exports = {
     about,
     services,
     contact,
-    register,
+    register_pri,
+    register_sec,
     agent,
     s_home,
     admissions,

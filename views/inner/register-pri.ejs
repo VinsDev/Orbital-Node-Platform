@@ -6,13 +6,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register your School</title>
   <link rel="stylesheet" href="landing/reg.css">
+
+  <script src="../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
   <div class="container">
     <header class="header">
       <h1 id="title" class="text-center">
-        Register your School
+        Register your Primary School
       </h1>
     </header>
 
@@ -20,7 +22,7 @@
       To the Orbital Node Platform
     </p>
 
-    <form id="reg-form" action="register" method="post" enctype="multipart/form-data" >
+    <form id="reg-form" action="register" method="post" enctype="multipart/form-data">
       <div class="form-group">
         <label for="name" id="name-label">School Name</label>
         <input type="text" name="name" id="name" class="form-control" placeholder="Enter your School name" required />
@@ -51,8 +53,7 @@
       </div>
       <div class="form-group">
         <label id="state-label" for="state">State</label>
-        <input type="text" name="state" id="state" class="form-control" placeholder="Enter your State"
-          required />
+        <input type="text" name="state" id="state" class="form-control" placeholder="Enter your State" required />
       </div>
 
       <div class="form-group">
@@ -80,50 +81,43 @@
           placeholder="Type about here..."></textarea>
       </div>
 
-      <div class="form-group">
-        <select id="category" name="category" class="form-control" required>
-          <option disabled selected value>Select your school category</option>
-          <option value="primary">Primary</option>
-          <option value="secondary">Secondary</option>
-          <option value="both">Both</option>
-        </select>
-      </div>
-
 
       <div class="form-group">
-        <label id="email-label" for="email">Principal's Name</label>
+        <label id="email-label" for="email">Head Teacher's Name</label>
         <input type="text" name="p_name" id="p_name" class="form-control" placeholder="Type in the Principal's Name"
           required />
       </div>
 
       <div class="form-group">
-        <label for="ppic" id="ppic-label">Principal's Picture</label>
+        <label for="ppic" id="ppic-label">Head Teacher's Picture</label>
         <input type="file" name="images" id="ppic" accept="image/*" onchange="loadFile(event, 'principal-i')"
           required><br />
         <img id="principal-i" />
       </div>
 
       <div class="form-group">
-        <label id="email-label" for="vp1name">Vice Principal Admin's Name</label>
+        <label id="email-label" for="vp1name">Assistant Head Teacher's Name</label>
         <input type="text" name="vp1name" id="vp1name" class="form-control"
           placeholder="Type in the Vice Principal's Name" required />
       </div>
 
       <div class="form-group">
-        <label for="vp1pic" id="vp1pic-label">Vice Principal Admin's Picture</label>
-        <input type="file" name="images" id="vp1pic" accept="image/*" onchange="loadFile(event, 'vp1-i')" required><br />
+        <label for="vp1pic" id="vp1pic-label">Assistant Head Teacher's Picture</label>
+        <input type="file" name="images" id="vp1pic" accept="image/*" onchange="loadFile(event, 'vp1-i')"
+          required><br />
         <img id="vp1-i" />
       </div>
 
       <div class="form-group">
-        <label id="email-label" for="email">Vice Principal Academy's Name</label>
+        <label id="email-label" for="email">Sport Teacher's Name</label>
         <input type="text" name="vp2name" id="vp2name" class="form-control"
           placeholder="Type in the Vice Principal's Name" required />
       </div>
 
       <div class="form-group">
-        <label for="vppic" id="vppic-label">Vice Principal Academy's Picture</label>
-        <input type="file" name="images" id="vp2pic" accept="image/*" onchange="loadFile(event, 'vp2-i')" required><br />
+        <label for="vppic" id="vppic-label">Sport Teacher's Picture</label>
+        <input type="file" name="images" id="vp2pic" accept="image/*" onchange="loadFile(event, 'vp2-i')"
+          required><br />
         <img id="vp2-i" />
       </div>
 
@@ -162,25 +156,72 @@
         <input type="text" name="agent" id="agent" class="form-control"
           placeholder="Type in your agent refferal code here" />
       </div>
-
-      <div class="form-group">
-        <button type="submit" id="regist_b" class="submit-button">
-          Register and Make Payments
-        </button>
-      </div>
-
-      <script>
-        var loadFile = function (event, id) {
-          var output = document.getElementById(id);
-          output.src = URL.createObjectURL(event.target.files[0]); output.onload = function () {
-            URL.revokeObjectURL(output.src)
-          }
-        }
-      </script>
-
+      <button type="submit" id="sub" style="display: none;"></button>
     </form>
+    <div class="form-group">
+      <button type="button" id="regist_b" class="submit-button" onclick="pay()">
+        Make Payments and Register
+      </button>
+    </div>
 
+    <script>
+      var loadFile = function (event, id) {
+        var output = document.getElementById(id);
+        output.src = URL.createObjectURL(event.target.files[0]); output.onload = function () {
+          URL.revokeObjectURL(output.src)
+        }
+      }
+    </script>
   </div>
+
+  <script>
+    var paymentForm = document.getElementById('reg-form');
+    var name = document.getElementById('name');
+    var email = document.getElementById('email');
+    var subBtn = document.getElementById('sub');
+    paymentForm.addEventListener('submit', payWithPaystack, false);
+
+    function pay() {
+      if (name.value === '' || email.value === '') {
+        subBtn.click();
+      }
+      else {
+        payWithPaystack();
+      }
+    }
+
+    function payWithPaystack() {
+      var handler = PaystackPop.setup({
+        key: 'pk_test_2a745e048ab1ab553f2b45265a2b43c5cde2f34a', // Replace with your public key
+        email: document.getElementById('email').value,
+        amount: 1000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+        currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+        ref: 'jj85', // Replace with a reference you generated
+        callback: function (response) {
+          //this happens after the payment is completed successfully
+          var reference = response.reference;
+          // alert('Payment complete! Reference: ' + reference);
+          // Make an AJAX call to your server with the reference to verify the transaction
+          $.ajax({
+            url: 'verify_transaction?reference=' + response.reference,
+            method: 'get',
+            success: function (data) {
+              // the transaction status is in response.data.status
+              if (data.success) {
+                subBtn.click();
+              }
+            }
+          });
+        },
+        onClose: function () {
+          // alert('Transaction was not completed, window closed.');
+        },
+      });
+      handler.openIframe();
+    }
+  </script>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 </body>
 
 </html>

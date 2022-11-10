@@ -15,6 +15,7 @@ const nweb = "http://orbital-node.herokuapp.com/news/";
 const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
+const { response } = require("express");
 
 // LANDING . . .
 const getSchools = async (req, res) => {
@@ -53,7 +54,6 @@ const sendForm = async (req, res, url) => {
                 pic2: baseUrl + url[2].filename,
                 about: req.body.about,
                 d_about: req.body.d_about,
-                category: req.body.category,
                 p_name: req.body.p_name,
                 ppic: baseUrl + url[3].filename,
                 vp1name: req.body.vp1name,
@@ -138,6 +138,40 @@ const regAgent = async (req, res) => {
         console.log(error);
     }
 }
+const verifyTransaction = async (req, res) => {
+    try {
+        const https = require('https');
+
+        const options = {
+            hostname: 'api.paystack.co',
+            port: 443,
+            path: '/transaction/verify/' + req.query.reference,
+            method: 'GET',
+            headers: {
+                Authorization: 'sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e'
+            }
+        }
+        console.log(options)
+
+        https.request(options, response => {
+            let data = ''
+
+            response.on('data', (chunk) => {
+                data += chunk
+            });
+
+            response.on('end', () => {
+                console.log(JSON.parse(data))
+            })
+            res.send({ success: true })
+        }).on('error', error => {
+            console.error(error)
+        })
+    } catch (error) {
+        console.log(error);
+        return res.end();
+    }
+};
 
 
 // SCHOOL . . .
@@ -573,16 +607,28 @@ const createSession = async (req, res) => {
             terms: [
                 {
                     name: "first",
+                    start_date: 'null',
+                    stop_date: 'null',
+                    attendance_dates: [],
+                    attendance_model: [],
                     results: 'false',
                     students: []
                 },
                 {
                     name: "second",
+                    start_date: 'null',
+                    stop_date: 'null',
+                    attendance_dates: [],
+                    attendance_model: [],
                     results: 'false',
                     students: []
                 },
                 {
                     name: "third",
+                    start_date: 'null',
+                    stop_date: 'null',
+                    attendance_dates: [],
+                    attendance_model: [],
                     results: 'false',
                     students: []
                 },
@@ -645,6 +691,7 @@ const createSubject = async (req, res) => {
 }
 const createStudent = async (req, res) => {
     try {
+        var s_subjects = [];
 
         var student_model = {
             name: req.body.name,
@@ -658,27 +705,18 @@ const createStudent = async (req, res) => {
             total: -1,
             average: -1,
             position: -1,
-            remarks: "",
+            morning_attendance: [],
+            afternoon_attendance: []
         }
 
-        var classIndex = -1;
-
-        var s_subjects = [];
-
         await mongoClient.connect();
-
         const database = mongoClient.db(dbConfig.database);
         database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students": student_model } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }] })
 
         let school_data = await database.collection("schools").findOne({ 'school_info.name': req.params.sname });
-
-        // Class index
-        for (var i = 0; i < school_data.classes.length; i++) {
-            if (school_data.classes[i].name === req.body.class.trim()) {
-                classIndex = i;
-                break;
-            }
-        }
+        var lses = school_data.sessions.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
 
         // Assign class subjects to a subjects list
         for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
@@ -695,7 +733,16 @@ const createStudent = async (req, res) => {
             )
         }
 
-        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects } } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] });
+        database.collection("schools").findOneAndUpdate(
+            { "school_info.name": req.params.sname },
+            {
+                $push: {
+                    "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects },
+                    "sessions.$[sess].terms.$[term].students.$[stud].morning_attendance": { $each: school_data.sessions[lses].terms[currTermIndex].attendance_model },
+                    "sessions.$[sess].terms.$[term].students.$[stud].afternoon_attendance": { $each: school_data.sessions[lses].terms[currTermIndex].attendance_model }
+                }
+            },
+            { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] });
 
         return res.redirect(303, '/admin/' + req.params.sname + '/student-info');
     } catch (error) {
@@ -915,10 +962,55 @@ const updateResultStatus = async (req, res) => {
         });
     }
 }
+const updateTermDates = async (req, res) => {
+    try {
+
+        var start = new Date(req.body.start_date);
+        var end = new Date(req.body.stop_date);
+        let attendance_dates = [];
+        let attendance_model = [];
+
+        while (start <= end) {
+            var mm = ((start.getMonth() + 1) >= 10) ? (start.getMonth() + 1) : '0' + (start.getMonth() + 1);
+            var dd = ((start.getDate()) >= 10) ? (start.getDate()) : '0' + (start.getDate());
+            var yyyy = start.getFullYear();
+            var date = yyyy + "-" + mm + "-" + dd + "-" + start.getDay();
+
+            start = new Date(start.setDate(start.getDate() + 1));
+            attendance_dates.push(date);
+            attendance_model.push("Mark");
+        }
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var lses = school_data.sessions.length - 1;
+        var session = school_data.sessions[lses].name;
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "sessions.$[sess].terms.$[term].start_date": req.body.start_date, "sessions.$[sess].terms.$[term].stop_date": req.body.stop_date, "sessions.$[sess].terms.$[term].attendance_dates": attendance_dates, "sessions.$[sess].terms.$[term].attendance_model": attendance_model } },
+            {
+                arrayFilters:
+                    [{ "sess.name": session }, { "term.name": school_data.sessions[lses].current_term }]
+            }).then(res.redirect(303, '/admin/' + req.params.sname + '/student-register'));
+        return;
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
+// TEACHERS APP . . .
+
 
 module.exports = {
     uploadRegForm,
     regAgent,
+    verifyTransaction,
     getSchools,
     getSubjects,
     getStudents,
@@ -938,7 +1030,8 @@ module.exports = {
     getStudentResults,
     updateSubjectsResults,
     updateCurrentTerm,
-    updateResultStatus
+    updateResultStatus,
+    updateTermDates
 };
 
 function htremarkHelper(score) {
