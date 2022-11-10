@@ -191,12 +191,13 @@
     }
 
     function payWithPaystack() {
+      var ref = "ref" + Math.random().toString(16).slice(2);
       var handler = PaystackPop.setup({
         key: 'pk_test_2a745e048ab1ab553f2b45265a2b43c5cde2f34a', // Replace with your public key
         email: document.getElementById('email').value,
         amount: 1000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
         currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-        ref: 'jj85', // Replace with a reference you generated
+        ref: ref, // Replace with a reference you generated
         callback: function (response) {
           //this happens after the payment is completed successfully
           var reference = response.reference;
