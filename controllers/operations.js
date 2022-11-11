@@ -41,6 +41,9 @@ const getSchools = async (req, res) => {
 }
 const sendForm = async (req, res, url) => {
     try {
+        var st = new Date();
+        var temp = new Date(date_obj_converter(st));
+        var exp = new Date(temp.setDate(temp.getDate() + 120));
 
         var school_model = {
             school_info: {
@@ -66,6 +69,8 @@ const sendForm = async (req, res, url) => {
                 fees: req.body.fees,
                 e_register: req.body.e_register,
                 agent: req.body.agent,
+                reg_date: st,
+                exp_date: exp
             },
             news: [],
             fees_info: {
@@ -145,7 +150,7 @@ const verifyTransaction = async (req, res) => {
         let output;
         await axios.get(`https://api.paystack.co/transaction/verify/${ref}`, {
             headers: {
-                authorization: "sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e",
+                authorization: "sk_live_f2a65b8636dda649d084c30d981ce08317228cc0",
                 //replace TEST SECRET KEY with your actual test secret 
                 //key from paystack
                 "content-type": "application/json",
@@ -1060,4 +1065,11 @@ function htremarkHelper(score) {
             }
         }
     }
+}
+
+function date_obj_converter(date) {
+    var mm = ((date.getMonth() + 1) >= 10) ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
+    var dd = ((date.getDate()) >= 10) ? (date.getDate()) : '0' + (date.getDate());
+    var yyyy = date.getFullYear();
+    return yyyy + "-" + mm + "-" + dd;
 }
