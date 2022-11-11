@@ -188,7 +188,8 @@ const dashboard = async (req, res) => {
                 teachers: "0",
                 subscription: "Unknown",
                 session: "Unknown",
-                current_term: "Unknown"
+                current_term: "Unknown",
+                results_status: "false"
             });
         }
     } catch (error) {
