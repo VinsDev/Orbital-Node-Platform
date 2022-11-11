@@ -9,10 +9,10 @@ var PdfPrinter = require('pdfmake');
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = local;
+const baseUrl = web;
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nlocal;
+const nbaseUrl = nweb;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
 const { response } = require("express");
@@ -139,39 +139,41 @@ const regAgent = async (req, res) => {
     }
 }
 const verifyTransaction = async (req, res) => {
+    const axios = require("axios");
     try {
-        const https = require('https');
-
-        const options = {
-            hostname: 'api.paystack.co',
-            port: 443,
-            path: '/transaction/verify/' + req.query.reference,
-            method: 'GET',
+        const ref = req.query.reference;
+        let output;
+        await axios.get(`https://api.paystack.co/transaction/verify/${ref}`, {
             headers: {
-                Authorization: 'sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e'
-            }
+                authorization: "sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e",
+                //replace TEST SECRET KEY with your actual test secret 
+                //key from paystack
+                "content-type": "application/json",
+                "cache-control": "no-cache",
+            },
         }
-        console.log(options)
+        ).then((success) => {
+            output = success;
+            return res.status(200).send({ success: true });
+        }).catch((error) => {
+            output = error;
+            return res.status(200).send({ success: true });
+        });
+        //now we check for internet connectivity issues
+        if (!output.response && output.status !== 200) console.log("No internet Connection");
+        //next,we confirm that there was no error in verification.
+        if (output.response && !output.response.data.status) console.log("Error verifying payment , 'unknown Transaction Reference Id'");
 
-        https.request(options, response => {
-            let data = ''
+        //we return the output of the transaction
+    }
 
-            response.on('data', (chunk) => {
-                data += chunk
-            });
 
-            response.on('end', () => {
-                console.log(JSON.parse(data))
-            })
-            res.send({ success: true })
-        }).on('error', error => {
-            console.error(error)
-        })
-    } catch (error) {
+    catch (error) {
         console.log(error);
         return res.end();
     }
 };
+
 
 
 // SCHOOL . . .
