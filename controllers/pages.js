@@ -420,24 +420,11 @@ const assessment = async (req, res) => {
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
-        for (var i = 0; i < school_data.classes.length; i++) {
-            if (school_data.classes[i].name === req.params.class) {
-                classIndex = i;
-                break;
-            }
-        }
-
-        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
-            if (school_data.classes[classIndex].subjects[i].name === req.params.subject) {
-                subjectIndex = i;
-                break;
-            }
-        }
-
         return res.render("../admin/inner/assessment", {
             school_obj: school_data.school_info,
             sessions_data: school_data.sessions,
-            subject_data: school_data.classes[classIndex].subjects[subjectIndex],
+            className: req.params.class,
+            subject: req.params.subject
         });
     } catch (error) {
         return res.status(500).send({

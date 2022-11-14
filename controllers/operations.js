@@ -732,7 +732,6 @@ const createStudent = async (req, res) => {
                     name: school_data.classes[classIndex].subjects[i].name,
                     ass: [-1, -1, -1, -1, -1],
                     total: -1,
-                    grade: "",
                     position: -1,
                     highest: -1,
                     lowest: -1
@@ -836,7 +835,8 @@ const getSubjectsResults = async (req, res) => {
 
     var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
     var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
-    // var classIndex = school_data.sessions[sessionIndex].terms[termIndex].classes.findIndex(i => i.name === req.body.class.trim());
+    var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+    var subjectLength = school_data.classes[classIndex].subjects.length;
 
 
     for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
@@ -845,7 +845,10 @@ const getSubjectsResults = async (req, res) => {
         }
     }
 
-    res.status(200).send({ payload: subjectsResults });
+    res.status(200).send({
+        payload: subjectsResults,
+        s_num: subjectLength
+    });
 
 }
 const getStudentResults = async (req, res) => {

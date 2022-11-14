@@ -149,15 +149,16 @@
           <div class="card-body">
             <h5 class="card-title">
               <b id="cls">
-                <%=subject_data.class%>
+                <%=className%>
               </b><b>Term Assessments: </b><em id="subname">
-                <%=subject_data.name%>
+                <%=subject%>
               </em>
             </h5>
 
             <!-- TABLE LOGIC -->
             <script type="text/javascript">
               var ajax_data = [];
+              var subjectIndex = -1;
               $(document).ready(function ($) {
                 fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
                   method: 'POST',
@@ -170,10 +171,10 @@
                 }).then(res => res.json()).then(data => {
                   ajax_data = data.payload;
 
-                  var subjectIndex = -1;
                   for (var i = 0; i < ajax_data[0].subjects.length; i++) {
-                    if (ajax_data[0].subjects[i].name === $("#subname").text().trim()) {
+                    if ($("#subname").text().trim() === ajax_data[0].subjects[i].name.trim()) {
                       subjectIndex = i;
+                      break;
                     }
                   }
 
