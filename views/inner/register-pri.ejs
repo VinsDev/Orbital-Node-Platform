@@ -193,7 +193,7 @@
     function payWithPaystack() {
       var ref = "ref" + Math.random().toString(16).slice(2);
       var handler = PaystackPop.setup({
-        key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f', // Replace with your public key
+        key: 'pk_test_2a745e048ab1ab553f2b45265a2b43c5cde2f34a', // Replace with your public key
         email: document.getElementById('email').value,
         amount: 15000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
         currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars

@@ -150,7 +150,7 @@ const verifyTransaction = async (req, res) => {
         let output;
         await axios.get(`https://api.paystack.co/transaction/verify/${ref}`, {
             headers: {
-                authorization: "sk_live_f2a65b8636dda649d084c30d981ce08317228cc0",
+                authorization: "sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e",
                 //replace TEST SECRET KEY with your actual test secret 
                 //key from paystack
                 "content-type": "application/json",
@@ -838,7 +838,6 @@ const getSubjectsResults = async (req, res) => {
     var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
     var subjectLength = school_data.classes[classIndex].subjects.length;
 
-
     for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
         if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
             subjectsResults.push(school_data.sessions[sessionIndex].terms[termIndex].students[i])
@@ -884,7 +883,6 @@ const getStudentResults = async (req, res) => {
     }
 }
 const updateSubjectsResults = async (req, res) => {
-
     try {
         await mongoClient.connect();
 
@@ -897,11 +895,12 @@ const updateSubjectsResults = async (req, res) => {
         var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
         var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
-        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subname);
+        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name.trim() === req.body.subname.trim());
 
         for (var j = 0; j < updatedRes.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === updatedRes[j].name) {
+                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name.trim() === updatedRes[j].name.trim()) {
+
                     schools.findOneAndUpdate({ "school_info.name": req.params.sname },
                         { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
                         {
@@ -916,8 +915,8 @@ const updateSubjectsResults = async (req, res) => {
             }
         }
 
-        res.send({ info: "ok" });
-
+        console.log("hi");
+        return res.redirect(303, '/admin/' + req.params.sname + '/assessment/' + req.body.class + '/' + req.body.subname);
     } catch (error) {
         return res.status(500).send({
             message: error.message,

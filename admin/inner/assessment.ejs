@@ -232,15 +232,15 @@
                     $.extend(arr, { row_id: row_id });
 
                     switch (col_name) {
-                      case 'ass1': ajax_data[row_id].subjects[subjectIndex].ass[0] = Number(col_val);
+                      case 'ass1': ajax_data[row_id].subjects[subjectIndex].ass[0] = Number(negative_rev(col_val));
                         break;
-                      case 'ass2': ajax_data[row_id].subjects[subjectIndex].ass[1] = Number(col_val);
+                      case 'ass2': ajax_data[row_id].subjects[subjectIndex].ass[1] = Number(negative_rev(col_val));
                         break;
-                      case 'test1': ajax_data[row_id].subjects[subjectIndex].ass[2] = Number(col_val);
+                      case 'test1': ajax_data[row_id].subjects[subjectIndex].ass[2] = Number(negative_rev(col_val));
                         break;
-                      case 'test2': ajax_data[row_id].subjects[subjectIndex].ass[3] = Number(col_val);
+                      case 'test2': ajax_data[row_id].subjects[subjectIndex].ass[3] = Number(negative_rev(col_val));
                         break;
-                      case 'exams': ajax_data[row_id].subjects[subjectIndex].ass[4] = Number(col_val);
+                      case 'exams': ajax_data[row_id].subjects[subjectIndex].ass[4] = Number(negative_rev(col_val));
                       default:
                         break;
                     }
@@ -250,6 +250,7 @@
               });
 
               function upload() {
+                console.log("hi")
                 fetch('/admin/<%= school_obj.name %>/updateSubjectsResults', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -273,6 +274,14 @@
                 }
                 else {
                   return number;
+                }
+              }
+              function negative_rev(value) {
+                if (value === "") {
+                  return -1;
+                }
+                else {
+                  return value;
                 }
               }
             </script>
