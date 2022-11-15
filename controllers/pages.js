@@ -470,7 +470,11 @@ const subjects = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/subjects", { school_obj: school_data.school_info, class_data: school_data.classes });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/subjects", { school_obj: school_data.school_info, class_data: school_data.classes, subject_length: school_data.classes[0].subjects.length });
+        } else {
+            return res.render("../admin/subjects", { school_obj: school_data.school_info, class_data: school_data.classes, subject_length: 0 });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
