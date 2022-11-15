@@ -894,13 +894,13 @@ const updateSubjectsResults = async (req, res) => {
 
         var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
         var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
-        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
-        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name.trim() === req.body.subname.trim());
+        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subname);
 
 
         for (var j = 0; j < updatedRes.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name.trim() === updatedRes[j].name.trim() && school_data.sessions[sessionIndex].terms[termIndex].students[i].class.trim() === updatedRes[j].class.trim()) {
+                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === updatedRes[j].name && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === updatedRes[j].class) {
                     console.log(updatedRes[j].name);
                     schools.findOneAndUpdate({ "school_info.name": req.params.sname },
                         { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
