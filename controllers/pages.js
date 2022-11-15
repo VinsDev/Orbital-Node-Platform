@@ -179,7 +179,8 @@ const dashboard = async (req, res) => {
                 subscription: 10,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
-                results_status: school_data.sessions[lses].terms[currTermIndex].results
+                results_status: school_data.sessions[lses].terms[currTermIndex].results,
+                subject_length: school_data.classes[0].subjects.length
             });
         } else {
             return res.render("../admin/dashboard", {
@@ -189,7 +190,8 @@ const dashboard = async (req, res) => {
                 subscription: "Unknown",
                 session: "Unknown",
                 current_term: "Unknown",
-                results_status: "false"
+                results_status: "false",
+                subject_length: 0
             });
         }
     } catch (error) {
@@ -205,7 +207,11 @@ const school_info = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/school-info", { school_obj: school_data.school_info });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/school-info", { school_obj: school_data.school_info, subject_length: school_data.classes[0].subjects.length });
+        } else {
+            return res.render("../admin/school-info", { school_obj: school_data.school_info, subject_length: 0 });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -219,7 +225,11 @@ const upcoming_news = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/upcoming-news", { school_obj: school_data.school_info, news: school_data.news });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/upcoming-news", { school_obj: school_data.school_info, news: school_data.news, subject_length: school_data.classes[0].subjects.length });
+        } else {
+            return res.render("../admin/upcoming-news", { school_obj: school_data.school_info, news: school_data.news, subject_length: 0 });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -233,7 +243,11 @@ const fees_info = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/fees-info", { school_obj: school_data.school_info });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/fees-info", { school_obj: school_data.school_info, subject_length: school_data.classes[0].subjects.length });
+        } else {
+            return res.render("../admin/fees-info", { school_obj: school_data.school_info, subject_length: 0 });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -247,11 +261,21 @@ const student_info = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/student-info", {
-            school_obj: school_data.school_info,
-            sessions_data: school_data.sessions,
-            class_data: school_data.classes
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/student-info", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: school_data.classes[0].subjects.length
+            });
+        } else {
+            return res.render("../admin/student-info", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: 0
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -265,11 +289,21 @@ const student_fees = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/student-fees", {
-            school_obj: school_data.school_info,
-            sessions_data: school_data.sessions,
-            class_data: school_data.classes
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/student-fees", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: school_data.classes[0].subjects.length
+            });
+        } else {
+            return res.render("../admin/student-fees", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: 0
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -283,7 +317,7 @@ const student_register = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        
+
         if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
             lses = school_data.sessions.length - 1;
             lcls = school_data.classes.length - 1;
@@ -295,15 +329,17 @@ const student_register = async (req, res) => {
                 current_term: school_data.sessions[lses].current_term,
                 start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
                 stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
+                subject_length: school_data.classes[0].subjects.length
             });
         } else {
-            return res.render("../admin/dashboard", {
+            return res.render("../admin/student-register", {
                 school_obj: school_data.school_info,
-                students: "0",
-                teachers: "0",
-                subscription: "Unknown",
-                session: "Unknown",
-                current_term: "Unknown"
+                students: "",
+                session: "",
+                current_term: "",
+                start_date: "null",
+                stop_date: "null",
+                subject_length: 0
             });
         }
     } catch (error) {
@@ -338,11 +374,21 @@ const student_results = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/student-results", {
-            school_obj: school_data.school_info,
-            sessions_data: school_data.sessions,
-            class_data: school_data.classes,
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/student-results", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: school_data.classes[0].subjects.length
+            });
+        } else {
+            return res.render("../admin/student-results", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                subject_length: 0
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -356,7 +402,11 @@ const parents = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/parents", { school_obj: school_data.school_info });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/parents", { school_obj: school_data.school_info, subject_length: school_data.classes[0].subjects.length });
+        } else {
+            return res.render("../admin/parents", { school_obj: school_data.school_info, subject_length: 0 });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -370,10 +420,19 @@ const sessions = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/sessions", {
-            school_obj: school_data.school_info,
-            session_data: school_data.sessions
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/sessions", {
+                school_obj: school_data.school_info,
+                session_data: school_data.sessions,
+                subject_length: school_data.classes[0].subjects.length
+            });
+        } else {
+            return res.render("../admin/sessions", {
+                school_obj: school_data.school_info,
+                session_data: school_data.sessions,
+                subject_length: 0
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -387,9 +446,17 @@ const classes = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/classes", {
-            school_obj: school_data.school_info, class_data: school_data.classes
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            return res.render("../admin/classes", {
+                school_obj: school_data.school_info, class_data: school_data.classes,
+                subject_length: school_data.classes[0].subjects.length
+            });
+        } else {
+            return res.render("../admin/classes", {
+                school_obj: school_data.school_info, class_data: school_data.classes,
+                subject_length: 0
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
