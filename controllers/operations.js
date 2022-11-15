@@ -47,28 +47,28 @@ const sendForm = async (req, res, url) => {
 
         var school_model = {
             school_info: {
-                name: req.body.name,
+                name: req.body.name.trim(),
                 logo: baseUrl + url[0].filename,
-                email: req.body.email,
-                phone: req.body.phone,
-                adress: req.body.adress,
-                state: req.body.state,
+                email: req.body.email.trim(),
+                phone: req.body.phone.trim(),
+                adress: req.body.adress.trim(),
+                state: req.body.state.trim(),
                 pic1: baseUrl + url[1].filename,
                 pic2: baseUrl + url[2].filename,
-                about: req.body.about,
-                d_about: req.body.d_about,
-                p_name: req.body.p_name,
+                about: req.body.about.trim(),
+                d_about: req.body.d_about.trim(),
+                p_name: req.body.p_name.trim(),
                 ppic: baseUrl + url[3].filename,
-                vp1name: req.body.vp1name,
+                vp1name: req.body.vp1name.trim(),
                 vp1pic: baseUrl + url[4].filename,
-                vp2name: req.body.vp2name,
+                vp2name: req.body.vp2name.trim(),
                 vp2pic: baseUrl + url[5].filename,
-                mission: req.body.mission,
-                vision: req.body.vision,
-                anthem: req.body.anthem,
+                mission: req.body.mission.trim(),
+                vision: req.body.vision.trim(),
+                anthem: req.body.anthem.trim(),
                 fees: req.body.fees,
                 e_register: req.body.e_register,
-                agent: req.body.agent,
+                agent: req.body.agent.trim(),
                 reg_date: st,
                 exp_date: exp
             },
@@ -82,8 +82,8 @@ const sendForm = async (req, res, url) => {
             classes: [],
             sessions: [],
             admin: {
-                admin_username: req.body.email,
-                admin_password: req.body.phone,
+                admin_username: req.body.email.trim(),
+                admin_password: req.body.phone.trim(),
             }
         }
 
@@ -610,7 +610,7 @@ const createSession = async (req, res) => {
     try {
 
         var session_model = {
-            name: req.body.name,
+            name: req.body.name.trim(),
             terms: [
                 {
                     name: "first",
@@ -659,7 +659,7 @@ const createClass = async (req, res) => {
     try {
 
         class_model = {
-            name: req.body.name,
+            name: req.body.name.trim(),
             subjects: []
         }
 
@@ -682,9 +682,9 @@ const createSubject = async (req, res) => {
     try {
 
         class_subject = {
-            name: req.body.name,
+            name: req.body.name.trim(),
             class: req.body.class_name,
-            teacher: req.body.teacher,
+            teacher: req.body.teacher.trim(),
         }
 
         await mongoClient.connect();
@@ -701,7 +701,7 @@ const createStudent = async (req, res) => {
         var s_subjects = [];
 
         var student_model = {
-            name: req.body.name,
+            name: req.body.name.trim(),
             password: req.body.dob,
             gender: req.body.gender,
             dob: req.body.dob,
@@ -897,10 +897,11 @@ const updateSubjectsResults = async (req, res) => {
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
         var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name.trim() === req.body.subname.trim());
 
+
         for (var j = 0; j < updatedRes.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name.trim() === updatedRes[j].name.trim()) {
-
+                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name.trim() === updatedRes[j].name.trim() && school_data.sessions[sessionIndex].terms[termIndex].students[i].class.trim() === updatedRes[j].class.trim()) {
+                    console.log(updatedRes[j].name);
                     schools.findOneAndUpdate({ "school_info.name": req.params.sname },
                         { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
                         {
@@ -915,7 +916,6 @@ const updateSubjectsResults = async (req, res) => {
             }
         }
 
-        console.log("hi");
         return res.redirect(303, '/admin/' + req.params.sname + '/assessment/' + req.body.class + '/' + req.body.subname);
     } catch (error) {
         return res.status(500).send({
