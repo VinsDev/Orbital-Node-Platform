@@ -192,9 +192,9 @@ const dashboard = async (req, res) => {
         } else {
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
-                students: "0",
+                students: "Not set yet",
                 teachers: "0",
-                subscription: "Unknown",
+                subscription: school_data.school_info.exp_date,
                 session: "Unknown",
                 current_term: "Unknown",
                 results_status: "false",
