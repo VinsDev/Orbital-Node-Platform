@@ -258,14 +258,24 @@ const student_info = async (req, res) => {
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         lses = school_data.sessions.length - 1;
         lcls = school_data.classes.length - 1;
-        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
-        return res.render("../admin/student-info", {
-            school_obj: school_data.school_info,
-            sessions_data: school_data.sessions,
-            class_data: school_data.classes,
-            start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
-            stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
-        });
+        if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
+            var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+            return res.render("../admin/student-info", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
+                stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
+            });
+        } else {
+            return res.render("../admin/student-info", {
+                school_obj: school_data.school_info,
+                sessions_data: school_data.sessions,
+                class_data: school_data.classes,
+                start_date: "null",
+                stop_date: "null",
+            });
+        }
     } catch (error) {
         return res.status(500).send({
             message: error.message,
