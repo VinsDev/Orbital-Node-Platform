@@ -230,105 +230,121 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <!-- REFERENCE SELECTOR -->
-    <div class="card">
-      <div class="internal">
-        <div class="rrr">
-          <div class="row md-3">
-            <label class="col-sm-5 col-form-label">Session</label>
-            <div class="col-sm-8">
-              <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
-                <% for(var i=0; i < sessions_data.length; i++){ %>
-                  <option value="<%= sessions_data[i].name %>">
-                    <%= sessions_data[i].name %>
-                  </option>
-                  <% } %>
-              </select>
+    <% if(sessions_data.length!=0 && class_data.length !=0 && sessions_data[0].terms[0].students.length !=0) { %>
+      <!-- REFERENCE SELECTOR -->
+      <div class="card">
+        <div class="internal">
+          <div class="rrr">
+            <div class="row md-3">
+              <label class="col-sm-5 col-form-label">Session</label>
+              <div class="col-sm-8">
+                <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+                  <% for(var i=0; i < sessions_data.length; i++){ %>
+                    <option value="<%= sessions_data[i].name %>">
+                      <%= sessions_data[i].name %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div class="row md-1">
-            <label class="col-sm-5 col-form-label">Term</label>
-            <div class="col-sm-8">
-              <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
-                <option value="first" selected>First</option>
-                <option value="second">Second</option>
-                <option value="third">Third</option>
-              </select>
+            <div class="row md-1">
+              <label class="col-sm-5 col-form-label">Term</label>
+              <div class="col-sm-8">
+                <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+                  <option value="first" selected>First</option>
+                  <option value="second">Second</option>
+                  <option value="third">Third</option>
+                </select>
+              </div>
             </div>
-          </div>
 
-          <div class="row md-1">
-            <label class="col-sm-5 col-form-label">Class</label>
-            <div class="col-sm-8">
-              <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
-                <% for(var i=0; i < class_data.length; i++){ %>
-                  <option value="<%= class_data[i].name %>">
-                    <%= class_data[i].name %>
-                  </option>
-                  <% } %>
-              </select>
+            <div class="row md-1">
+              <label class="col-sm-5 col-form-label">Class</label>
+              <div class="col-sm-8">
+                <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
+                  <% for(var i=0; i < class_data.length; i++){ %>
+                    <option value="<%= class_data[i].name %>">
+                      <%= class_data[i].name %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <section class="section">
-      <div class="row">
-        <div class="col-md-12 offset-md-0">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">View Students Results</h5>
-              <!-- Table with hoverable rows -->
-              <table class="table table-hover" id="myTable">
-                <thead>
-                  <tr>
-                    <th scope="col">S/N</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">DOB</th>
-                    <th scope="col">Class</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <div id="field">
-                    <%counter=1;%>
-                      <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                        <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                          <tr
-                            data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
-                            <th scope="row">
-                              <%=counter %>
-                            </th>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].name %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].gender %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].dob %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].class %>
-                            </td>
-                          </tr>
-                          <%counter++;%>
-                            <% } %>
+      <section class="section">
+        <div class="row">
+          <div class="col-md-12 offset-md-0">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">View Students Results</h5>
+                <!-- Table with hoverable rows -->
+                <table class="table table-hover" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Gender</th>
+                      <th scope="col">DOB</th>
+                      <th scope="col">Class</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <div id="field">
+                      <%counter=1;%>
+                        <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                          <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                            <tr
+                              data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
+                              <th scope="row">
+                                <%=counter %>
+                              </th>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].name %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].gender %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].dob %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].class %>
+                              </td>
+                            </tr>
+                            <%counter++;%>
                               <% } %>
-                  </div>
-                </tbody>
-              </table>
-              <!-- End Table with hoverable rows -->
+                                <% } %>
+                    </div>
+                  </tbody>
+                </table>
+                <!-- End Table with hoverable rows -->
 
+              </div>
             </div>
+
           </div>
-
         </div>
-      </div>
-    </section>
-
+      </section>
+      <% } else { %>
+        <div class="text-center">
+          <p>Please ensure that you follow the setup instructions on the user manual in the order stated in other to
+            view the Students Results.</p><br>
+          <ul>
+            <li>Set term starting and Ending dates in the E-register section under Students</li>
+            <li>Create a session</li>
+            <li>Create Classes</li>
+            <li>Add subjects to classes</li>
+            <li>Add students to class</li>
+          </ul>
+          <p>Before you will be able to view the students info</p>
+          <i>Please note that if you do not follow the above instructions in the order stated, you could possibly run into issues
+            while
+            working with our system.</i>
+        </div>
+        <% } %>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->

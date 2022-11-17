@@ -231,99 +231,114 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <!-- REFERENCE SELECTOR -->
-    <div class="card">
-      <div class="internal">
-        <div class="rrr">
-          <div class="row md-3">
-            <label class="col-sm-5 col-form-label">Class</label>
-            <div class="col-sm-12">
-              <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
-                <% for(var i=0; i < class_data.length; i++){ %>
-                  <option>
-                    <%= class_data[i].name %>
-                  </option>
-                  <% } %>
-              </select>
+
+    <% if(class_data.length !=0) { %>
+      <!-- REFERENCE SELECTOR -->
+      <div class="card">
+        <div class="internal">
+          <div class="rrr">
+            <div class="row md-3">
+              <label class="col-sm-5 col-form-label">Class</label>
+              <div class="col-sm-12">
+                <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
+                  <% for(var i=0; i < class_data.length; i++){ %>
+                    <option>
+                      <%= class_data[i].name %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <section class="section">
-      <div class="columns" id="subject-field">
-        <% for(var j=0; j < class_data[0].subjects.length; j++){ %>
-          <div class="col-md-10 offset-md-1">
-            <div class="card">
-              <h5 class="session">
-                <%= class_data[0].subjects[j].name %>
-              </h5>
-            </div>
-          </div>
-          <% } %>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Add Subject</button>
-      </div>
-    </section>
-
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">Add Subject</h5>
-            <button class="close" data-bs-dismiss="modal"
-              style="border: none; background-color: transparent;">&times;</button>
-          </div>
-          <div class="modal-body">
-            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/subjects">
-              <div class="col-12">
-                <label for="yourName" class="form-label">Subject Name</label>
-                <input type="text" name="name" class="form-control" id="name" required>
-                <div class="invalid-feedback">Please, enter the subject name!</div>
-              </div>
-
-              <div class="row g-3">
-                <label for="category" class="col-sm-2 col-form-label">Class</label>
-                <div class="col-sm-10">
-                  <select id="class_name" name="class_name" class="form-control">
-                    <option disabled selected value>Select your class</option>
-                    <% for(var i=0; i < class_data.length; i++){ %>
-                      <option>
-                        <%= class_data[i].name %>
-                      </option>
-                      <% } %>
-                  </select>
+      <section class="section">
+        <div class="columns" id="subject-field">
+          <% for(var j=0; j < class_data[0].subjects.length; j++){ %>
+            <div class="col-md-10 offset-md-1">
+              <div class="card" style="position: relative;">
+                <div class="d-flex justify-content-between">
+                  <h5 class="session" id="nb_<%=j%>">
+                    <%= class_data[0].subjects[j].name %>
+                  </h5>
+                  <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
+                    <button class="btn btn-primary" id="b_<%=j%>" onclick="del(this.id)">Delete</button>
+                  </div>
                 </div>
               </div>
+            </div>
+            <% } %>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">Add
+            Subject</button>
+        </div>
+      </section>
 
-              <div class="col-12">
-                <label for="yourName" class="form-label">Teacher's Name</label>
-                <input type="text" name="teacher" class="form-control" id="teacher" required>
-                <div class="invalid-feedback">Please, enter the teacher's name!</div>
-              </div>
+      <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add Subject</h5>
+              <button class="close" data-bs-dismiss="modal"
+                style="border: none; background-color: transparent;">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/subjects">
+                <div class="col-12">
+                  <label for="yourName" class="form-label">Subject Name</label>
+                  <input type="text" name="name" class="form-control" id="name" required>
+                  <div class="invalid-feedback">Please, enter the subject name!</div>
+                </div>
 
-              <div class="col-12">
-                <button id="btnSubmit" type="submit" style="display: none;"></button>
-              </div>
-            </form>
+                <div class="row g-3">
+                  <label for="category" class="col-sm-2 col-form-label">Class</label>
+                  <div class="col-sm-10">
+                    <select id="class_name" name="class_name" class="form-control">
+                      <option disabled selected value>Select your class</option>
+                      <% for(var i=0; i < class_data.length; i++){ %>
+                        <option>
+                          <%= class_data[i].name %>
+                        </option>
+                        <% } %>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <label for="yourName" class="form-label">Teacher's Name</label>
+                  <input type="text" name="teacher" class="form-control" id="teacher" required>
+                  <div class="invalid-feedback">Please, enter the teacher's name!</div>
+                </div>
+
+                <div class="col-12">
+                  <button id="btnSubmit" type="submit" style="display: none;"></button>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="create">Add</button>
+            </div>
+
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="create">Add</button>
-          </div>
-
         </div>
       </div>
-    </div>
-    <script>
-      $("#create").on("click", function (e) {
-        console.log('hi')
-        $('#btnSubmit').click()
-      });
-    </script>
+      <script>
+        $("#create").on("click", function (e) {
+          console.log('hi')
+          $('#btnSubmit').click()
+        });
+      </script>
 
+      <% } else { %>
+        <div class="text-center">
+          <p>Atleast one class needs to be added to your school's admin panel before you can view or add subjects</p>
+          <i>You can create classes from the <b>Classes</b> section just above subjects on the navigation drawer at the
+            left portion of your screen.</i>
+        </div>
+        <% } %>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -338,7 +353,6 @@
   <!-- Vendor JS Files -->
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
 
   <!-- Template Main JS File -->
@@ -363,11 +377,16 @@
           if (item.name === e.value) {
             item.subjects.forEach((item, i) => {
               field.innerHTML += `<div class="col-md-10 offset-md-1">
-          <div class="card">
-            <h5 class="session">
-              ${item.name}
-            </h5>
-          </div>
+                <div class="card" style="position: relative;">
+                <div class="d-flex justify-content-between">
+                  <h5 class="session" id="nb_${i}">
+                    ${item.name}
+                  </h5>
+                  <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
+                    <button class="btn btn-primary" id="b_${i}" onclick="del(this.id)">Delete</button>
+                  </div>
+                </div>
+              </div>
         </div>`
             })
           }
@@ -376,6 +395,28 @@
       return;
 
       field.innerHTML = '';
+    }
+  </script>
+
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+  <script>
+    function del(id) {
+      var subjectId = '#n' + id;
+
+      $.ajax({
+        url: window.location.href + '/delete',
+        type: 'POST',
+        data: {
+          class: $('#selected-class').val().trim(),
+          subject: $(subjectId).text().trim()
+        },
+        success: function (data) {
+          location.reload();
+        },
+        error: function (error) {
+          alert("Something happened !")
+        }
+      })
     }
   </script>
 

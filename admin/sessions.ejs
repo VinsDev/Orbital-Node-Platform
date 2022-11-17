@@ -227,10 +227,15 @@
       <div class="columns">
         <% for(var i=0; i < session_data.length; i++){ %>
           <div class="col-md-10 offset-md-1">
-            <div class="card">
-              <h5 class="session">
-                <%= session_data[i].name %>
-              </h5>
+            <div class="card" style="position: relative;">
+              <div class="d-flex justify-content-between">
+                <h5 class="session" id="nb_<%=i%>">
+                  <%= session_data[i].name %>
+                </h5>
+                <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
+                  <button class="btn btn-primary" id="b_<%=i%>" onclick="del(this.id)">Delete</button>
+                </div>
+              </div>
             </div>
           </div>
           <% } %>
@@ -259,19 +264,6 @@
                 <input type="text" name="name" class="form-control" id="sess-name" required>
                 <div class="invalid-feedback">Please, enter the session name!</div>
               </div>
-
-              <!--  <div class="col-12">
-                <label for="yourEmail" class="form-label">Starting Date</label>
-                <input type="date" name="sdate" class="form-control" id="sdate" required>
-                <div class="invalid-feedback">Please enter Starting Date!</div>
-              </div>
-
-              <div class="col-12">
-                <label for="yourEmail" class="form-label">Finishing Date</label>
-                <input type="date" name="edate" class="form-control" id="edate" required>
-                <div class="invalid-feedback">Please enter Finishing Date!</div>
-              </div> -->
-
               <button type="submit" id="btnSubmit" style="display: none;"></button>
             </form>
           </div>
@@ -310,6 +302,26 @@
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+  <script>
+    function del(id) {
+      var sessionId = '#n' + id;
+
+      $.ajax({
+        url: window.location.href + '/delete',
+        type: 'POST',
+        data: {
+          session: $(sessionId).text().trim()
+        },
+        success: function (data) {
+          location.reload();
+        },
+        error: function (error) {
+          alert("Something happened !")
+        }
+      })
+    }
+  </script>
 
 </body>
 

@@ -162,6 +162,13 @@ const admin = (req, res) => {
 };
 const dashboard = async (req, res) => {
     try {
+
+        var dt = new Date();
+        var mm = ((dt.getMonth() + 1) >= 10) ? (dt.getMonth() + 1) : '0' + (dt.getMonth() + 1);
+        var dd = ((dt.getDate()) >= 10) ? (dt.getDate()) : '0' + (dt.getDate());
+        var yyyy = dt.getFullYear();
+        var date = yyyy + " / " + mm + " / " + dd;
+
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
@@ -176,10 +183,11 @@ const dashboard = async (req, res) => {
                 school_obj: school_data.school_info,
                 students: school_data.sessions[lses].terms[0].students.length,
                 teachers: school_data.classes[lcls].subjects.length,
-                subscription: 10,
+                subscription: school_data.school_info.exp_date,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
-                results_status: school_data.sessions[lses].terms[currTermIndex].results
+                results_status: school_data.sessions[lses].terms[currTermIndex].results,
+                today: date
             });
         } else {
             return res.render("../admin/dashboard", {
@@ -189,7 +197,8 @@ const dashboard = async (req, res) => {
                 subscription: "Unknown",
                 session: "Unknown",
                 current_term: "Unknown",
-                results_status: "false"
+                results_status: "false",
+                today: date
             });
         }
     } catch (error) {
@@ -247,11 +256,16 @@ const student_info = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-            return res.render("../admin/student-info", {
-                school_obj: school_data.school_info,
-                sessions_data: school_data.sessions,
-            class_data: school_data.classes
-            });
+        lses = school_data.sessions.length - 1;
+        lcls = school_data.classes.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+        return res.render("../admin/student-info", {
+            school_obj: school_data.school_info,
+            sessions_data: school_data.sessions,
+            class_data: school_data.classes,
+            start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
+            stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -265,11 +279,11 @@ const student_fees = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-            return res.render("../admin/student-fees", {
-                school_obj: school_data.school_info,
-                sessions_data: school_data.sessions,
+        return res.render("../admin/student-fees", {
+            school_obj: school_data.school_info,
+            sessions_data: school_data.sessions,
             class_data: school_data.classes
-            });
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -383,7 +397,7 @@ const sessions = async (req, res) => {
         if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
             return res.render("../admin/sessions", {
                 school_obj: school_data.school_info,
-            session_data: school_data.sessions
+                session_data: school_data.sessions
             });
         } else {
             return res.render("../admin/sessions", {
@@ -405,9 +419,9 @@ const classes = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-            return res.render("../admin/classes", {
+        return res.render("../admin/classes", {
             school_obj: school_data.school_info, class_data: school_data.classes
-            });
+        });
     } catch (error) {
         return res.status(500).send({
             message: error.message,

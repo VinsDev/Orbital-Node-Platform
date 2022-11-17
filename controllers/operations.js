@@ -9,10 +9,10 @@ var PdfPrinter = require('pdfmake');
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
+const baseUrl = local;
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nweb;
+const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
 const { response } = require("express");
@@ -69,8 +69,8 @@ const sendForm = async (req, res, url) => {
                 fees: req.body.fees,
                 e_register: req.body.e_register,
                 agent: req.body.agent.trim(),
-                reg_date: st,
-                exp_date: exp
+                reg_date: date_obj_converter(st),
+                exp_date: date_obj_converter(exp)
             },
             news: [],
             fees_info: {
@@ -897,11 +897,9 @@ const updateSubjectsResults = async (req, res) => {
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
         var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subname);
 
-
         for (var j = 0; j < updatedRes.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
                 if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === updatedRes[j].name && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === updatedRes[j].class) {
-                    console.log(updatedRes[j].name);
                     schools.findOneAndUpdate({ "school_info.name": req.params.sname },
                         { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
                         {
@@ -915,8 +913,7 @@ const updateSubjectsResults = async (req, res) => {
                 }
             }
         }
-
-        return res.redirect(303, '/admin/' + req.params.sname + '/assessment/' + req.body.class + '/' + req.body.subname);
+        return res.send({});
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1012,6 +1009,73 @@ const updateTermDates = async (req, res) => {
         });
     }
 }
+const deleteSession = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        school_data.sessions.splice(sessionIndex, 1);
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "sessions": school_data.sessions } });
+
+        return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const deleteClass = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+        school_data.classes.splice(classIndex, 1);
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "classes": school_data.classes } });
+
+        return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const deleteSubject = async (req, res) => {
+    try {
+
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subject);
+        school_data.classes[classIndex].subjects.splice(subjectIndex, 1);
+
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "classes": school_data.classes } });
+
+        return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+
 
 // TEACHERS APP . . .
 
@@ -1040,7 +1104,10 @@ module.exports = {
     updateSubjectsResults,
     updateCurrentTerm,
     updateResultStatus,
-    updateTermDates
+    updateTermDates,
+    deleteSession,
+    deleteClass,
+    deleteSubject,
 };
 
 function htremarkHelper(score) {

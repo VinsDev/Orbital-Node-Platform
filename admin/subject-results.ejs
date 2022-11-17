@@ -225,73 +225,89 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <!-- REFERENCE SELECTOR -->
-    <div class="card">
-      <div class="internal">
-        <div class="rrr">
-          <div class="row md-3">
-            <label class="col-sm-5 col-form-label">Class</label>
-            <div class="col-sm-12">
-              <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
-                <% for(var i=0; i < class_data.length; i++){ %>
-                  <option value="<%= class_data[i].name %>">
-                    <%= class_data[i].name %>
-                  </option>
-                  <% } %>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <section class="section">
-      <div class="row">
-        <div class="col-md-12 offset-md-0">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Manage Students Continous Assessment</h5>
-
-              <!-- Table with hoverable rows -->
-              <table class="table table-hover" id="myTable">
-                <thead>
-                  <tr>
-                    <th scope="col">S/N</th>
-                    <th scope="col">Subject</th>
-                    <th scope="col">Teacher</th>
-                    <th scope="col">Class</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% for(var i=0; i<class_data[0].subjects.length; i++) { %>
-                    <tr
-                      data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
-                      <div>
-                        <th scope="row">
-                          <%= i+1 %>
-                        </th>
-                        <td>
-                          <%= class_data[0].subjects[i].name %>
-                        </td>
-                        <td>
-                          <%= class_data[0].subjects[i].teacher %>
-                        </td>
-                        <td>
-                          <%= class_data[0].subjects[i].class %>
-                        </td>
-                      </div>
-                    </tr>
+    <% if(sessions_data.length!=0 && class_data.length !=0 && class_data[0].subjects.length !=0) { %>
+      <!-- REFERENCE SELECTOR -->
+      <div class="card">
+        <div class="internal">
+          <div class="rrr">
+            <div class="row md-3">
+              <label class="col-sm-5 col-form-label">Class</label>
+              <div class="col-sm-12">
+                <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
+                  <% for(var i=0; i < class_data.length; i++){ %>
+                    <option value="<%= class_data[i].name %>">
+                      <%= class_data[i].name %>
+                    </option>
                     <% } %>
-                </tbody>
-              </table>
-              <!-- End Table with hoverable rows -->
-
+                </select>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+      <section class="section">
+        <div class="row">
+          <div class="col-md-12 offset-md-0">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Manage Students Continous Assessment</h5>
 
+                <!-- Table with hoverable rows -->
+                <table class="table table-hover" id="myTable">
+                  <thead>
+                    <tr>
+                      <th scope="col">S/N</th>
+                      <th scope="col">Subject</th>
+                      <th scope="col">Teacher</th>
+                      <th scope="col">Class</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for(var i=0; i < class_data[0].subjects.length; i++) { %>
+                      <tr
+                        data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
+                        <div>
+                          <th scope="row">
+                            <%= i+1 %>
+                          </th>
+                          <td>
+                            <%= class_data[0].subjects[i].name %>
+                          </td>
+                          <td>
+                            <%= class_data[0].subjects[i].teacher %>
+                          </td>
+                          <td>
+                            <%= class_data[0].subjects[i].class %>
+                          </td>
+                        </div>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+                <!-- End Table with hoverable rows -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <% } else { %>
+        <div class="text-center">
+          <p>Please ensure that you follow the setup instructions on the user manual in the order stated in other to
+            view the Continous Assessments.</p><br>
+          <ul>
+            <li>Set term starting and Ending dates in the E-register section under Students</li>
+            <li>Create a session</li>
+            <li>Create Classes</li>
+            <li>Add subjects to classes</li>
+            <li>Add students to class</li>
+          </ul>
+          <p>Before you will be able to view the students info</p>
+          <i>Please note that if you do not follow the above instructions in the order stated, you could possibly run into issues
+            while
+            working with our system.</i>
+        </div>
+        <% } %>
 
   </main><!-- End #main -->
 

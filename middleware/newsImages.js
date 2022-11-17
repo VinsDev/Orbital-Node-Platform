@@ -10,13 +10,13 @@ var storage = new GridFsStorage({
     const match = ["image/png", "image/jpeg"];
 
     if (match.indexOf(file.mimetype) === -1) {
-      const filename = `${Date.now()}-orbitalnodenews-${file.originalname}`;
+      const filename = `${Date.now()}-${req.body.name.trim()}-${file.originalname}`;
       return filename;
     }
 
     return {
       bucketName: dbConfig.newsBucket,
-      filename: `${Date.now()}-orbitalnodenews-${file.originalname}`
+      filename: `${Date.now()}-${req.body.name.trim()}-${file.originalname}`
     };
   }
 });

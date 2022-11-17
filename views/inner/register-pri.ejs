@@ -179,14 +179,14 @@
     var name = document.getElementById('name');
     var email = document.getElementById('email');
     var subBtn = document.getElementById('sub');
-    paymentForm.addEventListener('submit', payWithPaystack, false);
 
     function pay() {
       if (name.value === '' || email.value === '') {
         subBtn.click();
       }
       else {
-        payWithPaystack();
+        subBtn.click();
+        //payWithPaystack(); 
       }
     }
 

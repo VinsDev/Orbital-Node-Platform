@@ -138,6 +138,12 @@
                         </select>
                     </div>
                 </div>
+
+
+                <div>
+                    <button class="btn btn-primary" style="transform: translate(0, 50%);" onclick="refr()">Refresh
+                        Page</button>
+                </div>
             </div>
         </div>
     </div>
@@ -181,10 +187,9 @@
                                     tbl += '<th>S/N</th>';
                                     tbl += '<th>Subject</th>';
                                     tbl += '<th>Total</th>';
-                                    tbl += '<th>Position</th>';
-                                    tbl += '<th>Test 1</th>';
-                                    tbl += '<th>Test 2</th>';
-                                    tbl += '<th>Exams</th>';
+                                    tbl += '<th>Avr</th>';
+                                    tbl += '<th>Pos</th>';
+                                    tbl += '<th>Grade</th>';
                                     tbl += '</tr>';
                                     tbl += '</thead>';
                                     tbl += '<tbody>';
@@ -193,11 +198,10 @@
                                         tbl += '<tr row_id="' + row_id + '">';
                                         tbl += '<td col_name="sn">' + (index + 1) + '</td>';
                                         tbl += '<td col_name="name">' + val['name'] + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + val.total + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + val.position + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="test1">' + val.ass[2] + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="test2">' + val.ass[3] + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + val.ass[4] + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average) + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.grade) + '</td>';
                                     });
                                     tbl += '</tbody>';
                                     tbl += '</table>'
@@ -275,10 +279,9 @@
                 tbl += '<th>S/N</th>';
                 tbl += '<th>Subject</th>';
                 tbl += '<th>Total</th>';
-                tbl += '<th>Position</th>';
-                tbl += '<th>Test 1</th>';
-                tbl += '<th>Test 2</th>';
-                tbl += '<th>Exams</th>';
+                tbl += '<th>Avr</th>';
+                tbl += '<th>Pos</th>';
+                tbl += '<th>Grade</th>';
                 tbl += '</tr>';
                 tbl += '</thead>';
                 tbl += '<tbody>';
@@ -287,17 +290,31 @@
                     tbl += '<tr row_id="' + row_id + '">';
                     tbl += '<td col_name="sn">' + (index + 1) + '</td>';
                     tbl += '<td col_name="name">' + val['name'] + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + val.total + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + val.position + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="test1">' + val.ass[2] + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + val.ass[3] + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + val.ass[4] + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.grade) + '</td>';
                 });
                 tbl += '</tbody>';
                 tbl += '</table>'
 
                 $(document).find('.tbl_user_data').html(tbl);
             });
+        }
+    </script>
+
+    <script>
+        function negative(number) {
+            if (number < 0) {
+                return '';
+            }
+            else {
+                return number;
+            }
+        }
+
+        function refr() {
+            location.reload();
         }
     </script>
 </body>

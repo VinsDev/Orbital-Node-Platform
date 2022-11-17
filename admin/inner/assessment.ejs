@@ -250,7 +250,6 @@
               });
 
               function upload() {
-                console.log("hi")
                 fetch('/admin/<%= school_obj.name %>/updateSubjectsResults', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -262,8 +261,8 @@
                     data: ajax_data,
                   })
                 }).then((res) => {
-                  if (res.info == "ok") {
-                    alert("Ok");
+                  if (res.status === 200) {
+                    alert("Changes saved successfully");
                   }
                 });
               }
@@ -276,6 +275,7 @@
                   return number;
                 }
               }
+
               function negative_rev(value) {
                 if (value === "") {
                   return -1;
@@ -369,11 +369,11 @@
           var row_id = index;
           tbl += '<tr row_id="' + row_id + '">';
           tbl += '<td col_name="name">' + val['name'] + '</td>';
-          tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + val.subjects[subjectIndex].ass[0] + '</td>';
-          tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + val.subjects[subjectIndex].ass[1] + '</td>';
-          tbl += '<td class="row_data" edit_type="click" col_name="test1">' + val.subjects[subjectIndex].ass[2] + '</td>';
-          tbl += '<td class="row_data" edit_type="click" col_name="test2">' + val.subjects[subjectIndex].ass[3] + '</td>';
-          tbl += '<td class="row_data" edit_type="click" col_name="exams">' + val.subjects[subjectIndex].ass[4] + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.subjects[subjectIndex].ass[0]) + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + negative(val.subjects[subjectIndex].ass[1]) + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="test1">' + negative(val.subjects[subjectIndex].ass[2]) + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.subjects[subjectIndex].ass[3]) + '</td>';
+          tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.subjects[subjectIndex].ass[4]) + '</td>';
           tbl += '</tr>';
         });
         tbl += '</tbody>';
