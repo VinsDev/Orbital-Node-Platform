@@ -25,14 +25,16 @@ a.meanmenu-reveal {
 }
 
 .mean-container .mean-bar::before {
-	background: url("../../../images/logo.png") no-repeat center center / cover;
-	height: 26px;
-	width: 60px;
-	content: "";
+	/* background: url("../../../images/logo.png") no-repeat center center ; */
+	content: "Orbital Node";
 	left: 14px;
 	position: absolute;
 	text-transform: uppercase;
-	top: 16px;
+	color: white;
+	font-weight: bold;
+	font-size: 15px;
+	letter-spacing: 1.0px;
+	top: 15px;
 	z-index: 1;
 }
 

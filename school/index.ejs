@@ -314,49 +314,41 @@
                         <p>Meet our principal officers</p>
                     </div><!-- ends: .section-header -->
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-6">
                     <div class="single_item single_item_first">
                         <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.ppic %>" alt="" class="img-fluid"></a>
+                            <img src="<%= school_obj.ppic %>" alt="" class="img-fluid">
                         </div>
                         <div class="blog_title">
-
-                            <h3>Principal</h3>
-                            <div class="post_bloger">
-                                <span class="bloger_name">
-                                    <%= school_obj.p_name %>
-                                </span>
-                            </div>
+                            <% if(school_obj.category==="primary" ){ %>
+                                <h3>Head Teacher</h3>
+                                <% } else { %>
+                                    <h3>Principal</h3>
+                                    <% } %>
+                                        <div class="post_bloger">
+                                            <span class="bloger_name">
+                                                <%= school_obj.p_name %>
+                                            </span>
+                                        </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-6">
                     <div class="single_item single_item_center">
                         <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.vp1pic %>" alt="" class="img-fluid"></a>
+                            <img src="<%= school_obj.vp1pic %>" alt="" class="img-fluid">
                         </div>
                         <div class="blog_title">
-                            <h3>Vice Principal Admin</h3>
-                            <div class="post_bloger">
-                                <span class="bloger_name">
-                                    <%= school_obj.vp1name %>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-6 col-md-4 col-lg-4">
-                    <div class="single_item single_item_center">
-                        <div class="blog-img">
-                            <a href="#" title=""><img src="<%= school_obj.vp2pic %>" alt="" class="img-fluid"></a>
-                        </div>
-                        <div class="blog_title">
-                            <h3>Vice Principal Academics</h3>
-                            <div class="post_bloger">
-                                <span class="bloger_name">
-                                    <%= school_obj.vp2name %>
-                                </span>
-                            </div>
+                            <% if(school_obj.category==="primary" ){ %>
+                                <h3>Assistant Head Teacher</h3>
+                                <% } else { %>
+                                    <h3>Vice Principal</h3>
+                                    <% } %>
+                                        <div class="post_bloger">
+                                            <span class="bloger_name">
+                                                <%= school_obj.vp1name %>
+                                            </span>
+                                        </div>
                         </div>
                     </div>
                 </div>

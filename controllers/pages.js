@@ -5,8 +5,6 @@ const dbConfig = require("../config/db");
 const url = dbConfig.url;
 const mongoClient = new MongoClient(url);
 
-const orbital = require("../computations/compile-results");
-
 // ORBITAL NODE LANDING . . .
 const about = (req, res) => {
     return res.sendFile(path.join(`${__dirname}/../views/about.html`));
@@ -35,7 +33,10 @@ const s_home = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
-        return res.render("../school/index", { school_obj: school_data.school_info, news: school_data.news });
+        return res.render("../school/index", {
+            school_obj: school_data.school_info,
+            news: school_data.news
+        });
 
 
 
@@ -177,12 +178,10 @@ const dashboard = async (req, res) => {
 
         if (school_data.sessions.length > 0 && school_data.classes.length > 0) {
             lses = school_data.sessions.length - 1;
-            lcls = school_data.classes.length - 1;
             var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
                 students: school_data.sessions[lses].terms[0].students.length,
-                teachers: school_data.classes[lcls].subjects.length,
                 subscription: school_data.school_info.exp_date,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
@@ -193,7 +192,6 @@ const dashboard = async (req, res) => {
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
                 students: "Not set yet",
-                teachers: "0",
                 subscription: school_data.school_info.exp_date,
                 session: "Unknown",
                 current_term: "Unknown",
@@ -324,7 +322,7 @@ const student_register = async (req, res) => {
             return res.render("../admin/student-register", {
                 school_obj: school_data.school_info,
                 students: "",
-                session: "",
+                session: "null",
                 current_term: "",
                 start_date: "null",
                 stop_date: "null",
@@ -482,8 +480,6 @@ const result = async (req, res) => {
 
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-
-        orbital.computeResults(req.params.sname, school_data.sessions[0].name, school_data.sessions[0].terms[0].name, school_data.classes[0].name);
 
         return res.render("../admin/inner/result", {
             school_obj: school_data.school_info,

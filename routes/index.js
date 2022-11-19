@@ -75,6 +75,10 @@ let routes = app => {
   router.get("/admin/:sname/assessment/:class/:subject", pagesController.assessment);
   router.get("/admin/:sname/result/:class/:student", pagesController.result);
 
+  // TEACHERS APP . . .
+  router.post("/ontap/staffLogin", uploadController.staffLogin);
+  router.get("/ontap/:sname/getClassList", uploadController.getClassList);
+  router.get("/ontap/:sname/getAttendanceForClass/:class", uploadController.getAttendanceForClass);
 
   return app.use("/", router);
 };

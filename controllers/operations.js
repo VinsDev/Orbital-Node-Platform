@@ -9,13 +9,12 @@ var PdfPrinter = require('pdfmake');
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
+const baseUrl = local;
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nweb;
+const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
-const { response } = require("express");
 
 // LANDING . . .
 const getSchools = async (req, res) => {
@@ -51,6 +50,7 @@ const sendForm = async (req, res, url) => {
                 logo: baseUrl + url[0].filename,
                 email: req.body.email.trim(),
                 phone: req.body.phone.trim(),
+                category: req.body.category.trim(),
                 adress: req.body.adress.trim(),
                 state: req.body.state.trim(),
                 pic1: baseUrl + url[1].filename,
@@ -61,8 +61,6 @@ const sendForm = async (req, res, url) => {
                 ppic: baseUrl + url[3].filename,
                 vp1name: req.body.vp1name.trim(),
                 vp1pic: baseUrl + url[4].filename,
-                vp2name: req.body.vp2name.trim(),
-                vp2pic: baseUrl + url[5].filename,
                 mission: req.body.mission.trim(),
                 vision: req.body.vision.trim(),
                 anthem: req.body.anthem.trim(),
@@ -178,8 +176,6 @@ const verifyTransaction = async (req, res) => {
         return res.end();
     }
 };
-
-
 
 // SCHOOL . . .
 const downloadImage = async (req, res) => {
@@ -913,6 +909,9 @@ const updateSubjectsResults = async (req, res) => {
                 }
             }
         }
+
+        orbital.computeResults(req.params.sname, school_data.sessions[sessionIndex].name, school_data.sessions[sessionIndex].terms[termIndex].name, school_data.classes[classIndex].name);
+
         return res.send({});
     } catch (error) {
         return res.status(500).send({
@@ -1076,9 +1075,94 @@ const deleteSubject = async (req, res) => {
     }
 }
 
-
 // TEACHERS APP . . .
+const staffLogin = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        console.log(req.body.username);
 
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'admin.admin_username': req.body.username.trim() });
+        if (school_data) {
+            if (school_data.admin.admin_password === req.body.password.trim()) {
+                return res.send({ success: true, school_name: school_data.school_info.name });
+            } else {
+                res.send({ success: false });
+            }
+        } else {
+            res.send({ success: false });
+        }
+    } catch (error) {
+        return res.send({ message: error });
+    }
+}
+const getClassList = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        let clsNames = [];
+
+        school_data.classes.forEach((cls) => {
+            clsNames.push(cls.name);
+        })
+
+        res.status(200).send(clsNames);
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const getAttendanceForClass = async (req, res) => {
+    try {
+        let studentsList = [];
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        lses = school_data.sessions.length - 1;
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+
+        var std = school_data.sessions[lses].terms[currTermIndex].students;
+        std.forEach((student) => {
+            if (student.class === req.params.class) {
+                studentsList.push({
+                    name: student.name,
+                    gender: student.gender,
+                    morning: student.morning_attendance,
+                    afternoon: student.afternoon_attendance
+                })
+            }
+        })
+
+
+        var today = new Date();
+        var mm = ((today.getMonth() + 1) >= 10) ? (today.getMonth() + 1) : '0' + (today.getMonth() + 1);
+        var dd = ((today.getDate()) >= 10) ? (today.getDate()) : '0' + (today.getDate());
+        var yyyy = today.getFullYear();
+        var date = yyyy + "-" + mm + "-" + dd + "-" + today.getDay();
+        var todayIndex = school_data.sessions[lses].terms[currTermIndex].attendance_dates.findIndex(i => i === date);
+
+        res.status(200).send({
+            attendance_dates: school_data.sessions[lses].terms[currTermIndex].attendance_dates,
+            today_index: todayIndex,
+            students: studentsList
+        });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 module.exports = {
     uploadRegForm,
@@ -1108,6 +1192,9 @@ module.exports = {
     deleteSession,
     deleteClass,
     deleteSubject,
+    staffLogin,
+    getClassList,
+    getAttendanceForClass,
 };
 
 function htremarkHelper(score) {

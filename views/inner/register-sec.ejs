@@ -46,6 +46,8 @@
           required />
       </div>
 
+      <input type="hidden" name="category" id="category" value="secondary">
+
       <div class="form-group">
         <label id="adress-label" for="adress">School Adress</label>
         <input type="text" name="adress" id="adress" class="form-control" placeholder="Enter your School Adress"
@@ -96,30 +98,18 @@
       </div>
 
       <div class="form-group">
-        <label id="email-label" for="vp1name">Vice Principal Academy's Name</label>
+        <label id="email-label" for="vp1name">Vice Principal Admin's Name</label>
         <input type="text" name="vp1name" id="vp1name" class="form-control"
           placeholder="Type in the Vice Principal's Name" required />
       </div>
 
       <div class="form-group">
-        <label for="vp1pic" id="vp1pic-label">Vice Principal Academy's Picture</label>
+        <label for="vp1pic" id="vp1pic-label">Vice Principal Admin's Picture</label>
         <input type="file" name="images" id="vp1pic" accept="image/*" onchange="loadFile(event, 'vp1-i')"
           required><br />
         <img id="vp1-i" />
       </div>
 
-      <div class="form-group">
-        <label id="email-label" for="email">Vice Principal Admin's Name</label>
-        <input type="text" name="vp2name" id="vp2name" class="form-control"
-          placeholder="Type in the Vice Principal's Name" required />
-      </div>
-
-      <div class="form-group">
-        <label for="vppic" id="vppic-label">Vice Principal Admin's Picture</label>
-        <input type="file" name="images" id="vp2pic" accept="image/*" onchange="loadFile(event, 'vp2-i')"
-          required><br />
-        <img id="vp2-i" />
-      </div>
 
       <div class="form-group">
         <p>Mission</p>
@@ -194,7 +184,7 @@
       var handler = PaystackPop.setup({
         key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f', // Replace with your public key
         email: document.getElementById('email').value,
-        amount: 15000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+        amount: 16680 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
         currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
         ref: ref, // Replace with a reference you generated
         callback: function (response) {
