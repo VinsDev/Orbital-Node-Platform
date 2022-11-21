@@ -388,7 +388,7 @@ const parents = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        return res.render("../admin/parents", { school_obj: school_data.school_info });
+        return res.render("../admin/parents", { school_obj: school_data.school_info, feedbacks: school_data.feedbacks });
     } catch (error) {
         return res.status(500).send({
             message: error.message,

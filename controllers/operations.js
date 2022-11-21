@@ -551,6 +551,27 @@ const portaLogin = async (req, res) => {
         return res.send({ message: error });
     }
 }
+const upload_feedbacks = async (req, res) => {
+    try {
+        var feedback_model = {
+            parent: req.body.name,
+            contact: req.body.number,
+            message: req.body.message,
+            date: Date()
+        }
+
+        await mongoClient.connect();
+        const database = mongoClient.db(dbConfig.database);
+
+        database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
+            { $push: { feedbacks: feedback_model } }
+        );
+
+        return res.send({ success: true });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 // ADMIN . . .
 const login = async (req, res) => {
@@ -1170,6 +1191,7 @@ module.exports = {
     downloadImage,
     downloadPdf,
     downloadNewsImage,
+    upload_feedbacks,
     login,
     portaLogin,
     upload_news,

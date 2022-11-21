@@ -227,29 +227,34 @@
 
     <section class="section">
       <div class="columns">
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Mr. Matthew Mark Luke</h5>
-              <p>My son Jesse Avaachia in primary 3 is a very stubborn boy. I want you people to help me deal with him.
-                Hestole my money yesterday all in the name of he wants to pay dues. Pls wich dues is are you people
-                collecting currently?</p>
-              <i>Phone number: 08100000000 (9-Oct-2029 07:23am)</i>
+        <% if(feedbacks.length===0) { %>
+          <div class="col-md-10 offset-md-1">
+            <div class="card">
+              <div class="card-body">
+                <p>No feedback has been sent by parents to your school yet.</p>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="col-md-10 offset-md-1">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Mr. John Psalms Solomon</h5>
-              <p>My son Amadi Eze in primary 5 is a very somehow boy. I want you people to help me deal with him.
-                Hestole my money yesterday all in the name of he wants to pay dues. Pls wich dues is are you people
-                collecting currently?</p>
-              <i>Email: Phone number: 08100000000 (9-Nov-2029 07:49pm)</i>
-            </div>
-          </div>
-        </div>
+          <% } else { %>
+            <% for (var i=0; i< feedbacks.length; i++) { %>
+              <div class="col-md-10 offset-md-1">
+                <div class="card">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <%=feedbacks[i].parent %>
+                    </h5>
+                    <p>
+                      <%=feedbacks[i].message %>
+                    </p>
+                    <b><i>Phone Number:</b>
+                    <%=feedbacks[i].contact %></i><br>
+                      <b><i>Date:</b>
+                      <%=feedbacks[i].date %></i>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+                <% } %>
       </div>
     </section>
 
