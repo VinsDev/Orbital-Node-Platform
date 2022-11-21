@@ -187,8 +187,8 @@
                                     tbl += '<th>S/N</th>';
                                     tbl += '<th>Subject</th>';
                                     tbl += '<th>Total</th>';
-                                    tbl += '<th>Avr</th>';
-                                    tbl += '<th>Pos</th>';
+                                    tbl += '<th>Sub. Avr.</th>';
+                                    tbl += '<th>Pos.</th>';
                                     tbl += '<th>Grade</th>';
                                     tbl += '</tr>';
                                     tbl += '</thead>';
@@ -199,7 +199,7 @@
                                         tbl += '<td col_name="sn">' + (index + 1) + '</td>';
                                         tbl += '<td col_name="name">' + val['name'] + '</td>';
                                         tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average) + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
                                         tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
                                         tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.grade) + '</td>';
                                     });

@@ -158,7 +158,6 @@
             <!-- TABLE LOGIC -->
             <script type="text/javascript">
               var ajax_data = [];
-              var subjectIndex = -1;
               $(document).ready(function ($) {
                 fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
                   method: 'POST',
@@ -171,12 +170,7 @@
                 }).then(res => res.json()).then(data => {
                   ajax_data = data.payload;
 
-                  for (var i = 0; i < ajax_data[0].subjects.length; i++) {
-                    if ($("#subname").text().trim() === ajax_data[0].subjects[i].name.trim()) {
-                      subjectIndex = i;
-                      break;
-                    }
-                  }
+                  var subjectIndex = ajax_data[0].subjects.findIndex(i => i.name.trim() === $("#subname").text().trim());
 
                   //--->create data table > start
                   var tbl = '';
@@ -193,7 +187,7 @@
                   tbl += '</tr>';
                   tbl += '</thead>';
                   tbl += '<tbody>';
-                  $.each(ajax_data, function (index, val) {
+                    $.each(ajax_data, function (index, val) {
                     var row_id = index;
                     tbl += '<tr row_id="' + row_id + '">';
                     tbl += '<td col_name="sn">' + (index + 1) + '</td>';

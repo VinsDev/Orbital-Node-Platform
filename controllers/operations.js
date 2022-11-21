@@ -29,7 +29,7 @@ const getSchools = async (req, res) => {
 
 
         cursor.forEach(school => schoolList.push(school)).then(() => {
-            res.status(200).send({ payload: schoolList.slice(0, 10) });
+            res.status(200).send({ payload: schoolList.slice(0, 8) });
         });
 
     } catch (error) {
@@ -249,7 +249,7 @@ const downloadPdf = async (req, res) => {
         ];
 
         for (var i = 0; i < student_data.subjects.length; i++) {
-            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].position, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].grade, style: 'tableHeader', alignment: 'center' }])
+            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average.toFixed(2), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: position_qualifier(student_data.subjects[i].position), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].grade, style: 'tableHeader', alignment: 'center' }])
         }
 
         var dt = new Date();
@@ -366,12 +366,12 @@ const downloadPdf = async (req, res) => {
                         {
                             width: '*',
                             style: 'bottom',
-                            text: `CLASS AVERAGE: ${student_data.average}`
+                            text: `CLASS AVERAGE: ${student_data.average.toFixed(2)}`
                         },
                         {
                             width: '*',
                             style: 'bottom',
-                            text: `POSITION IN CLASS: ${student_data.position}`
+                            text: `POSITION IN CLASS: ${position_qualifier(student_data.position)}`
                         },
                         {
                             width: 'auto',
@@ -694,33 +694,15 @@ const createSubject = async (req, res) => {
 }
 const createStudent = async (req, res) => {
     try {
-        var s_subjects = [];
-
-        var student_model = {
-            name: req.body.name.trim(),
-            password: req.body.dob,
-            gender: req.body.gender,
-            dob: req.body.dob,
-            session: req.body.session,
-            term: req.body.term,
-            class: req.body.class,
-            subjects: [],
-            total: -1,
-            average: -1,
-            position: -1,
-            morning_attendance: [],
-            afternoon_attendance: []
-        }
-
         await mongoClient.connect();
         const database = mongoClient.db(dbConfig.database);
-        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "sessions.$[sess].terms.$[term].students": student_model } }, { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }] })
 
         let school_data = await database.collection("schools").findOne({ 'school_info.name': req.params.sname });
         var lses = school_data.sessions.length - 1;
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
 
+        var s_subjects = [];
         // Assign class subjects to a subjects list
         for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
             s_subjects.push(
@@ -735,16 +717,29 @@ const createStudent = async (req, res) => {
             )
         }
 
-        database.collection("schools").findOneAndUpdate(
-            { "school_info.name": req.params.sname },
+        var student_model = {
+            name: req.body.name.trim(),
+            password: req.body.dob,
+            gender: req.body.gender,
+            dob: req.body.dob,
+            session: req.body.session,
+            term: req.body.term,
+            class: req.body.class,
+            subjects: s_subjects,
+            total: -1,
+            average: -1,
+            position: -1,
+            morning_attendance: school_data.sessions[lses].terms[currTermIndex].attendance_model,
+            afternoon_attendance: school_data.sessions[lses].terms[currTermIndex].attendance_model
+        }
+
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $push: { "sessions.$[sess].terms.$[term].students": student_model } },
             {
-                $push: {
-                    "sessions.$[sess].terms.$[term].students.$[stud].subjects": { $each: s_subjects },
-                    "sessions.$[sess].terms.$[term].students.$[stud].morning_attendance": { $each: school_data.sessions[lses].terms[currTermIndex].attendance_model },
-                    "sessions.$[sess].terms.$[term].students.$[stud].afternoon_attendance": { $each: school_data.sessions[lses].terms[currTermIndex].attendance_model }
-                }
-            },
-            { arrayFilters: [{ "sess.name": req.body.session }, { "term.name": req.body.term }, { "stud.name": req.body.name }] });
+                arrayFilters: [
+                    { "sess.name": req.body.session },
+                    { "term.name": req.body.term }]
+            })
 
         return res.redirect(303, '/admin/' + req.params.sname + '/student-info');
     } catch (error) {
@@ -758,7 +753,7 @@ const getSubjects = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
 
         res.status(200).send({ payload: school_data.classes });
@@ -804,7 +799,7 @@ const getSubjectsResultsList = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
         for (var i = 0; i < school_data.classes.length; i++) {
             if (school_data.classes[i].name === req.body.class) {
@@ -827,7 +822,7 @@ const getSubjectsResults = async (req, res) => {
 
     const database = mongoClient.db(dbConfig.database);
     const schools = database.collection("schools");
-    let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+    let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
     var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
     var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
@@ -856,7 +851,7 @@ const getStudentResults = async (req, res) => {
 
         orbital.computeResults(req.params.sname, req.body.session, req.body.term, req.body.class);
 
-        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
 
         var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
@@ -1205,17 +1200,17 @@ function htremarkHelper(score) {
             return "An Amazing Result. Keep it up";
         } else {
             if (score < 70 && score >= 60) {
-                return "Good Result. You can more";
+                return "Good Result. You can do more";
             } else {
                 if (score < 60 && score >= 50) {
-                    return "Satisfactory Result. You can better.";
+                    return "Satisfactory Result. You can do better.";
                 } else {
                     if (score < 50 && score >= 40) {
                         return "Average Result, Work harder";
                     } else if (score < 40 && score >= 0) {
                         return "Poor performance. Do better next time.";
                     } else {
-                        return "Your Scores are not within the stipulated range.";
+                        return "Your Scores are not within the stipulated range. Form teacher please make corrections";
                     }
                 }
             }
@@ -1228,4 +1223,33 @@ function date_obj_converter(date) {
     var dd = ((date.getDate()) >= 10) ? (date.getDate()) : '0' + (date.getDate());
     var yyyy = date.getFullYear();
     return yyyy + "-" + mm + "-" + dd;
+}
+
+function position_qualifier(pos) {
+    if (p(pos, 1) || p(pos, 21) || p(pos, 31) || p(pos, 41) || p(pos, 51) || p(pos, 61) || p(pos, 71) || p(pos, 81) || p(pos, 91) || p(pos, 101) || p(pos, 121) || p(pos, 131) || p(pos, 141) || p(pos, 151) || p(pos, 161) || p(pos, 171) || p(pos, 181) || p(pos, 191) || p(pos, 201)) {
+        return pos + "ST";
+    }
+    else {
+        if (p(pos, 2) || p(pos, 22) || p(pos, 32) || p(pos, 42) || p(pos, 52) || p(pos, 62) || p(pos, 72) || p(pos, 82) || p(pos, 92) || p(pos, 102) || p(pos, 122) || p(pos, 132) || p(pos, 142) || p(pos, 152) || p(pos, 162) || p(pos, 172) || p(pos, 182) || p(pos, 192) || p(pos, 202)) {
+            return pos + "ND";
+        } else {
+            if (p(pos, 3) || p(pos, 23) || p(pos, 33) || p(pos, 43) || p(pos, 53) || p(pos, 63) || p(pos, 73) || p(pos, 83) || p(pos, 93) || p(pos, 103) || p(pos, 123) || p(pos, 133) || p(pos, 143) || p(pos, 153) || p(pos, 163) || p(pos, 173) || p(pos, 183) || p(pos, 193) || p(pos, 203)) {
+                return pos + "RD";
+            } else {
+                if (btw(pos, 4, 20) || btw(pos, 24, 30) || btw(pos, 34, 40) || btw(pos, 44, 50) || btw(pos, 54, 60) || btw(pos, 64, 70) || btw(pos, 74, 80) || btw(pos, 84, 90) || btw(pos, 94, 100) || btw(pos, 104, 120) || btw(pos, 124, 130) || btw(pos, 134, 140) || btw(pos, 144, 150) || btw(pos, 154, 160) || btw(pos, 164, 170) || btw(pos, 174, 180) || btw(pos, 184, 190) || btw(pos, 194, 200)) {
+                    return pos + "TH";
+                } else {
+                    return pos;
+                }
+            }
+        }
+    }
+}
+
+function p(pos, num) {
+    if (pos === num) { return true; } else { return false; }
+}
+
+function btw(p, a, b) {
+    if (p >= a && p <= b) { return true; } else { return false; }
 }
