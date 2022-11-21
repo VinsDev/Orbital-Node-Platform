@@ -26,7 +26,6 @@
   <link href="../../admin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
@@ -239,47 +238,178 @@
     <section class="section">
       <div class="row">
         <div class="col-md-12 offset-md-0">
-          <div class="card">
-            <div class="card-body">
-              <% if(session==="null" ) { %>
-                <div class="text-center">
-                  <p>Atleast one Academic session and atleast one class needs to be added to your school's admin panel
-                    before you can access
-                    the e-register section</p>
-                  <i>You can create a session from the <b>Session</b> section on the References in the navigation drawer
-                    at the
-                    left portion of your screen.</i>
-                </div>
-                <% } else { %>
-                  <h5 class="card-title">Current Term: <%= current_term %>
-                  </h5>
-                  <% if(start_date==="null" || stop_date==="null" ) { %>
-                    <form action="/admin/<%= school_obj.name %>/updateTermDates" method="post">
-                      <div class="row">
-                        <div class="col-xxl-4">
-                          <label for="yourEmail" class="form-label">Starting Date</label>
-                          <input type="date" name="start_date" class="form-control" id="start_date" required>
-                          <div class="invalid-feedback">Please enter Starting Date!</div>
-                        </div>
 
-                        <div class="col-xxl-4">
-                          <label for="yourEmail" class="form-label">Finishing Date</label>
-                          <input type="date" name="stop_date" class="form-control" id="stop_date" required>
-                          <div class="invalid-feedback">Please enter Finishing Date!</div>
+          <% if(session==="null" ) { %>
+            <div class="text-center">
+              <p>Atleast one Academic session and atleast one class needs to be added to your school's admin panel
+                before you can access
+                the e-register section</p>
+              <i>You can create a session from the <b>Session</b> section on the References in the navigation drawer
+                at the
+                left portion of your screen.</i>
+            </div>
+            <% } else { %>
+              <h5 class="card-title">Current Term: <%= current_term %>
+              </h5>
+              <% if(start_date==="null" || stop_date==="null" ) { %>
+                <form action="/admin/<%= school_obj.name %>/updateTermDates" method="post">
+                  <div class="row">
+                    <div class="col-xxl-4">
+                      <label for="yourEmail" class="form-label">Starting Date</label>
+                      <input type="date" name="start_date" class="form-control" id="start_date" required>
+                      <div class="invalid-feedback">Please enter Starting Date!</div>
+                    </div>
+
+                    <div class="col-xxl-4">
+                      <label for="yourEmail" class="form-label">Finishing Date</label>
+                      <input type="date" name="stop_date" class="form-control" id="stop_date" required>
+                      <div class="invalid-feedback">Please enter Finishing Date!</div>
+                    </div>
+                  </div>
+                  <div class="text-center" style="margin-bottom: 20px;">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                  </div>
+                </form>
+
+                <% } else { %>
+                  <!-- Students Card -->
+                  <div class="col-xxl-12 col-md-12">
+                    <div class="card info-card sales-card">
+                      <div class="card-body">
+                        <h5 class="card-title">All Students in School <span>| Total Number</span></h5>
+
+                        <div class="d-flex align-items-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-people"></i>
+                          </div>
+                          <div class="ps-3">
+                            <h6>
+                              <%= students %>
+                            </h6>
+
+                          </div>
                         </div>
                       </div>
-            </div>
-            <div class="text-center" style="margin-bottom: 20px;">
-              <button class="btn btn-primary" type="submit">Save</button>
-            </div>
-            </form>
-            <% } else { %>
 
-              <% } %>
-                <% } %>
-          </div>
+                    </div>
+                  </div><!-- End Students Card -->
+
+                  <div class="col-xxl-12 col-md-12">
+                    <div class="card info-card revenue-card">
+                      <div class="card-body">
+                        <h5 class="card-title">Today's Date<span></span></h5>
+
+                        <div class="d-flex align-items-center">
+                          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-calendar"></i>
+                          </div>
+                          <div class="ps-3">
+                            <h6>
+                              <%= today %>
+                            </h6>
+
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Present Today <span>| Morning</span></h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>
+                                <%= students %>
+                              </h6>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Present Today <span>| Afternoon</span></h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>
+                                Not Marked Yet
+                              </h6>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Absent Today <span>| Generally</span></h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>
+                                0
+                              </h6>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="col-xxl-6 col-md-6">
+                      <div class="card info-card sales-card">
+                        <div class="card-body">
+                          <h5 class="card-title">Sick Today <span>| Generally</span></h5>
+
+                          <div class="d-flex align-items-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                              <i class="bi bi-people"></i>
+                            </div>
+                            <div class="ps-3">
+                              <h6>
+                                0
+                              </h6>
+
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="text-center">
+                    <i>For a more detailed breakdown of Students Attendance, please refer to the Orbital Node Teachers
+                      App.</i>
+                  </div>
+
+                  <% } %>
+                    <% } %>
+
+
         </div>
-      </div>
     </section>
 
   </main><!-- End #main -->

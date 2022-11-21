@@ -181,7 +181,7 @@ const dashboard = async (req, res) => {
             var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
-                students: school_data.sessions[lses].terms[0].students.length,
+                students: school_data.sessions[lses].terms[currTermIndex].students.length,
                 subscription: school_data.school_info.exp_date,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
@@ -300,6 +300,12 @@ const student_fees = async (req, res) => {
 };
 const student_register = async (req, res) => {
     try {
+        var dt = new Date();
+        var mm = ((dt.getMonth() + 1) >= 10) ? (dt.getMonth() + 1) : '0' + (dt.getMonth() + 1);
+        var dd = ((dt.getDate()) >= 10) ? (dt.getDate()) : '0' + (dt.getDate());
+        var yyyy = dt.getFullYear();
+        var date = yyyy + " / " + mm + " / " + dd;
+
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
@@ -312,11 +318,12 @@ const student_register = async (req, res) => {
             var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
             return res.render("../admin/student-register", {
                 school_obj: school_data.school_info,
-                students: school_data.sessions[lses].terms[0].students.length,
+                students: school_data.sessions[lses].terms[currTermIndex].students.length,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
                 start_date: school_data.sessions[lses].terms[currTermIndex].start_date,
                 stop_date: school_data.sessions[lses].terms[currTermIndex].stop_date,
+                today: date
             });
         } else {
             return res.render("../admin/student-register", {
@@ -326,6 +333,7 @@ const student_register = async (req, res) => {
                 current_term: "",
                 start_date: "null",
                 stop_date: "null",
+                today: date
             });
         }
     } catch (error) {

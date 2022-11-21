@@ -206,7 +206,7 @@
                     data: convertFormToJSON(form),
                     success: function (data) {
                         if (data.success) {
-                            $container.html('<h2>Message sent successfully. We will address your issue and get back to you shortly through the phone number you dropped. Thank you.</h2>');
+                            $container.html('<h2>Your message sent successfully. We will address your issue and get back to you shortly through the phone number you dropped. Thank you.</h2>');
                             setTimeout(function () { location.reload(); }, 5000);
 
                         } else {
