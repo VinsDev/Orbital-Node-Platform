@@ -223,8 +223,8 @@
         </ol>
       </nav>
     </div><!-- End Page Title -->
-    <% if(sessions_data.length !=0 && class_data.length !=0 && class_data[0].subjects.length !=0 &&
-      start_date !="null" && stop_date !="null" ) { %>
+    <% if(sessions_data.length !=0 && class_data.length !=0 && class_data[0].subjects.length !=0 && start_date !="null"
+      && stop_date !="null" ) { %>
       <section class="section">
         <div class="col-md-12 offset-md-0">
           <!-- REFERENCE SELECTOR -->
@@ -317,8 +317,8 @@
             </div>
           </div>
           <div class="text-center">
-            <button type="submit" class="btn btn-primary" data-bs-toggle="modal"
-              data-bs-target="#exampleModalCenter">Add
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
+              id="adstd">Add
               Student</button>
           </div>
         </div>
@@ -349,8 +349,6 @@
                   </div>
                 </div>
 
-
-
                 <div class="col-12">
                   <label for="yourEmail" class="form-label">Date of birth</label>
                   <input type="date" name="dob" class="form-control" id="dob" required>
@@ -360,7 +358,7 @@
                 <div class="row md-3">
                   <label class="col-sm-5 col-form-label">Session</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Session" name="session">
+                    <select class="form-select" aria-label="Session" name="session" id="session">
                       <% for(var i=0; i < sessions_data.length; i++){ %>
                         <option>
                           <%= sessions_data[i].name %>
@@ -373,7 +371,7 @@
                 <div class="row md-1">
                   <label class="col-sm-5 col-form-label">Term</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Term" name="term">
+                    <select class="form-select" aria-label="Term" name="term" id="term">
                       <option value="first" selected>First</option>
                       <option value="second">Second</option>
                       <option value="third">Third</option>
@@ -384,7 +382,8 @@
                 <div class="row md-1">
                   <label class="col-sm-5 col-form-label">Class</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Class" name="class">
+                    <select class="form-select" aria-label="Class" name="class" id="clsvalue"
+                      onchange="updateCheckableSubjects()">
                       <% for(var i=0; i < class_data.length; i++){ %>
                         <option>
                           <%= class_data[i].name %>
@@ -393,6 +392,12 @@
                     </select>
                   </div>
                 </div>
+
+                <label class="col-sm-5 col-form-label">Subjects</label>
+                <div class="col-sm-8">
+                  <div class="chk_subs"></div>
+                </div>
+
 
                 <div class="col-12">
                   <button id="btnSubmit" type="submit" style="display: none;"></button>
@@ -407,12 +412,71 @@
           </div>
         </div>
       </div>
+      <!-- Click -->
       <script>
         $("#create").on("click", function (e) {
-          console.log('hi')
-          $('#btnSubmit').click()
+          $.ajax({
+            url: '/admin/<%= school_obj.name %>/getTermStatus/',
+            data: {
+              session: $('#session').val(),
+              term: $('#term').val()
+            },
+            type: 'POST',
+            success: function (data) {
+              if (data.status === "true") {
+                $('#btnSubmit').click();
+              }
+              else {
+                if (data.av_nodes === "yes") {
+                  $('#nbutt').click();
+                } else {
+                  alert("You do not have available nodes to activate this term. Please purchase more nodes from the Dashboard or Orbital Node Official Website");
+                }
+              }
+            }
+          })
         });
+
+        function activateTerm() {
+          $.ajax({
+            url: '/admin/<%= school_obj.name %>/activateTerm/',
+            data: {
+              session: $('#session').val(),
+              term: $('#term').val()
+            },
+            type: 'POST',
+            success: function (data) {
+              $('#adstd').click()
+            }
+          })
+        }
       </script>
+
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nodes" id="nbutt"
+        style="display: none;">Nbutt</button>
+      <div class="modal fade" id="nodes" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+              <button class="close" data-bs-dismiss="modal"
+                style="border: none; background-color: transparent;">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Selected term is not activated. Do you want to use one of your available nodes to activate the term?
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" class="btn btn-primary" onclick="activateTerm()">Yes</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+
       <% } else { %>
         <div class="text-center">
           <p>Please ensure that you follow the setup instructions on the user manual in the order stated in other to
@@ -446,7 +510,6 @@
   <!-- Vendor JS Files -->
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
 
   <!-- Template Main JS File -->
@@ -493,6 +556,36 @@
         $('#myTable tbody').html(content);
       });
       return;
+    }
+
+    $(document).ready(function () {
+      var container = $('.chk_subs');
+      var checkboxes = '';
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getClassSubjects/' + $('#clsvalue').val(),
+        type: 'GET',
+        success: function (data) {
+          $.each(data.payload, function (index, value) {
+            checkboxes += '<input type="checkbox" id="sub_' + index + '" name="sub_' + index + '"' + 'value = "' + value.name + '" checked >' + '<label for="sub_' + index + '">' + value.name + ' </label> <br>';
+          });
+          container.html(checkboxes);
+        }
+      })
+    })
+
+    function updateCheckableSubjects() {
+      var container = $('.chk_subs');
+      var checkboxes = '';
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getClassSubjects/' + $('#clsvalue').val(),
+        type: 'GET',
+        success: function (data) {
+          $.each(data.payload, function (index, value) {
+            checkboxes += '<input type="checkbox" id="sub_' + index + '" name="sub_' + '"' + 'value = "' + value.name + '" checked >' + '<label for="sub_' + index + '">' + value.name + ' </label> <br>';
+          });
+          container.html(checkboxes);
+        }
+      })
     }
   </script>
 

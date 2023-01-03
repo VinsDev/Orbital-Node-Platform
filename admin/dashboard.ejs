@@ -227,7 +227,7 @@
       <div class="row">
 
         <!-- Left side columns -->
-        <div class="col-sm-10 offset-md-1"> 
+        <div class="col-sm-10 offset-md-1">
           <div class="row">
 
             <!-- Students Card -->
@@ -279,18 +279,21 @@
 
               <div class="card info-card customers-card">
                 <div class="card-body">
-                  <h5 class="card-title">Your Subscription ends on</h5>
+                  <h5 class="card-title">Number of Nodes Remaining:</h5>
                   <div class="d-flex align-items-center">
                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                       <i class="bi bi-brightness-high"></i>
                     </div>
                     <div class="ps-3">
                       <h6>
-                        <%= subscription %>
+                        <%= nodes %>
                       </h6>
                     </div>
                   </div>
-
+                  <div style="margin-top: 20px;">
+                    <a id="regnow" target="_blank" href="/purchase-node" style="color: rgb(4, 8, 255); font-size: 16px;font-weight: bold;">Purchase
+                      a Node</a>
+                  </div>
                 </div>
               </div>
             </div><!-- End Subscription Card -->

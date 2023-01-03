@@ -24,7 +24,6 @@ const computeResults = async (sname, session, term, s_class) => {
         termPositions(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
         termAverage(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
         subjectAverage(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
-        subjectGrade(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
         highest(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
         lowest(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
         remarks(sname, session, term, school_data.sessions[sessionIndex].terms[termIndex].students, s_class, school_data.classes[classIndex].subjects);
@@ -40,7 +39,7 @@ function subjectsTotal(sname, session, term, students, s_class, subjects) {
     });
     var total = 0;
     for (var i = 0; i < classStudents.length; i++) {
-        for (var j = 0; j < subjects.length; j++) {
+        for (var j = 0; j < classStudents[i].subjects.length; j++) {
             total = classStudents[i].subjects[j].ass.reduce((a, b) => a + b, 0);
             schools.updateOne({ "school_info.name": sname },
                 { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].total": total } },
@@ -49,7 +48,7 @@ function subjectsTotal(sname, session, term, students, s_class, subjects) {
                         [{ "sess.name": session },
                         { "term.name": term },
                         { "stud.name": classStudents[i].name },
-                        { "sub.name": subjects[j].name }]
+                        { "sub.name": classStudents[i].subjects[j].name }]
                 })
             total = 0;
         }
@@ -61,7 +60,7 @@ function termTotal(sname, session, term, students, s_class, subjects) {
     });
     var total = 0;
     for (var i = 0; i < classStudents.length; i++) {
-        for (var j = 0; j < subjects.length; j++) {
+        for (var j = 0; j < classStudents[i].subjects.length; j++) {
             total += classStudents[i].subjects[j].total;
         }
         schools.updateOne({ "school_info.name": sname },
@@ -80,27 +79,39 @@ function subjectPositions(sname, session, term, students, s_class, subjects) {
         return value.class === s_class;
     });
     var namesAndSubjectTotal = [];
-    for (var i = 0; i < subjects.length; i++) {
-        for (var j = 0; j < classStudents.length; j++) {
-            namesAndSubjectTotal.push({
-                name: classStudents[j].name,
-                total: classStudents[j].subjects[i].total
-            })
-        }
-        namesAndSubjectTotal.sort((a, b) => b.total - a.total);
-        for (var k = 0; k < classStudents.length; k++) {
+
+    for (var ref_student = 0; ref_student < classStudents.length; ref_student++) {
+        for (var rs_subject = 0; rs_subject < classStudents[ref_student].subjects.length; rs_subject++) {
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        namesAndSubjectTotal.push({
+                            name: classStudents[sample_student].name,
+                            total: classStudents[sample_student].subjects[sample_subject].total
+                        });
+                        break;
+                    }
+                }
+            }
+
+            namesAndSubjectTotal.sort((a, b) => b.total - a.total);
+
             schools.updateOne({ "school_info.name": sname },
-                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].position": namesAndSubjectTotal.findIndex(s => s.name === classStudents[k].name) + 1 } },
+                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].position": namesAndSubjectTotal.findIndex(s => s.name === classStudents[ref_student].name) + 1 } },
                 {
                     arrayFilters:
                         [{ "sess.name": session },
                         { "term.name": term },
-                        { "stud.name": classStudents[k].name },
-                        { "sub.name": subjects[i].name }]
+                        { "stud.name": classStudents[ref_student].name },
+                        { "sub.name": classStudents[ref_student].subjects[rs_subject].name }]
                 })
+
+            namesAndSubjectTotal = [];
+
         }
-        namesAndSubjectTotal = [];
     }
+
+
 }
 function termPositions(sname, session, term, students, s_class, subjects) {
     var classStudents = students.filter(function (value) {
@@ -127,7 +138,7 @@ function termAverage(sname, session, term, students, s_class, subjects) {
     });
     for (var i = 0; i < classStudents.length; i++) {
         schools.updateOne({ "school_info.name": sname },
-            { $set: { "sessions.$[sess].terms.$[term].students.$[stud].average": classStudents[i].total / subjects.length } },
+            { $set: { "sessions.$[sess].terms.$[term].students.$[stud].average": classStudents[i].total / classStudents[i].subjects.length } },
             {
                 arrayFilters:
                     [{ "sess.name": session },
@@ -140,68 +151,42 @@ function subjectAverage(sname, session, term, students, s_class, subjects) {
     var classStudents = students.filter(function (value) {
         return value.class === s_class;
     });
+
+    var takers = 0;
     var total = 0;
-    for (var i = 0; i < subjects.length; i++) {
-        for (var j = 0; j < classStudents.length; j++) {
-            total += classStudents[j].subjects[i].total;
-        }
-        for (var k = 0; k < classStudents.length; k++) {
+
+    for (var ref_student = 0; ref_student < classStudents.length; ref_student++) {
+        for (var rs_subject = 0; rs_subject < classStudents[ref_student].subjects.length; rs_subject++) {
+            // count takers
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        takers++;
+                        break;
+                    }
+                }
+            }
+            // sum total for all students offering a subject
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        total += classStudents[sample_student].subjects[sample_subject].total;
+                        break;
+                    }
+                }
+            }
+
             schools.updateOne({ "school_info.name": sname },
-                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].average": total / classStudents.length } },
+                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].average": total / takers } },
                 {
                     arrayFilters:
                         [{ "sess.name": session },
                         { "term.name": term },
-                        { "stud.name": classStudents[k].name },
-                        { "sub.name": subjects[i].name }]
-                })
-        }
-        total = 0;
-    }
-}
-function subjectGrade(sname, session, term, students, s_class, subjects) {
-    var classStudents = students.filter(function (value) {
-        return value.class === s_class;
-    });
-    for (var i = 0; i < classStudents.length; i++) {
-        for (var j = 0; j < subjects.length; j++) {
-            schools.updateOne({ "school_info.name": sname },
-                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].grade": gradeHelper(classStudents[i].subjects[j].total) } },
-                {
-                    arrayFilters:
-                        [{ "sess.name": session },
-                        { "term.name": term },
-                        { "stud.name": classStudents[i].name },
-                        { "sub.name": subjects[j].name }]
-                })
-        }
-    }
-}
-function gradeHelper(score) {
-    if (score <= 100 && score >= 75) {
-        return "A";
-    }
-    else {
-        if (score < 75 && score >= 65) {
-            return "B";
-        }
-        else {
-            if (score < 65 && score >= 55) {
-                return "C";
-            }
-            else {
-                if (score < 55 && score >= 40) {
-                    return "D";
-                }
-                else {
-                    if (score < 40 && score >= 0) {
-                        return "E";
-                    }
-                    else {
-                        return "Q"
-                    }
-                }
-            }
+                        { "stud.name": classStudents[ref_student].name },
+                        { "sub.name": classStudents[ref_student].subjects[rs_subject].name }]
+                });
+            total = 0;
+            takers = 0;
         }
     }
 }
@@ -209,20 +194,29 @@ function highest(sname, session, term, students, s_class, subjects) {
     var classStudents = students.filter(function (value) {
         return value.class === s_class;
     });
-    for (var i = 0; i < classStudents.length; i++) {
-        for (var j = 0; j < subjects.length; j++) {
-            for (var k = 0; k < classStudents.length; k++) {
-                if (classStudents[k].subjects[j].position === 1) {
-                    schools.updateOne({ "school_info.name": sname },
-                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].highest": classStudents[k].subjects[j].total } },
-                        {
-                            arrayFilters:
-                                [{ "sess.name": session },
-                                { "term.name": term },
-                                { "stud.name": classStudents[i].name },
-                                { "sub.name": subjects[j].name }]
-                        })
-                    break;
+
+    for (var ref_student = 0; ref_student < classStudents.length; ref_student++) {
+        for (var rs_subject = 0; rs_subject < classStudents[ref_student].subjects.length; rs_subject++) {
+            // count takers
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        if (classStudents[sample_student].subjects[sample_subject].position === 1) {
+                            schools.updateOne({ "school_info.name": sname },
+                                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].highest": classStudents[sample_student].subjects[sample_subject].total } },
+                                {
+                                    arrayFilters:
+                                        [{ "sess.name": session },
+                                        { "term.name": term },
+                                        { "stud.name": classStudents[ref_student].name },
+                                        { "sub.name": classStudents[ref_student].subjects[rs_subject].name }]
+                                })
+                            break;
+                        }
+                        else {
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -232,22 +226,42 @@ function lowest(sname, session, term, students, s_class, subjects) {
     var classStudents = students.filter(function (value) {
         return value.class === s_class;
     });
-    for (var i = 0; i < classStudents.length; i++) {
-        for (var j = 0; j < subjects.length; j++) {
-            for (var k = 0; k < classStudents.length; k++) {
-                if (classStudents[k].subjects[j].position === classStudents.length) {
-                    schools.updateOne({ "school_info.name": sname },
-                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].lowest": classStudents[k].subjects[j].total } },
-                        {
-                            arrayFilters:
-                                [{ "sess.name": session },
-                                { "term.name": term },
-                                { "stud.name": classStudents[i].name },
-                                { "sub.name": subjects[j].name }]
-                        })
-                    break;
+    var takers = 0;
+
+    for (var ref_student = 0; ref_student < classStudents.length; ref_student++) {
+        for (var rs_subject = 0; rs_subject < classStudents[ref_student].subjects.length; rs_subject++) {
+            // count takers
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        takers++;
+                        break;
+                    }
                 }
             }
+
+            for (var sample_student = 0; sample_student < classStudents.length; sample_student++) {
+                for (var sample_subject = 0; sample_subject < classStudents[sample_student].subjects.length; sample_subject++) {
+                    if (classStudents[sample_student].subjects[sample_subject].name === classStudents[ref_student].subjects[rs_subject].name) {
+                        if (classStudents[sample_student].subjects[sample_subject].position === takers) {
+                            schools.updateOne({ "school_info.name": sname },
+                                { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].lowest": classStudents[sample_student].subjects[sample_subject].total } },
+                                {
+                                    arrayFilters:
+                                        [{ "sess.name": session },
+                                        { "term.name": term },
+                                        { "stud.name": classStudents[ref_student].name },
+                                        { "sub.name": classStudents[ref_student].subjects[rs_subject].name }]
+                                })
+                            break;
+                        }
+                        else {
+                            break;
+                        }
+                    }
+                }
+            }
+            takers = 0;
         }
     }
 }

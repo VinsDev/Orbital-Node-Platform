@@ -18,6 +18,9 @@ const contact = (req, res) => {
 const register_pri = (req, res) => {
     return res.render("inner/register-pri");
 };
+const purchase_node = (req, res) => {
+    return res.render("inner/purchase-node");
+};
 const register_sec = (req, res) => {
     return res.render("inner/register-sec");
 };
@@ -182,7 +185,7 @@ const dashboard = async (req, res) => {
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
                 students: school_data.sessions[lses].terms[currTermIndex].students.length,
-                subscription: school_data.school_info.exp_date,
+                nodes: school_data.school_info.nodes,
                 session: school_data.sessions[lses].name,
                 current_term: school_data.sessions[lses].current_term,
                 results_status: school_data.sessions[lses].terms[currTermIndex].results,
@@ -192,7 +195,7 @@ const dashboard = async (req, res) => {
             return res.render("../admin/dashboard", {
                 school_obj: school_data.school_info,
                 students: "Not set yet",
-                subscription: school_data.school_info.exp_date,
+                nodes: school_data.school_info.nodes,
                 session: "Unknown",
                 current_term: "Unknown",
                 results_status: "false",
@@ -506,6 +509,7 @@ module.exports = {
     about,
     services,
     contact,
+    purchase_node,
     register_pri,
     register_sec,
     agent,

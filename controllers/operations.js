@@ -9,10 +9,10 @@ var PdfPrinter = require('pdfmake');
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
 const web = "http://orbital-node.herokuapp.com/files/";
-const baseUrl = web;
+const baseUrl = local;
 const nlocal = "http://localhost:3000/news/";
 const nweb = "http://orbital-node.herokuapp.com/news/";
-const nbaseUrl = nweb;
+const nbaseUrl = nlocal;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
 
@@ -38,11 +38,11 @@ const getSchools = async (req, res) => {
         });
     }
 }
-const sendForm = async (req, res, url) => {
+const schoolRegForm = async (req, res, url) => {
     try {
         var st = new Date();
-        var temp = new Date(date_obj_converter(st));
-        var exp = new Date(temp.setDate(temp.getDate() + 120));
+        // var temp = new Date(date_obj_converter(st));
+        // var exp = new Date(temp.setDate(temp.getDate() + 120));
 
         var school_model = {
             school_info: {
@@ -68,7 +68,7 @@ const sendForm = async (req, res, url) => {
                 e_register: req.body.e_register,
                 agent: req.body.agent.trim(),
                 reg_date: date_obj_converter(st),
-                exp_date: date_obj_converter(exp)
+                nodes: 1
             },
             news: [],
             fees_info: {
@@ -96,7 +96,7 @@ const sendForm = async (req, res, url) => {
 const uploadRegForm = async (req, res) => {
     try {
         await upload(req, res);
-        await sendForm(req, res, req.files)
+        await schoolRegForm(req, res, req.files)
 
         if (req.files.length <= 0) {
             return res
@@ -138,6 +138,25 @@ const regAgent = async (req, res) => {
 
         return res.status(200).render("inner/success_agent", { name: req.body.name });
     } catch {
+        console.log(error);
+    }
+}
+const subscribeNode = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ "school_info.email": req.body.email.trim() });
+        var nodes = school_data.school_info.nodes;
+
+        schools.findOneAndUpdate({ "school_info.email": req.body.email.trim() },
+            { $set: { "school_info.nodes": nodes + Number(req.body.quantity) } },
+        )
+
+
+        return res.status(200).render("inner/success_node", { name: school_data.school_info.name, quantity: req.body.quantity });
+    } catch (error) {
         console.log(error);
     }
 }
@@ -249,7 +268,7 @@ const downloadPdf = async (req, res) => {
         ];
 
         for (var i = 0; i < student_data.subjects.length; i++) {
-            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average.toFixed(2), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: position_qualifier(student_data.subjects[i].position), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].grade, style: 'tableHeader', alignment: 'center' }])
+            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average.toFixed(2), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: position_qualifier(student_data.subjects[i].position), style: 'tableHeader', alignment: 'center' }, { text: gradeHelper(student_data.subjects[i].total), style: 'tableHeader', alignment: 'center' }])
         }
 
         var dt = new Date();
@@ -636,7 +655,8 @@ const createSession = async (req, res) => {
                     attendance_dates: [],
                     attendance_model: [],
                     results: 'false',
-                    students: []
+                    students: [],
+                    active: 'false'
                 },
                 {
                     name: "second",
@@ -645,7 +665,8 @@ const createSession = async (req, res) => {
                     attendance_dates: [],
                     attendance_model: [],
                     results: 'false',
-                    students: []
+                    students: [],
+                    active: 'false'
                 },
                 {
                     name: "third",
@@ -654,7 +675,8 @@ const createSession = async (req, res) => {
                     attendance_dates: [],
                     attendance_model: [],
                     results: 'false',
-                    students: []
+                    students: [],
+                    active: 'false'
                 },
             ],
             current_term: 'first'
@@ -707,7 +729,8 @@ const createSubject = async (req, res) => {
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "classes.$[t].subjects": class_subject } }, { arrayFilters: [{ "t.name": req.body.class_name }] })
+        database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "classes.$[t].subjects": class_subject } }, { arrayFilters: [{ "t.name": req.body.class_name }] });
+
         return res.redirect(303, '/admin/' + req.params.sname + '/subjects');
     } catch {
         console.log(error);
@@ -715,6 +738,8 @@ const createSubject = async (req, res) => {
 }
 const createStudent = async (req, res) => {
     try {
+
+
         await mongoClient.connect();
         const database = mongoClient.db(dbConfig.database);
 
@@ -723,17 +748,29 @@ const createStudent = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
 
+
+        var subs = [];
+        // Prepare selected subjects
+        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
+            var itr = "sub_" + i;
+            if (req.body[itr]) {
+                subs.push(req.body[itr]);
+            }
+        }
+
+
         var s_subjects = [];
         // Assign class subjects to a subjects list
-        for (var i = 0; i < school_data.classes[classIndex].subjects.length; i++) {
+        for (var i = 0; i < subs.length; i++) {
             s_subjects.push(
                 {
-                    name: school_data.classes[classIndex].subjects[i].name,
+                    name: subs[i],
                     ass: [-1, -1, -1, -1, -1],
                     total: -1,
                     position: -1,
                     highest: -1,
-                    lowest: -1
+                    lowest: -1,
+                    average: -1
                 }
             )
         }
@@ -785,6 +822,23 @@ const getSubjects = async (req, res) => {
         });
     }
 }
+const getClassSubjects = async (req, res) => {
+    try {
+        // let payload = req.body.payload.trim();
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var classIndex = school_data.classes.findIndex(i => i.name === req.params.class);
+        res.status(200).send({ payload: school_data.classes[classIndex].subjects });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 const getStudents = async (req, res) => {
     try {
         let studentsList = [];
@@ -806,6 +860,58 @@ const getStudents = async (req, res) => {
         })
 
         res.status(200).send({ payload: studentsList, results_status: school_data.sessions[sessionIndex].terms[termIndex].results });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const getTermStatus = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+
+
+        res.status(200).send({ status: school_data.sessions[sessionIndex].terms[termIndex].active, av_nodes: available_nodes(school_data.school_info.nodes) });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const activateTerm = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var nodes = school_data.school_info.nodes;
+
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            {
+                $set: {
+                    "sessions.$[sess].terms.$[term].active": "true",
+                    "school_info.nodes": nodes - 1
+                }
+            },
+            {
+                arrayFilters:
+                    [{ "sess.name": req.body.session },
+                    { "term.name": req.body.term }]
+            });
+
+        res.status(200).send({ success: true });
 
     } catch (error) {
         return res.status(500).send({
@@ -838,7 +944,8 @@ const getSubjectsResultsList = async (req, res) => {
     }
 }
 const getSubjectsResults = async (req, res) => {
-    let subjectsResults = [];
+    let subjectsAssessmentDataStudent = [];
+    let subjectsAssessmentData = [];
     await mongoClient.connect();
 
     const database = mongoClient.db(dbConfig.database);
@@ -848,17 +955,17 @@ const getSubjectsResults = async (req, res) => {
     var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
     var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
     var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
-    var subjectLength = school_data.classes[classIndex].subjects.length;
 
     for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-        if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
-            subjectsResults.push(school_data.sessions[sessionIndex].terms[termIndex].students[i])
+        if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class && school_data.sessions[sessionIndex].terms[termIndex].students[i].subjects.findIndex(i => i.name === req.body.subject) >= 0) {
+            subjectsAssessmentDataStudent.push(school_data.sessions[sessionIndex].terms[termIndex].students[i].name);
+            subjectsAssessmentData.push(school_data.sessions[sessionIndex].terms[termIndex].students[i].subjects[school_data.sessions[sessionIndex].terms[termIndex].students[i].subjects.findIndex(i => i.name === req.body.subject)]);
         }
     }
 
     res.status(200).send({
-        payload: subjectsResults,
-        s_num: subjectLength
+        student_names: subjectsAssessmentDataStudent,
+        assessments_data: subjectsAssessmentData,
     });
 
 }
@@ -898,7 +1005,8 @@ const updateSubjectsResults = async (req, res) => {
     try {
         await mongoClient.connect();
 
-        let updatedRes = req.body.data;
+        let updatedAssessment = req.body.assessments_data;
+        let correspondingNames = req.body.student_names;
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
@@ -907,13 +1015,12 @@ const updateSubjectsResults = async (req, res) => {
         var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
         var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
         var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
-        var subjectIndex = school_data.classes[classIndex].subjects.findIndex(i => i.name === req.body.subname);
 
-        for (var j = 0; j < updatedRes.length; j++) {
+        for (var j = 0; j < correspondingNames.length; j++) {
             for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
-                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === updatedRes[j].name && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === updatedRes[j].class) {
+                if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === correspondingNames[j] && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class) {
                     schools.findOneAndUpdate({ "school_info.name": req.params.sname },
-                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedRes[j].subjects[subjectIndex] } },
+                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub]": updatedAssessment[j] } },
                         {
                             arrayFilters:
                                 [{ "sess.name": req.body.session },
@@ -925,7 +1032,6 @@ const updateSubjectsResults = async (req, res) => {
                 }
             }
         }
-
         orbital.computeResults(req.params.sname, school_data.sessions[sessionIndex].name, school_data.sessions[sessionIndex].terms[termIndex].name, school_data.classes[classIndex].name);
 
         return res.send({});
@@ -1016,8 +1122,9 @@ const updateTermDates = async (req, res) => {
             {
                 arrayFilters:
                     [{ "sess.name": session }, { "term.name": school_data.sessions[lses].current_term }]
-            }).then(res.redirect(303, '/admin/' + req.params.sname + '/student-register'));
-        return;
+            });
+
+        return res.redirect(303, '/admin/' + req.params.sname + '/student-register');
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1186,8 +1293,10 @@ module.exports = {
     verifyTransaction,
     getSchools,
     getSubjects,
+    getClassSubjects,
     getStudents,
     getListFiles,
+    getTermStatus,
     downloadImage,
     downloadPdf,
     downloadNewsImage,
@@ -1199,6 +1308,7 @@ module.exports = {
     createClass,
     createSubject,
     createStudent,
+    activateTerm,
     getSubjectsResultsList,
     getSubjectsResults,
     getStudentResults,
@@ -1212,6 +1322,7 @@ module.exports = {
     staffLogin,
     getClassList,
     getAttendanceForClass,
+    subscribeNode
 };
 
 function htremarkHelper(score) {
@@ -1274,4 +1385,40 @@ function p(pos, num) {
 
 function btw(p, a, b) {
     if (p >= a && p <= b) { return true; } else { return false; }
+}
+function gradeHelper(score) {
+    if (score <= 100 && score >= 75) {
+        return "A";
+    }
+    else {
+        if (score < 75 && score >= 65) {
+            return "B";
+        }
+        else {
+            if (score < 65 && score >= 55) {
+                return "C";
+            }
+            else {
+                if (score < 55 && score >= 40) {
+                    return "D";
+                }
+                else {
+                    if (score < 40 && score >= 0) {
+                        return "E";
+                    }
+                    else {
+                        return "Q"
+                    }
+                }
+            }
+        }
+    }
+}
+function available_nodes(num) {
+    if (num > 0) {
+        return "yes";
+    }
+    else {
+        return "no";
+    }
 }

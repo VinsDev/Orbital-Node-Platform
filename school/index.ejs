@@ -16,7 +16,7 @@
     <meta name="msapplication-navbutton-color" content="#3264f5">
     <!-- iOS Safari -->
     <meta name="apple-mobile-web-app-status-bar-style" content="#3264f5">
-    
+
     <title>
         <%= school_obj.name %>
     </title>
@@ -262,53 +262,60 @@
                     </div>
                 </div>
             </div>
+            <% if (news.length==0){ %>
+                <div class="text-center">
+                    <h5>No news uploaded yet.</h5>
+                </div>
+                <% } else { %>
 
-            <div class="row">
-                <% for(var i=0; i < news.length; i++){ %>
-                    <% if(i===0 || i===2 || i===4){ %>
-                        <div class="col-sm-12 events_full_box">
-                            <div class="events_single">
-                                <div class="event_banner">
-                                    <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
-                                </div>
-                                <div class="event_info">
-                                    <h3>
-                                        <%= news[i].header %>
-                                    </h3>
-                                    <p>
-                                        <%= news[i].details %>
-                                    </p>
-                                    <div class="event_dete">
-                                        <span class="date">.</span>
-                                        <span>News</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <% } %>
-                            <% if(i===1 || i===3 || i===5){ %>
+                    <div class="row">
+                        <% for(var i=0; i < news.length; i++){ %>
+                            <% if(i===0 || i===2 || i===4){ %>
                                 <div class="col-sm-12 events_full_box">
-                                    <div class="events_single events_single_left">
+                                    <div class="events_single">
+                                        <div class="event_banner">
+                                            <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
+                                        </div>
                                         <div class="event_info">
-                                            <h3>"<%= news[i].header %>
+                                            <h3>
+                                                <%= news[i].header %>
                                             </h3>
                                             <p>
                                                 <%= news[i].details %>
                                             </p>
-                                        </div>
-                                        <div class="event_banner">
-                                            <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
-                                        </div>
-                                        <div class="event_dete">
-                                            <span class="date">.</span>
-                                            <span>News</span>
+                                            <div class="event_dete">
+                                                <span class="date">.</span>
+                                                <span>News</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <% } %>
-                                    <% } %>
+                                    <% if(i===1 || i===3 || i===5){ %>
+                                        <div class="col-sm-12 events_full_box">
+                                            <div class="events_single events_single_left">
+                                                <div class="event_info">
+                                                    <h3>"<%= news[i].header %>
+                                                    </h3>
+                                                    <p>
+                                                        <%= news[i].details %>
+                                                    </p>
+                                                </div>
+                                                <div class="event_banner">
+                                                    <a href="#"><img src="<%= news[i].image %>" alt=""
+                                                            class="img-fluid"></a>
+                                                </div>
+                                                <div class="event_dete">
+                                                    <span class="date">.</span>
+                                                    <span>News</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                            <% } %>
 
-            </div>
+                    </div>
+                    <% } %>
         </div>
     </section><!-- ./ End Events Area section -->
 

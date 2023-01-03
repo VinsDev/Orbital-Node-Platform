@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3264f5" />
+  <!-- Chrome, Firefox OS and Opera -->
+  <meta name="theme-color" content="#3264f5">
+  <!-- Windows Phone -->
+  <meta name="msapplication-navbutton-color" content="#3264f5">
+  <!-- iOS Safari -->
+  <meta name="apple-mobile-web-app-status-bar-style" content="#3264f5">
+
+  <title>Register your School</title>
+  <link rel="stylesheet" href="landing/reg.css">
+
+  <script src="../admin/assets/js/jquery-3.6.1.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1 id="title" class="text-center">
+        Purchase Node
+      </h1>
+    </header>
+
+    <p id="description" class="description text-center">
+      Nodes are used to activate terms on your school profile.
+    </p>
+    <form action="/subscribeNode" method="post">
+      <div class="form-group">
+        <label id="email-label" for="email">School Email</label>
+        <input type="email" name="email" id="email" class="form-control" placeholder="Enter your School Email"
+          required />
+      </div>
+
+      <div class="form-group">
+        <label id="phone-label" for="email">Phone Number</label>
+        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your School Phone Number"
+          required />
+      </div>
+
+      <div class="form-group">
+        <p>How many Nodes would you like to purchase?</p>
+        <select aria-label="Numbers" name="quantity" id="rad" onchange="update_price()"
+          style="font-size: 20px;width: 50px; font-weight: bold;">
+          <option value="1">
+            1
+          </option>
+          <option value="2">
+            2
+          </option>
+          <option value="3">
+            3
+          </option>
+        </select>
+      </div>
+
+      <div id="price"></div>
+
+      <button type="submit" id="sub" style="display: none;"></button>
+    </form>
+    <div class="form-group">
+      <button type="button" id="regist_b" class="submit-button" onclick="pay()">
+        Make Payments
+      </button>
+    </div>
+    <div class="text-center">
+      <a href="/" style="color: white;margin-bottom: 30px;">Orbital Node Website</a>
+    </div>
+
+    <script>
+      var loadFile = function (event, id) {
+        var output = document.getElementById(id);
+        output.src = URL.createObjectURL(event.target.files[0]); output.onload = function () {
+          URL.revokeObjectURL(output.src)
+        }
+      }
+
+      $(document).ready(function () {
+        $("#price").html('<p>Price: ₦' + Number($("#rad").val()) * 7000 + '</p>');
+      });
+
+      function update_price() {
+        $("#price").html('<p>Price: ₦' + Number($("#rad").val()) * 7000 + '</p>');
+      }
+    </script>
+  </div>
+
+  <script>
+    var paymentForm = document.getElementById('reg-form');
+    var email = document.getElementById('email');
+    var phone = document.getElementById('phone');
+    var subBtn = document.getElementById('sub');
+
+    function pay() {
+      if (phone.value === '' || email.value === '') {
+        subBtn.click();
+      }
+      else {
+        // payWithPaystack();
+        subBtn.click();
+      }
+    }
+
+    function payWithPaystack() {
+      var ref = "ref" + Math.random().toString(16).slice(2);
+      var handler = PaystackPop.setup({
+        key: 'pk_test_2a745e048ab1ab553f2b45265a2b43c5cde2f34a', // Replace with your public key
+        email: document.getElementById('email').value,
+        amount: Number($("#rad").val()) * 7000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+        currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
+        ref: ref, // Replace with a reference you generated
+        callback: function (response) {
+          //this happens after the payment is completed successfully
+          var reference = response.reference;
+          // alert('Payment complete! Reference: ' + reference);
+          // Make an AJAX call to your server with the reference to verify the transaction
+          $.ajax({
+            url: 'verify_transaction?reference=' + response.reference,
+            method: 'get',
+            success: function (data) {
+              // the transaction status is in response.data.status
+              subBtn.click();
+            }
+          });
+        },
+        onClose: function () {
+          // alert('Transaction was not completed, window closed.');
+        },
+      });
+      handler.openIframe();
+    }
+  </script>
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+</body>
+
+</html>

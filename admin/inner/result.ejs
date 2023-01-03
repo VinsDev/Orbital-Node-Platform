@@ -201,7 +201,7 @@
                                         tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
                                         tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
                                         tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.grade) + '</td>';
+                                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
                                     });
                                     tbl += '</tbody>';
                                     tbl += '</table>'
@@ -209,6 +209,35 @@
                                     $(document).find('.tbl_user_data').html(tbl);
                                 });
                             });
+
+                            function gradeHelper(score) {
+                                if (score <= 100 && score >= 75) {
+                                    return "A";
+                                }
+                                else {
+                                    if (score < 75 && score >= 65) {
+                                        return "B";
+                                    }
+                                    else {
+                                        if (score < 65 && score >= 55) {
+                                            return "C";
+                                        }
+                                        else {
+                                            if (score < 55 && score >= 40) {
+                                                return "D";
+                                            }
+                                            else {
+                                                if (score < 40 && score >= 0) {
+                                                    return "E";
+                                                }
+                                                else {
+                                                    return "Q"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         </script>
 
                         <!-- TABLE DIVS -->

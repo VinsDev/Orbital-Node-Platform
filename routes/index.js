@@ -15,6 +15,7 @@ let routes = app => {
   router.get("/about", pagesController.about);
   router.get("/services", pagesController.services);
   router.get("/contact", pagesController.contact);
+  router.get("/purchase-node", pagesController.purchase_node);
   router.get("/register-pri", pagesController.register_pri);
   router.get("/register-sec", pagesController.register_sec);
   router.get("/agent", pagesController.agent);
@@ -28,11 +29,15 @@ let routes = app => {
   router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", uploadController.downloadPdf);
   router.get("/news/:name", uploadController.downloadNewsImage);
   router.post("/getSchools", uploadController.getSchools);
+  router.post("/subscribeNode", uploadController.subscribeNode);
   router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
+  router.get("/admin/:sname/getClassSubjects/:class", uploadController.getClassSubjects);
   router.post("/admin/:sname/getStudents", uploadController.getStudents);
   router.post("/admin/:sname/getSubjectsResultsList", uploadController.getSubjectsResultsList);
   router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
+  router.post("/admin/:sname/getTermStatus", uploadController.getTermStatus);
+  router.post("/admin/:sname/activateTerm", uploadController.activateTerm);
   router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
   router.post("/admin/:sname/sessions/delete", uploadController.deleteSession);
   router.post("/admin/:sname/classes/delete", uploadController.deleteClass);
