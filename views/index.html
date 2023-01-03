@@ -156,8 +156,7 @@
                   var myForm = document.getElementById("suggestion_form");
                   var myInput = document.getElementById("search-field");
 
-                  let match = myInput.value.match(/^[a-zA-Z. ]*/);
-                  let match2 = myInput.value.match(/\s*/);
+                  let match = myInput.value.match(/^[a-zA-Z.' ]*/);
                   if (myInput.value) {
                     if (match[0] === myInput.value) {
                       if (suggestion_hidden) {
