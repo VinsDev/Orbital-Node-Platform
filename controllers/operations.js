@@ -1274,8 +1274,16 @@ const getAttendanceForClass = async (req, res) => {
         var date = yyyy + "-" + mm + "-" + dd + "-" + today.getDay();
         var todayIndex = school_data.sessions[lses].terms[currTermIndex].attendance_dates.findIndex(i => i === date);
 
+        var attendance_dates = [];
+        school_data.sessions[lses].terms[currTermIndex].attendance_dates.forEach((day)=>{
+            attendance_dates.push({
+                date: day,
+                active: false
+            });
+        })
+
         res.status(200).send({
-            attendance_dates: school_data.sessions[lses].terms[currTermIndex].attendance_dates,
+            attendance_dates: attendance_dates,
             today_index: todayIndex,
             students: studentsList
         });
