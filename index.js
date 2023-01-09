@@ -1,9 +1,6 @@
 const cors = require("cors");
 const express = require("express");
 const app = express();
-app.use((req, res) => {
-  res.redirect(301, `https://${req.headers.host}${req.url}`);
-});
 const path = require("path");
 const initRoutes = require("./routes");
 
