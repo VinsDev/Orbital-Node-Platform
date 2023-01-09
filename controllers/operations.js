@@ -1275,7 +1275,7 @@ const getAttendanceForClass = async (req, res) => {
         var todayIndex = school_data.sessions[lses].terms[currTermIndex].attendance_dates.findIndex(i => i === date);
 
         var attendance_dates = [];
-        school_data.sessions[lses].terms[currTermIndex].attendance_dates.forEach((day)=>{
+        school_data.sessions[lses].terms[currTermIndex].attendance_dates.forEach((day) => {
             attendance_dates.push({
                 date: day,
                 active: false
@@ -1288,6 +1288,26 @@ const getAttendanceForClass = async (req, res) => {
             students: studentsList
         });
 
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const updateStudentsAttendance = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        let classAttendance = req.body.assessments_data;
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        
+
+
+        return res.send({});
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1323,6 +1343,7 @@ module.exports = {
     updateSubjectsResults,
     updateCurrentTerm,
     updateResultStatus,
+    updateStudentsAttendance,
     updateTermDates,
     deleteSession,
     deleteClass,
