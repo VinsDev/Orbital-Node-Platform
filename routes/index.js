@@ -11,7 +11,8 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 let routes = app => {
   // LANDING PAGES . . .
-  router.get("/", homeController.getHome);
+  router.get("/", homeController.first);
+  router.get("/home", homeController.home);
   router.get("/about", pagesController.about);
   router.get("/services", pagesController.services);
   router.get("/contact", pagesController.contact);
