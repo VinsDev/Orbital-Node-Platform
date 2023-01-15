@@ -183,8 +183,7 @@
         subBtn.click();
       }
       else {
-        //payWithPaystack();
-        subBtn.click();
+        payWithPaystack();
       }
     }
 
@@ -193,7 +192,7 @@
       var handler = PaystackPop.setup({
         key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f', // Replace with your public key
         email: document.getElementById('email').value,
-        amount: 16680 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
+        amount: 100 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
         currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
         ref: ref, // Replace with a reference you generated
         callback: function (response) {

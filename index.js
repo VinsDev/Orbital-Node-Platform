@@ -5,7 +5,7 @@ const path = require("path");
 const initRoutes = require("./routes");
 
 var corsOptions = {
-  origin: "http://localhost:3000"
+  origin: "https://orbitalnodetechnologies.com"
 };
 
 app.use(cors(corsOptions));

@@ -167,7 +167,7 @@ const verifyTransaction = async (req, res) => {
         let output;
         await axios.get(`https://api.paystack.co/transaction/verify/${ref}`, {
             headers: {
-                authorization: "sk_test_9b4d25a826d5ea1946525393541110ad7ba4e98e",
+                authorization: "sk_live_f2a65b8636dda649d084c30d981ce08317228cc0",
                 //replace TEST SECRET KEY with your actual test secret 
                 //key from paystack
                 "content-type": "application/json",
@@ -551,14 +551,14 @@ const portaLogin = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname.trim() });
 
         var lses = school_data.sessions.length - 1;
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
             if (req.body.name === school_data.sessions[lses].terms[currTermIndex].students[i].name) {
-                if (req.body.password === school_data.sessions[lses].terms[currTermIndex].students[i].password) {
+                if (req.body.password.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].password) {
                     return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
                 } else {
                     return res.send({ success: false });
