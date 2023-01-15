@@ -557,7 +557,7 @@ const portaLogin = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
-            if (req.body.name === school_data.sessions[lses].terms[currTermIndex].students[i].name) {
+            if (req.body.name.trim().toLowerCase() === school_data.sessions[lses].terms[currTermIndex].students[i].name.toLowerCase()) {
                 if (req.body.password.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].password) {
                     return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
                 } else {
@@ -1304,7 +1304,7 @@ const updateStudentsAttendance = async (req, res) => {
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
-        
+
 
 
         return res.send({});
