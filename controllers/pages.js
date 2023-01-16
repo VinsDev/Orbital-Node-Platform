@@ -465,8 +465,6 @@ const assessment = async (req, res) => {
     try {
         await mongoClient.connect();
 
-        var classIndex = -1;
-        var subjectIndex = -1;
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });

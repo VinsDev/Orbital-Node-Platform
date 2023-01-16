@@ -1197,6 +1197,35 @@ const deleteSubject = async (req, res) => {
         });
     }
 }
+const deleteStudent = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+        var studentIndex = school_data.sessions[sessionIndex].terms[termIndex].students.findIndex(i => i.name === req.body.student);
+        school_data.sessions[sessionIndex].terms[termIndex].students.splice(studentIndex, 1);
+
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "sessions.$[sess].terms.$[term].students": school_data.sessions[sessionIndex].terms[termIndex].students } }, {
+            arrayFilters:
+                [{ "sess.name": req.body.session },
+                { "term.name": req.body.term },
+                ]
+        });
+
+        return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 // TEACHERS APP . . .
 const staffLogin = async (req, res) => {
@@ -1347,6 +1376,7 @@ module.exports = {
     updateTermDates,
     deleteSession,
     deleteClass,
+    deleteStudent,
     deleteSubject,
     staffLogin,
     getClassList,

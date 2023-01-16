@@ -291,7 +291,7 @@
                   <%counter=1;%>
                     <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
                       <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                        <tr>
+                        <tr data-st-id="<%=sessions_data[0].terms[0].students[j].name%>" class="stdRow">
                           <th scope="row">
                             <%=counter %>
                           </th>
@@ -317,14 +317,14 @@
             </div>
           </div>
           <div class="text-center">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentForm"
               id="adstd">Add
               Student</button>
           </div>
         </div>
         </div>
       </section>
-      <div class="modal fade" id="exampleModalCenter" tabindex="-1">
+      <div class="modal fade" id="addStudentForm" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -349,7 +349,7 @@
                   </div>
                 </div>
 
-                <div class="col-12">
+                <div class="col-12">session
                   <label for="yourEmail" class="form-label">Date of birth</label>
                   <input type="date" name="dob" class="form-control" id="dob" required>
                   <div class="invalid-feedback">Please enter date of birth!</div>
@@ -474,6 +474,30 @@
           </div>
         </div>
       </div>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteStudentVerification"
+        id="dellbutt" style="display: none;">DellButt</button>
+      <div class="modal fade" id="deleteStudentVerification" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle1">Delete Student</h5>
+              <button class="close" data-bs-dismiss="modal"
+                style="border: none; background-color: transparent;">&times;</button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete student ? :
+              <div id="stname"></div>
+              </p>
+              <p>This action will erase all data related to the student</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" class="btn btn-primary" onclick="deleteStudent()">Yes</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
 
 
 
@@ -537,7 +561,7 @@
 
         payload.forEach((item, index) => {
           content += `
-                  <tr>
+                  <tr data-st-id="${item.name}" class="stdRow">
                     <th scope="row">${index + 1}</th>
                     <td>
                       ${item.name}
@@ -587,6 +611,37 @@
         }
       })
     }
+
+    // click delete button
+    function verifyStudentDelete() {
+      $('#dellbutt').click();
+    }
+
+    // delete student request . . .
+    function deleteStudent() {
+      $.ajax({
+        url: window.location.href + '/delete',
+        type: 'POST',
+        data: {
+          session: $("#sessionSelector").val(),
+          term: $("#termSelector").val(),
+          student: $("#vins").text().trim(),
+        },
+        success: function (data) {
+          location.reload();
+        },
+        error: function (error) {
+          alert("Something happened !")
+        }
+      })
+    }
+
+    // pass data to modal . . .
+    $(document).on("dblclick", ".stdRow", function () {
+      var rowId = $(this).data('st-id');
+      $('#dellbutt').click();
+      $("#stname").html('<p id="vins">' + rowId + '</p>');
+    });
   </script>
 
 </body>
