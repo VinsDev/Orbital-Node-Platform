@@ -698,7 +698,7 @@ const createClass = async (req, res) => {
     try {
 
         class_model = {
-            name: req.body.name.trim(),
+            name: req.body.name.trim().toUpperCase(),
             subjects: []
         }
 
