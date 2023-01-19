@@ -16,7 +16,7 @@ var storage = new GridFsStorage({
 
     return {
       bucketName: dbConfig.imgBucket,
-      filename: `${Date.now()}-${req.body.name.trim()}-${file.originalname}`
+      filename: `${Date.now()}-${modifiedString(req.body.name.trim())}-${file.originalname}`
     };
   }
 });
@@ -24,3 +24,7 @@ var storage = new GridFsStorage({
 var uploadFiles = multer({ storage: storage }).array("images", 10);
 var uploadFilesMiddleware = util.promisify(uploadFiles);
 module.exports = uploadFilesMiddleware;
+
+function modifiedString(token) {
+  return token.replace(/\s+/g, '-').toLowerCase();
+}

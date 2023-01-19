@@ -35,7 +35,7 @@ const s_home = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
         return res.render("../school/index", {
             school_obj: school_data.school_info,
             news: school_data.news

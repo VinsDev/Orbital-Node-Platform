@@ -25,6 +25,7 @@ let routes = app => {
   router.post("/register", uploadController.uploadRegForm);
   router.get("/verify_transaction", uploadController.verifyTransaction);
   router.post("/agent", uploadController.regAgent);
+  router.post("/verify", uploadController.verifyActivationPin);
   router.get("/files", uploadController.getListFiles);
   router.get("/files/:name", uploadController.downloadImage);
   router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", uploadController.downloadPdf);

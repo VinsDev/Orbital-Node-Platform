@@ -43,6 +43,12 @@
       </div>
 
       <div class="form-group">
+        <label id="phone-label" for="email">Node Recharge PIN</label>
+        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your Node Recharge PIN"
+          required />
+      </div>
+
+     <!--  <div class="form-group">
         <p>How many Nodes would you like to purchase?</p>
         <select aria-label="Numbers" name="quantity" id="rad" onchange="update_price()"
           style="font-size: 20px;width: 50px; font-weight: bold;">
@@ -58,17 +64,17 @@
         </select>
       </div>
 
-      <div id="price"></div>
+      <div id="price"></div> -->
 
       <button type="submit" id="sub" style="display: none;"></button>
     </form>
     <div class="form-group">
       <button type="button" id="regist_b" class="submit-button" onclick="pay()">
-        Make Payments
+        Recharge
       </button>
     </div>
-    <div class="text-center">
-      <a href="/" style="color: white;margin-bottom: 30px;">Orbital Node Website</a>
+    <div class="text-center" style="margin-bottom: 30px;">
+      <a href="/" style="color: white;text-decoration: none;">Orbital Node Website</a>
     </div>
 
     <script>
@@ -100,7 +106,7 @@
         subBtn.click();
       }
       else {
-        payWithPaystack();
+        // payWithPaystack();
       }
     }
 

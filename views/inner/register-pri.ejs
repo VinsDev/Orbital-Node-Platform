@@ -11,7 +11,7 @@
   <meta name="msapplication-navbutton-color" content="#3264f5">
   <!-- iOS Safari -->
   <meta name="apple-mobile-web-app-status-bar-style" content="#3264f5">
-  
+
   <title>Register your School</title>
   <link rel="stylesheet" href="landing/reg.css">
 
@@ -149,19 +149,21 @@
       </div>
 
       <div class="form-group">
-        <label id="email-label" for="email">Agent Referral Code<span class="clue"> (optional) </span></label>
-        <input type="text" name="agent" id="agent" class="form-control"
-          placeholder="Type in your agent refferal code here" />
+        <label id="email-label" for="email">Activation PIN</label>
+        <input type="text" name="activation" id="activation" class="form-control"
+          placeholder="Type in your school activation PIN" required />
       </div>
+      <p>Please ensure that the activation PIN you are typing in is Correct because your School can be removed if our
+        systems dont Authenticate the PIN entered. Thanks</p>
       <button type="submit" id="sub" style="display: none;"></button>
     </form>
     <div class="form-group">
       <button type="button" id="regist_b" class="submit-button" onclick="pay()">
-        Make Payments and Register
+        Register
       </button>
     </div>
-    <div class="text-center">
-      <a href="/" style="color: white;margin-bottom: 10px;">Back to site</a>
+    <div class="text-center" style="margin-bottom: 30px;">
+      <a href="/" style="color: white;margin-bottom: 10px; text-decoration: none;">Back to site</a>
     </div>
 
     <script>
@@ -185,41 +187,35 @@
         subBtn.click();
       }
       else {
-         payWithPaystack();
+        // payWithPaystack();
+        subBtn.click();
       }
     }
-
-    function payWithPaystack() {
-      var ref = "ref" + Math.random().toString(16).slice(2);
-      var handler = PaystackPop.setup({
-        key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f', // Replace with your public key
-        email: document.getElementById('email').value,
-        amount: 7000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
-        currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-        ref: ref, // Replace with a reference you generated
-        callback: function (response) {
-          //this happens after the payment is completed successfully
-          var reference = response.reference;
-          // alert('Payment complete! Reference: ' + reference);
-          // Make an AJAX call to your server with the reference to verify the transaction
-          $.ajax({
-            url: 'verify_transaction?reference=' + response.reference,
-            method: 'get',
-            success: function (data) {
-              // the transaction status is in response.data.status
-              subBtn.click();
-            }
-          });
-        },
-        onClose: function () {
-          // alert('Transaction was not completed, window closed.');
-        },
-      });
-      handler.openIframe();
-    }
+    /*  function payWithPaystack() {
+        var ref = "ref" + Math.random().toString(16).slice(2);
+        var handler = PaystackPop.setup({
+          key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
+          email: document.getElementById('email').value,
+          amount: 7000 * 100,
+          currency: 'NGN',
+          ref: ref,
+          callback: function (response) {
+            var reference = response.reference;
+            $.ajax({
+              url: 'verify_transaction?reference=' + response.reference,
+              method: 'get',
+              success: function (data) {
+                subBtn.click();
+              }
+            });
+          },
+          onClose: function () {
+          },
+        });
+        handler.openIframe();
+      } */
   </script>
-
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <!-- <script src="https://js.paystack.co/v1/inline.js"></script> -->
 </body>
 
 </html>

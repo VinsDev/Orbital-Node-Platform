@@ -27,9 +27,10 @@
   <link rel="stylesheet" href="landing/assets/css/orbital-node.css">
   <link rel="stylesheet" href="landing/assets/css/owl.css">
 
-  <!-- Jquery -->
-  <script src="landing/vendor/jquery/jquery.min.js"></script>
 
+  <script src="landing/vendor/jquery/jquery.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 </head>
 
 <body>
@@ -161,8 +162,8 @@
                     if (match[0] === myInput.value) {
                       if (suggestion_hidden) {
                         var inputValue = myInput.value;
+                        console.log(inputValue);
                         let url = "schools/" + inputValue + "/home";
-                        console.log(url);
                         myForm.action = url;
                         window.location = myForm.action;
                         myForm.submit();
@@ -191,7 +192,8 @@
 
         <div class="text-center">
           <div class="wrapper">
-            <a id="regnow" href="/purchase-node" style="color: rgb(168, 220, 255); font-size: 16px;">Purchase a Node</a>
+            <a id="regnow" href="/purchase-node" style="color: rgb(168, 220, 255); font-size: 16px;">Recharge your
+              Nodes</a>
           </div>
         </div>
 
@@ -266,8 +268,8 @@
 
             <div class="price price-gradient">
               <h3 style="color: white; font-weight: bold;">PRIMARY SCHOOLS</h3>
-              <h6>₦7,000</h6>
-              <span>per term</span>
+              <!-- <h6>₦7,000</h6> -->
+              <!-- <span>per term</span> -->
             </div>
             <p>Suitable for all Schools</p>
             <div class="dev"></div>
@@ -280,7 +282,7 @@
               <li><i class="fa fa-check"></i>Automatic Results Computation</li><br />
               <li><i class="fa fa-check"></i>Admin Panel</li><br />
             </ul>
-            <a href="/register-pri" class="gradient-button">Register Primary</a>
+            <a href="#primaryActivationKey" data-toggle="modal" class="gradient-button">Register Primary</a>
           </div>
         </div>
         <div class="col-md-6 col-xs-12">
@@ -288,8 +290,8 @@
 
             <div class="price price-gradient">
               <h3 style="color: white; font-weight: bold;">SECONDARY SCHOOLS</h3>
-              <h6>₦7,000</h6>
-              <span>per term</span>
+              <!-- <h6>₦7,000</h6> -->
+              <!-- <span>per term</span> -->
             </div>
             <p>Suitable for all Schools</p>
             <div class="dev"></div>
@@ -302,7 +304,7 @@
               <li><i class="fa fa-check"></i>Automatic Results Computation</li><br />
               <li><i class="fa fa-check"></i>Admin Panel</li><br />
             </ul>
-            <a href="/register-sec" class="gradient-button">Register Secondary</a>
+            <a href="#secondaryActivationKey" data-toggle="modal" class="gradient-button">Register Secondary</a>
           </div>
         </div>
 
@@ -311,6 +313,143 @@
   </div>
   </div>
   <!-- Pricing Ends Here -->
+
+
+  <!-- Modal Primary -->
+  <div class="modal fade" id="primaryActivationKey" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Enter your school activation pin</h5>
+          <button class="close" data-dismiss="modal"
+            style="border: none; background-color: transparent;">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3 needs-validation class-form" method="post" action="/verify" id="priModForm">
+            <div class="col-12">
+              <label for="yourName" class="form-label">PIN</label>
+              <input type="text" name="pin" class="form-control" id="name" required>
+              <div class="invalid-feedback">Please ensure that you type in your school activation pin here</div>
+            </div>
+
+            <div class="col-12">
+              <button id="btnSubmit" type="submit" style="display: none;"></button>
+            </div>
+          </form>
+          <div style="margin-top: 25px;"></div>
+          <p>An Activation PIN is required to resgister a school.</p>
+          <p>To purchase an <b>Activation PIN,</b> Kindly contact us via any of the following Numbers either by Phone
+            Calls
+            or WhatsApp messages and our Representatives will attend to you. <br><b>08105634427, 08123456789.</b><br>You
+            can also
+            email your request for an activation pin for your school to <b>orbitaltech32@gmail.com</b> </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+          <button type="button" class="btn btn-primary" id="create">Verify</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+    $("#create").on("click", function (e) {
+      $('#btnSubmit').click()
+    });
+  </script>
+  <!-- Modal Primary Ends Here -->
+
+  <!-- Modal Secondary-->
+  <div class="modal fade" id="secondaryActivationKey" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Enter your school activation pin</h5>
+          <button class="close" data-dismiss="modal"
+            style="border: none; background-color: transparent;">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3 needs-validation class-form" method="post" action="/verify" id="secModForm">
+            <div class="col-12">
+              <label for="yourName" class="form-label">PIN</label>
+              <input type="text" name="name" class="form-control" id="name" required>
+              <div class="invalid-feedback">Please ensure that you type in your school activation pin here</div>
+            </div>
+
+            <div class="col-12">
+              <button id="btnSubmitSec" type="submit" style="display: none;"></button>
+            </div>
+          </form>
+          <div style="margin-top: 25px;"></div>
+          <p>An Activation PIN is required to resgister a school.</p>
+          <p>To purchase an <b>Activation PIN,</b> Kindly contact us via any of the following Numbers either by Phone
+            Calls
+            or WhatsApp messages and our Representatives will attend to you. <br><b>08105634427, 08123456789.</b><br>You
+            can also
+            email your request for an activation pin for your school to <b>orbitaltech32@gmail.com</b> </p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+          <button type="button" class="btn btn-primary" id="verify">Verify</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <script>
+    $("#verify").on("click", function (e) {
+      $('#btnSubmitSec').click()
+    });
+  </script>
+
+  <!-- Modal Secondary Ends Here -->
+
+  <!-- Ajax Form Data Handling -->
+  <script>
+    $(document).ready(function () {
+      $('#priModForm').on('submit', function (evt) {
+        evt.preventDefault();
+        var form = $(this);
+        var action = $(this).attr('action');
+        var $container = $(this).closest('.modal-body');
+        $(".modal-body").LoadingOverlay("show");
+        $.ajax({
+          url: action,
+          type: 'POST',
+          data: convertFormToJSON(form),
+          success: function (data) {
+            if (data.feedback === "ok") {
+              $container.html('<h3>Activation PIN Verified. Thank you</h3> <p>Redirecting . . .</p>');
+              window.location = "https://www.orbitalnodetechnologies.com/register-pri";
+
+            } else if (data.feedback === "used") {
+              $container.html('<h3>The Pin you entered has already been used</h3>');
+              $('<button class="btn btn-primary" style="margin: 20px" onclick="location.reload()">Try Again</button>').insertAfter($container);
+            }
+            else {
+              $container.html('<h3>Invalid PIN.</h3>');
+              $('<button class="btn btn-primary" style="margin: 20px" onclick="location.reload()">Try Again</button>').insertAfter($container);
+            }
+          },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            $container.html('There was a problem.');
+          }
+        });
+      });
+    });
+
+    function convertFormToJSON(form) {
+      const array = $(form).serializeArray();
+      const json = {};
+      $.each(array, function () {
+        json[this.name] = this.value || "";
+      });
+      return json;
+    }
+  </script>
 
 
   <!-- Features Starts Here -->
@@ -509,7 +648,7 @@
   <!-- Footer Ends Here -->
 
   <!-- Bootstrap core JavaScript -->
-  <script src="landing/vendor/jquery/jquery.min.js"></script>
+
   <script src="landing/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
   <!-- Additional Scripts -->

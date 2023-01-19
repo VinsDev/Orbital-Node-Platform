@@ -8,10 +8,10 @@ var PdfPrinter = require('pdfmake');
 
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
-const web = "http://orbital-node.herokuapp.com/files/";
+const web = "https://www.orbitalnodetechnologies.com/files/";
 const baseUrl = web;
 const nlocal = "http://localhost:3000/news/";
-const nweb = "http://orbital-node.herokuapp.com/news/";
+const nweb = "https://www.orbitalnodetechnologies.com/news/";
 const nbaseUrl = nweb;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
@@ -66,7 +66,7 @@ const schoolRegForm = async (req, res, url) => {
                 anthem: req.body.anthem.trim(),
                 fees: req.body.fees,
                 e_register: req.body.e_register,
-                agent: req.body.agent.trim(),
+                activation: req.body.activation.trim(),
                 reg_date: date_obj_converter(st),
                 nodes: 1
             },
@@ -195,6 +195,33 @@ const verifyTransaction = async (req, res) => {
         return res.end();
     }
 };
+const verifyActivationPin = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const activation = database.collection("activation");
+        let activation_data = await activation.findOne({ 'pin': req.body.pin.trim() });
+        if (activation_data) {
+            if (!activation_data.used) {
+                if (req.xhr || req.accepts('json,html') === 'json') {
+                    return res.send({ feedback: 'ok', pin: req.body.pin.trim() });
+                } else {
+                    return res.redirect(303, '/');
+                }
+            } else {
+                res.send({ feedback: 'used' });
+            }
+        }
+        else {
+            res.send({ feedback: "no" });
+        }
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 
 // SCHOOL . . .
 const downloadImage = async (req, res) => {
@@ -1348,6 +1375,7 @@ module.exports = {
     uploadRegForm,
     regAgent,
     verifyTransaction,
+    verifyActivationPin,
     getSchools,
     getSubjects,
     getClassSubjects,
