@@ -421,6 +421,7 @@
             if (data.feedback === "ok") {
               $container.html('<h3>Activation PIN Verified. Thank you</h3> <p>Redirecting please wait. . .</p>');
               window.location = "https://www.orbitalnodetechnologies.com/register-pri";
+              $('<button class="btn btn-primary" style="margin: 40px" onclick="location.reload()">Refresh</button>').insertAfter($container);
 
             } else if (data.feedback === "used") {
               $container.html('<h3>The Pin you entered has already been used</h3>');
