@@ -327,8 +327,8 @@
         <div class="modal-body">
           <form class="row g-3 needs-validation class-form" method="post" action="/verify" id="priModForm">
             <div class="col-12">
-              <label for="yourName" class="form-label">PIN</label>
-              <input type="text" name="pin" class="form-control" id="name" required>
+              <label for="pin" class="form-label">PIN</label>
+              <input type="text" name="pin" class="form-control" id="pin" required>
               <div class="invalid-feedback">Please ensure that you type in your school activation pin here</div>
             </div>
 
@@ -371,8 +371,8 @@
         <div class="modal-body">
           <form class="row g-3 needs-validation class-form" method="post" action="/verify" id="secModForm">
             <div class="col-12">
-              <label for="yourName" class="form-label">PIN</label>
-              <input type="text" name="name" class="form-control" id="name" required>
+              <label for="pin" class="form-label">PIN</label>
+              <input type="text" name="pin" class="form-control" id="pin" required>
               <div class="invalid-feedback">Please ensure that you type in your school activation pin here</div>
             </div>
 
@@ -468,6 +468,7 @@
           },
           error: function (error) {
             $container.html('There was a problem.');
+            $('<button class="btn btn-primary" style="margin: 20px" onclick="location.reload()">Try Again</button>').insertAfter($container);
           }
         });
       });
