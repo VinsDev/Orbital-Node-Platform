@@ -88,7 +88,10 @@ const schoolRegForm = async (req, res, url) => {
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
-        database.collection("schools").insertOne(school_model)
+
+        
+        
+        database.collection("schools").insertOne(school_model);
     } catch (error) {
         console.log(error);
     }

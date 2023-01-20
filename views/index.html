@@ -419,8 +419,40 @@
           data: convertFormToJSON(form),
           success: function (data) {
             if (data.feedback === "ok") {
-              $container.html('<h3>Activation PIN Verified. Thank you</h3> <p>Redirecting . . .</p>');
+              $container.html('<h3>Activation PIN Verified. Thank you</h3> <p>Redirecting please wait. . .</p>');
               window.location = "https://www.orbitalnodetechnologies.com/register-pri";
+
+            } else if (data.feedback === "used") {
+              $container.html('<h3>The Pin you entered has already been used</h3>');
+              $('<button class="btn btn-primary" style="margin: 20px" onclick="location.reload()">Try Again</button>').insertAfter($container);
+            }
+            else {
+              $container.html('<h3>Invalid PIN.</h3>');
+              $('<button class="btn btn-primary" style="margin: 20px" onclick="location.reload()">Try Again</button>').insertAfter($container);
+            }
+          },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            $container.html('There was a problem.');
+          }
+        });
+      });
+      $('#secModForm').on('submit', function (evt) {
+        evt.preventDefault();
+        var form = $(this);
+        var action = $(this).attr('action');
+        var $container = $(this).closest('.modal-body');
+        $(".modal-body").LoadingOverlay("show");
+        $.ajax({
+          url: action,
+          type: 'POST',
+          data: convertFormToJSON(form),
+          success: function (data) {
+            if (data.feedback === "ok") {
+              $container.html('<h3>Activation PIN Verified. Thank you</h3> <p>Redirecting please wait. . .</p>');
+              window.location = "https://www.orbitalnodetechnologies.com/register-sec";
 
             } else if (data.feedback === "used") {
               $container.html('<h3>The Pin you entered has already been used</h3>');
@@ -616,7 +648,7 @@
               <h2>Useful Links</h2>
             </div>
             <ul class="footer-list">
-              <li><a href="register">Register School</a></li>
+              <li><a href="#reg">Register School</a></li>
               <li><a href="agent">Agent Program</a></li>
               <!-- <li><a href="#">Customer Support</a></li>
               <li><a href="#">Latest News</a></li> -->
