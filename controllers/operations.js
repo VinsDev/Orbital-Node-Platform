@@ -89,9 +89,18 @@ const schoolRegForm = async (req, res, url) => {
 
         const database = mongoClient.db(dbConfig.database);
 
-        
-        
-        database.collection("schools").insertOne(school_model);
+        const activation = database.collection("activation");
+
+        let activation_data = await activation.findOne({ 'pin': req.body.activation.trim() });
+        if (activation_data) {
+            activation.findOneAndUpdate({ "pin": req.body.activation.trim() },
+                { $set: { "used": true, } },
+            );
+            database.collection("schools").insertOne(school_model);
+            return;
+        } else {
+            return res.status(200).render("inner/failure", { name: req.body.name }); 
+        }
     } catch (error) {
         console.log(error);
     }
@@ -100,12 +109,6 @@ const uploadRegForm = async (req, res) => {
     try {
         await upload(req, res);
         await schoolRegForm(req, res, req.files)
-
-        if (req.files.length <= 0) {
-            return res
-                .status(400)
-                .send({ message: "You must select at least 1 file." });
-        }
 
         return res.status(200).render("inner/success", { name: req.body.name });
     } catch (error) {
