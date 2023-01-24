@@ -118,6 +118,13 @@
         <img id="vp1-i" />
       </div>
 
+      <div class="form-group">
+        <label for="stamp" id="stamp-label">School Stamp <span>Optional</span></label>
+        <input type="file" name="images" id="stamp" accept="image/*" onchange="loadFile(event, 'stamp-i')"
+          required><br />
+        <img id="stamp-i" />
+      </div>
+
 
       <div class="form-group">
         <p>Mission</p>
@@ -193,28 +200,28 @@
       }
     }
    /*  function payWithPaystack() {
-       var ref = "ref" + Math.random().toString(16).slice(2);
-       var handler = PaystackPop.setup({
-         key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
-         email: document.getElementById('email').value,
-         amount: 7000 * 100,
-         currency: 'NGN',
-         ref: ref,
-         callback: function (response) {
-           var reference = response.reference;
-           $.ajax({
-             url: 'verify_transaction?reference=' + response.reference,
-             method: 'get',
-             success: function (data) {
-               subBtn.click();
-             }
-           });
-         },
-         onClose: function () {
-         },
-       });
-       handler.openIframe();
-     } */
+        var ref = "ref" + Math.random().toString(16).slice(2);
+        var handler = PaystackPop.setup({
+          key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
+          email: document.getElementById('email').value,
+          amount: 7000 * 100,
+          currency: 'NGN',
+          ref: ref,
+          callback: function (response) {
+            var reference = response.reference;
+            $.ajax({
+              url: 'verify_transaction?reference=' + response.reference,
+              method: 'get',
+              success: function (data) {
+                subBtn.click();
+              }
+            });
+          },
+          onClose: function () {
+          },
+        });
+        handler.openIframe();
+      } */
   </script>
   <!-- <script src="https://js.paystack.co/v1/inline.js"></script> -->
 </body>

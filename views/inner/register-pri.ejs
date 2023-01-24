@@ -119,6 +119,13 @@
       </div>
 
       <div class="form-group">
+        <label for="stamp" id="stamp-label">School Stamp <span>Optional</span></label>
+        <input type="file" name="images" id="stamp" accept="image/*" onchange="loadFile(event, 'stamp-i')"
+          required><br />
+        <img id="stamp-i" />
+      </div>
+
+      <div class="form-group">
         <p>Mission</p>
         <textarea id="mission" class="input-textarea form-control" name="mission"
           placeholder="Type in your school's mission here..."></textarea>
