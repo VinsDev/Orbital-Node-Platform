@@ -35,6 +35,7 @@ let routes = app => {
   router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
   router.get("/admin/:sname/getClassSubjects/:class", uploadController.getClassSubjects);
   router.post("/admin/:sname/getStudents", uploadController.getStudents);
+  router.post("/admin/:sname/student-fees", uploadController.setStudentFees);
   router.post("/admin/:sname/getSubjectsResultsList", uploadController.getSubjectsResultsList);
   router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
   router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);

@@ -349,7 +349,7 @@
                   </div>
                 </div>
 
-                <div class="col-12">session
+                <div class="col-12">
                   <label for="yourEmail" class="form-label">Date of birth</label>
                   <input type="date" name="dob" class="form-control" id="dob" required>
                   <div class="invalid-feedback">Please enter date of birth!</div>
@@ -412,45 +412,7 @@
           </div>
         </div>
       </div>
-      <!-- Click -->
-      <script>
-        $("#create").on("click", function (e) {
-          $.ajax({
-            url: '/admin/<%= school_obj.name %>/getTermStatus/',
-            data: {
-              session: $('#session').val(),
-              term: $('#term').val()
-            },
-            type: 'POST',
-            success: function (data) {
-              if (data.status === "true") {
-                $('#btnSubmit').click();
-              }
-              else {
-                if (data.av_nodes === "yes") {
-                  $('#nbutt').click();
-                } else {
-                  alert("You do not have available nodes to activate this term. Please purchase more nodes from the Dashboard or Orbital Node Official Website");
-                }
-              }
-            }
-          })
-        });
 
-        function activateTerm() {
-          $.ajax({
-            url: '/admin/<%= school_obj.name %>/activateTerm/',
-            data: {
-              session: $('#session').val(),
-              term: $('#term').val()
-            },
-            type: 'POST',
-            success: function (data) {
-              $('#adstd').click()
-            }
-          })
-        }
-      </script>
 
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nodes" id="nbutt"
         style="display: none;">Nbutt</button>
@@ -539,6 +501,45 @@
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
+  <!-- Click -->
+  <script>
+    $("#create").on("click", function (e) {
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getTermStatus/',
+        data: {
+          session: $('#session').val(),
+          term: $('#term').val()
+        },
+        type: 'POST',
+        success: function (data) {
+          if (data.status === "true") {
+            $('#btnSubmit').click();
+          }
+          else {
+            if (data.av_nodes === "yes") {
+              $('#nbutt').click();
+            } else {
+              alert("You do not have available nodes to activate this term. Please purchase more nodes from the Dashboard or Orbital Node Official Website");
+            }
+          }
+        }
+      })
+    });
+
+    function activateTerm() {
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/activateTerm/',
+        data: {
+          session: $('#session').val(),
+          term: $('#term').val()
+        },
+        type: 'POST',
+        success: function (data) {
+          $('#adstd').click()
+        }
+      })
+    }
+  </script>
 
   <script>
     function sendData() {

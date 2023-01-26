@@ -118,7 +118,7 @@
         <div class="row md-3">
           <label class="col-sm-5 col-form-label">Session</label>
           <div class="col-sm-8">
-            <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+            <select class="form-select" aria-label="Session" id="sessionSelector" onchange="updateData()">
               <% for(var i=0; i < sessions_data.length; i++){ %>
                 <option value="<%= sessions_data[i].name %>">
                   <%= sessions_data[i].name %>
@@ -131,7 +131,7 @@
         <div class="row md-1">
           <label class="col-sm-5 col-form-label">Term</label>
           <div class="col-sm-8">
-            <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+            <select class="form-select" aria-label="Term" id="termSelector" onchange="updateData()">
               <option value="first" selected>First</option>
               <option value="second">Second</option>
               <option value="third">Third</option>
@@ -155,133 +155,6 @@
               </em>
             </h5>
 
-            <!-- TABLE LOGIC -->
-            <script type="text/javascript">
-              var student_names = [];
-              var assessments_data = [];
-              $(document).ready(function ($) {
-                fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    session: $("#sessionSelector").val(),
-                    class: $("#cls").text().trim(),
-                    term: $("#termSelector").val(),
-                    subject: $("#subname").text().trim(),
-                  })
-                }).then(res => res.json()).then(data => {
-                  student_names = data.student_names;
-                  assessments_data = data.assessments_data;
-
-                  //--->create data table > start
-                  var tbl = '';
-                  tbl += '<table class="table table-bordered">'
-                  tbl += '<thead>';
-                  tbl += '<tr>';
-                  tbl += '<th>S/N</th>';
-                  tbl += '<th>Name</th>';
-                  tbl += '<th>Ass 1</th>';
-                  tbl += '<th>Ass 2</th>';
-                  tbl += '<th>Test 1</th>';
-                  tbl += '<th>Test 2</th>';
-                  tbl += '<th>Exams</th>';
-                  tbl += '</tr>';
-                  tbl += '</thead>';
-                  tbl += '<tbody>';
-                  $.each(assessments_data, function (index, val) {
-                    var row_id = index;
-                    tbl += '<tr row_id="' + row_id + '">';
-                    tbl += '<td col_name="sn">' + (index + 1) + '</td>';
-                    tbl += '<td col_name="name">' + student_names[index] + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.ass[0]) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass2">' + negative(val.ass[1]) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="test1">' + negative(val.ass[2]) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.ass[3]) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.ass[4]) + '</td>';
-                  });
-                  tbl += '</tbody>';
-                  tbl += '</table>'
-
-                  $(document).find('.tbl_user_data').html(tbl);
-                  $(document).on('click', '.row_data', function (event) {
-                    event.preventDefault();
-                    $(this).closest('td').attr('contenteditable', 'true');
-                    $(this).focus();
-                  })
-
-                  $(document).on('focusout', '.row_data', function (event) {
-                    event.preventDefault();
-
-                    var row_id = $(this).closest('tr').attr('row_id');
-
-                    var row_div = $(this)
-                      .removeClass('bg-warning')
-                      .css('padding', '')
-
-                    var col_name = row_div.attr('col_name');
-                    var col_val = row_div.html();
-
-                    var arr = {};
-                    arr[col_name] = col_val;
-
-                    $.extend(arr, { row_id: row_id });
-
-                    switch (col_name) {
-                      case 'ass1': assessments_data[row_id].ass[0] = Number(negative_rev(col_val));
-                        break;
-                      case 'ass2': assessments_data[row_id].ass[1] = Number(negative_rev(col_val));
-                        break;
-                      case 'test1': assessments_data[row_id].ass[2] = Number(negative_rev(col_val));
-                        break;
-                      case 'test2': assessments_data[row_id].ass[3] = Number(negative_rev(col_val));
-                        break;
-                      case 'exams': assessments_data[row_id].ass[4] = Number(negative_rev(col_val));
-                      default:
-                        break;
-                    }
-                    //$('.post_msg').html('<pre class="bg-success">' + JSON.stringify(assessments_data[row_id], null, 2) + '</pre>');
-                  })
-                });
-              });
-
-              function upload() {
-                fetch('/admin/<%= school_obj.name %>/updateSubjectsResults', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    session: $("#sessionSelector").val(),
-                    class: $("#cls").text().trim(),
-                    term: $("#termSelector").val(),
-                    subname: $("#subname").text().trim(),
-                    student_names: student_names,
-                    assessments_data: assessments_data,
-                  })
-                }).then((res) => {
-                  if (res.status === 200) {
-                    alert("Changes saved successfully");
-                  }
-                });
-              }
-
-              function negative(number) {
-                if (number < 0) {
-                  return '';
-                }
-                else {
-                  return number;
-                }
-              }
-
-              function negative_rev(value) {
-                if (value === "") {
-                  return -1;
-                }
-                else {
-                  return value;
-                }
-              }
-            </script>
-
             <!-- TABLE DIVS -->
             <div class="panel panel-default">
               <div class="panel-body">
@@ -291,12 +164,11 @@
           </div>
         </div>
 
-        <div class="text-center">
+        <div class="text-center" style="margin-bottom: 15px;">
           <button class="btn btn-primary" onclick="upload()">Save Changes</button>
           <a href="/admin/<%= school_obj.name %>/continous-assessments"><button class="btn btn-primary"
               style="margin-left: 20px;">Back</button></a>
         </div>
-        <div style="margin-bottom: 15px;"></div>
       </div>
     </div>
   </section>
@@ -312,16 +184,15 @@
       class="bi bi-arrow-up-short"></i></a>
 
 
-  <!-- Vendor JS Files -->
-  <script src="../../../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+  <!-- TABLE LOGIC -->
+  <script type="text/javascript">
+    var student_names = [];
+    var assessments_data = [];
+    $(document).ready(function ($) {
+      updateData();
+    });
 
-  <!-- Template Main JS File -->
-  <script src="../../../../admin/assets/js/main.js"></script>
-
-  <script>
-    function sendData() {
+    function updateData() {
       fetch('/admin/<%= school_obj.name %>/getSubjectsResults', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -410,15 +281,59 @@
             default:
               break;
           }
-
-          // $('.post_msg').html('<pre class="bg-success">' + JSON.stringify(assessments_data[row_id], null, 2) + '</pre>');
-
         })
 
       });
       return;
     }
+
+    function negative(number) {
+      if (number < 0) {
+        return '';
+      }
+      else {
+        return number;
+      }
+    }
+
+    function negative_rev(value) {
+      if (value === "") {
+        return -1;
+      }
+      else {
+        return value;
+      }
+    }
+
+    function upload() {
+      fetch('/admin/<%= school_obj.name %>/updateSubjectsResults', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session: $("#sessionSelector").val(),
+          class: $("#cls").text().trim(),
+          term: $("#termSelector").val(),
+          subname: $("#subname").text().trim(),
+          student_names: student_names,
+          assessments_data: assessments_data,
+        })
+      }).then((res) => {
+        if (res.status === 200) {
+          alert("Changes saved successfully");
+        }
+      });
+    }
   </script>
+
+
+  <!-- Vendor JS Files -->
+  <script src="../../../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../../../admin/assets/vendor/quill/quill.min.js"></script>
+  <script src="../../../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../../../../admin/assets/js/main.js"></script>
+
 </body>
 
 </html>

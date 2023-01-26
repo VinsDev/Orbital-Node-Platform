@@ -143,14 +143,26 @@
                                         Results</h6>
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Current Term Result</p>
-                                            <% if(results_status==='true' ){ %>
+                                            <p class="m-b-10 f-w-600">
+                                                <%= c_term %> Term Result
+                                            </p>
+                                            <% if(results_status==='1' ){ %>
                                                 <h6 class="text-muted f-w-400"><a id="termres"
                                                         href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/term-result">Download
                                                         Term result</a></h6>
-                                                <% } else { %>
-                                                    <h6 class="text-muted f-w-400">Not Ready Yet</h6>
-                                                    <% } %>
+                                                <% } else if(results_status==='2' && student_info.fees){ %>
+                                                    <h6 class="text-muted f-w-400"><a id="termres"
+                                                            href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/term-result">Download
+                                                            Term result</a></h6>
+                                                    <% } else { %>
+                                                        <% if(!student_info.fees){ %>
+                                                            <h6 class="text-muted f-w-400">Please pay your fees to see your result.</h6>
+                                                            <% } else { %>
+                                                                <h6 class="text-muted f-w-400">School have not released
+                                                                    results yet
+                                                                </h6>
+                                                                <% } %>
+                                                                    <% } %>
                                         </div>
                                         <div class="col-sm-6">
                                             <p class="m-b-10 f-w-600">Annual Result</p>

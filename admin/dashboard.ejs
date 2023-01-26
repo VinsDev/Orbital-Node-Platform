@@ -291,7 +291,8 @@
                     </div>
                   </div>
                   <div style="margin-top: 20px;">
-                    <a id="regnow" target="_blank" href="/purchase-node" style="color: rgb(4, 8, 255); font-size: 16px;font-weight: bold;">Purchase
+                    <a id="regnow" target="_blank" href="/purchase-node"
+                      style="color: rgb(4, 8, 255); font-size: 16px;font-weight: bold;">Purchase
                       a Node</a>
                   </div>
                 </div>
@@ -331,7 +332,7 @@
                 <% if(current_term==="second" ) c2='checked' ; %>
                   <% if(current_term==="third" ) c3='checked' ; %>
                     <fieldset class="row mb-3" id="fs">
-                      <legend class="col-form-label col-sm-2 pt-0">Current Term</legend>
+                      <legend class="col-form-label col-sm-2 pt-0">Portal Access Term</legend>
                       <div class="col-sm-10">
                         <div class="form-check">
                           <input class="form-check-input" type="radio" name="term" id="first" value="first" <%=c1 %>>
@@ -418,65 +419,97 @@
 
                     <% var e1="" %>
                       <% var e2="" %>
-                        <% if(results_status==='true' ) e1='checked' ; %>
-                          <% if(results_status==='false' ) e2='checked' ; %>
-                            <fieldset class="row mb-3">
-                              <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
-                              <div class="col-sm-10">
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="status" id="released"
-                                    value="released" <%=e1 %>>
-                                  <label class="form-check-label" for="gridRadios1">
-                                    Released
-                                  </label>
-                                </div>
-                                <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="status" id="not-released"
-                                    value="not-released" <%=e2 %>>
-                                  <label class="form-check-label" for="gridRadios2">
-                                    Not Released
-                                  </label>
-                                </div>
-                              </div>
-                            </fieldset>
-                            <script>
-                              $(document).ready(function () {
-                                $("#released").click(function () {
-                                  $.ajax({
-                                    url: '/admin/<%= school_obj.name %>/updateResultStatus',
-                                    type: 'POST',
-                                    data: {
-                                      results_status: true
-                                    },
-                                    success: function (data) {
-                                      if (data.success) { } else {
-                                        alert("Network Error");
-                                      }
-                                    },
-                                    error: function (error) {
-                                      alert('There was a problem.');
-                                    }
-                                  });
-                                });
-                                $("#not-released").click(function () {
-                                  $.ajax({
-                                    url: '/admin/<%= school_obj.name %>/updateResultStatus',
-                                    type: 'POST',
-                                    data: {
-                                      results_status: false
-                                    },
-                                    success: function (data) {
-                                      if (data.success) { } else {
-                                        alert("Network Error");
-                                      }
-                                    },
-                                    error: function (error) {
-                                      alert('There was a problem.');
-                                    }
+                        <% var e3="" %>
+                          <% if(results_status==='1' ) e1='checked' ; %>
+                            <% if(results_status==='2' ) e2='checked' ; %>
+                              <% if(results_status==='3' ) e3='checked' ; %>
+                                <fieldset class="row mb-3">
+                                  <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
+                                  <div class="col-sm-10">
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="status" id="released-for-all"
+                                        value="released-for-all" <%=e1 %>>
+                                      <label class="form-check-label" for="gridRadios1">
+                                        Released for all Students.
+                                      </label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="status" id="released-for-some"
+                                        value="released-for-some" <%=e2 %>>
+                                      <label class="form-check-label" for="gridRadios1">
+                                        Released for only Students who paid their fees.
+                                      </label>
+                                    </div>
+                                    <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="status" id="not-released"
+                                        value="not-released" <%=e3 %>>
+                                      <label class="form-check-label" for="gridRadios2">
+                                        Not Released
+                                      </label>
+                                    </div>
+                                  </div>
+                                </fieldset>
+                                <script>
+                                  $(document).ready(function () {
+                                    $("#released-for-all").click(function () {
+                                      $.ajax({
+                                        url: '/admin/<%= school_obj.name %>/updateResultStatus',
+                                        type: 'POST',
+                                        data: {
+                                          results_status: '1'
+                                        },
+                                        success: function (data) {
+                                          if (data.success) {
+                                            alert("success");
+                                          } else {
+                                            alert("Network Error");
+                                          }
+                                        },
+                                        error: function (error) {
+                                          alert('There was a problem.');
+                                        }
+                                      });
+                                    });
+                                    $("#released-for-some").click(function () {
+                                      $.ajax({
+                                        url: '/admin/<%= school_obj.name %>/updateResultStatus',
+                                        type: 'POST',
+                                        data: {
+                                          results_status: '2'
+                                        },
+                                        success: function (data) {
+                                          if (data.success) {
+                                            alert("success");
+                                          } else {
+                                            alert("Network Error");
+                                          }
+                                        },
+                                        error: function (error) {
+                                          alert('There was a problem.');
+                                        }
+                                      });
+                                    });
+                                    $("#not-released").click(function () {
+                                      $.ajax({
+                                        url: '/admin/<%= school_obj.name %>/updateResultStatus',
+                                        type: 'POST',
+                                        data: {
+                                          results_status: '3'
+                                        },
+                                        success: function (data) {
+                                          if (data.success) {
+                                            alert("success");
+                                          } else {
+                                            alert("Network Error");
+                                          }
+                                        },
+                                        error: function (error) {
+                                          alert('There was a problem.');
+                                        }
+                                      })
+                                    });
                                   })
-                                });
-                              })
-                            </script>
+                                </script>
 
     </section>
 

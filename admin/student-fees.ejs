@@ -23,10 +23,6 @@
   <link href="../../admin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="../../admin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="../../admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
@@ -236,16 +232,62 @@
       </nav>
     </div><!-- End Page Title -->
 
-    <section class="section">
-      <div class="row">
-        <div class="col-md-12 offset-md-0">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Students Fees Status</h5>
-              <p>Feature Coming Soon . . .</p>
+    <!-- REFERENCE SELECTOR -->
+    <div class="card">
+      <div class="internal">
+        <div class="rrr">
+          <div class="row md-3">
+            <label class="col-sm-5 col-form-label">Session</label>
+            <div class="col-sm-8">
+              <select class="form-select" aria-label="Session" id="sessionSelector" onchange="updateData()">
+                <% for(var i=0; i < sessions_data.length; i++){ %>
+                  <option value="<%= sessions_data[i].name %>">
+                    <%= sessions_data[i].name %>
+                  </option>
+                  <% } %>
+              </select>
+            </div>
+          </div>
+
+          <div class="row md-1">
+            <label class="col-sm-5 col-form-label">Term</label>
+            <div class="col-sm-8">
+              <select class="form-select" aria-label="Term" id="termSelector" onchange="updateData()">
+                <option value="first" selected>First</option>
+                <option value="second">Second</option>
+                <option value="third">Third</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row md-1">
+            <label class="col-sm-5 col-form-label">Class</label>
+            <div class="col-sm-8">
+              <select class="form-select" aria-label="Class" id="classSelector" onchange="updateData()">
+                <% for(var i=0; i < class_data.length; i++){ %>
+                  <option value="<%= class_data[i].name %>">
+                    <%= class_data[i].name %>
+                  </option>
+                  <% } %>
+              </select>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <section class="section">
+      <div class="col-md-12 offset-md-0">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Students</h5>
+            <div id="contents"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center" style="margin-bottom: 15px;">
+        <button class="btn btn-primary" onclick='$("#subBtn").click()'>Save Changes</button>
       </div>
     </section>
 
@@ -263,14 +305,8 @@
 
 
   <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/chart.js/chart.min.js"></script>
-  <script src="../../admin/assets/vendor/echarts/echarts.min.js"></script>
-  <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="../../admin/assets/vendor/php-email-form/validate.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
@@ -278,7 +314,38 @@
   <!-- Jquery -->
   <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
   <script>
-    function sendData() {
+    $(document).ready(function ($) {
+
+      $("#contents").on("submit", "form", function (event) {
+        event.preventDefault();
+        var formData = $(this).serializeArray();
+        var additionalData = {
+          session: $("#sessionSelector").val(),
+          class: $("#classSelector").val(),
+          term: $("#termSelector").val(),
+        };
+        var data = formData.reduce(function (obj, item) {
+          obj[item.name] = item.value;
+          return obj;
+        }, additionalData);
+        $.ajax({
+          type: "POST",
+          url: window.location.href,
+          data: data,
+          success: function (data) {
+            //Code to handle successful submission
+            alert("Changes were saved successfuly!");
+          },
+          error: function (xhr, status, error) {
+            //Code to handle error
+            alert("ho");
+          }
+        });
+      });
+      updateData();
+    });
+
+    function updateData() {
       fetch('/admin/<%= school_obj.name %>/getStudents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -291,33 +358,43 @@
         var payload = data.payload;
         var content = '';
         if (payload < 1) {
-          $('#myTable tbody').html('Students not added yet');
+          $('#contents').html('Students not added yet');
           return;
         }
 
+        content = '<form id="chkform" method="post">';
+
         payload.forEach((item, index) => {
+          var chk = '';
+          if (item.fees) {
+            chk = 'checked';
+          }
           content += `
-                  <tr>
-                    <th scope="row">${index + 1}</th>
-                    <td>
-                      ${item.name}
-                      </td>
-                    <td>
-                      ${item.gender}
-                    </td>
-                    <td>
-                      ${item.dob}
-                    </td>
-                    <td>
-                      ${item.class}
-                    </td>
-                  </tr>`
+                  <input type="checkbox" id="student${index + 1}" name="${item.name}" value="${index + 1}" ${chk}>
+                  <label for="item1">${item.name}</label>
+                  <br>
+                    `
         });
-        $('#myTable tbody').html(content);
+
+        content += `
+        <input type="submit" value="submit" id="subBtn" style="display:none;">
+        </form>`;
+
+        $('#contents').html(content);
       });
       return;
     }
+
+    function convertFormToJSON(form) {
+      const array = $(form).serializeArray(); // Encodes the set of form elements as an array of names and values.
+      const json = {};
+      $.each(array, function () {
+        json[this.name] = this.value || "";
+      });
+      return json;
+    }
   </script>
+
 </body>
 
 </html>

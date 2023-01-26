@@ -61,6 +61,7 @@ const schoolRegForm = async (req, res, url) => {
                 ppic: baseUrl + url[3].filename,
                 vp1name: req.body.vp1name.trim(),
                 vp1pic: baseUrl + url[4].filename,
+                stamp: baseUrl + url[5].filename,
                 mission: req.body.mission.trim(),
                 vision: req.body.vision.trim(),
                 anthem: req.body.anthem.trim(),
@@ -99,7 +100,7 @@ const schoolRegForm = async (req, res, url) => {
             database.collection("schools").insertOne(school_model);
             return;
         } else {
-            return res.status(200).render("inner/failure", { name: req.body.name }); 
+            return res.status(200).render("inner/failure", { name: req.body.name });
         }
     } catch (error) {
         console.log(error);
@@ -687,7 +688,7 @@ const createSession = async (req, res) => {
                     stop_date: 'null',
                     attendance_dates: [],
                     attendance_model: [],
-                    results: 'false',
+                    results: 3,
                     students: [],
                     active: 'false'
                 },
@@ -697,7 +698,7 @@ const createSession = async (req, res) => {
                     stop_date: 'null',
                     attendance_dates: [],
                     attendance_model: [],
-                    results: 'false',
+                    results: 3,
                     students: [],
                     active: 'false'
                 },
@@ -707,7 +708,7 @@ const createSession = async (req, res) => {
                     stop_date: 'null',
                     attendance_dates: [],
                     attendance_model: [],
-                    results: 'false',
+                    results: 3,
                     students: [],
                     active: 'false'
                 },
@@ -815,6 +816,7 @@ const createStudent = async (req, res) => {
             dob: req.body.dob,
             session: req.body.session,
             term: req.body.term,
+            fees: false,
             class: req.body.class,
             subjects: s_subjects,
             total: -1,
@@ -893,6 +895,57 @@ const getStudents = async (req, res) => {
         })
 
         res.status(200).send({ payload: studentsList, results_status: school_data.sessions[sessionIndex].terms[termIndex].results });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const setStudentFees = async (req, res) => {
+    try {
+        let studentsList = [];
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
+
+        var std = school_data.sessions[sessionIndex].terms[termIndex].students;
+
+        for (var i = 0; i < std.length; i++) {
+            if (std[i].class === req.body.class) {
+                if (req.body[std[i].name]) {
+                    schools.updateOne(
+                        { "school_info.name": req.params.sname },
+                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].fees": true } },
+                        {
+                            arrayFilters:
+                                [{ "sess.name": req.body.session },
+                                { "term.name": req.body.term },
+                                { "stud.name": std[i].name }]
+                        }
+                    )
+                }
+                else {
+                    schools.updateOne(
+                        { "school_info.name": req.params.sname },
+                        { $set: { "sessions.$[sess].terms.$[term].students.$[stud].fees": false } },
+                        {
+                            arrayFilters:
+                                [{ "sess.name": req.body.session },
+                                { "term.name": req.body.term },
+                                { "stud.name": std[i].name }]
+                        }
+                    )
+                }
+            }
+        }
+
+        res.status(200).send({ success: true });
 
     } catch (error) {
         return res.status(500).send({
@@ -1403,6 +1456,7 @@ module.exports = {
     getSubjectsResultsList,
     getSubjectsResults,
     getStudentResults,
+    setStudentFees,
     updateSubjectsResults,
     updateCurrentTerm,
     updateResultStatus,

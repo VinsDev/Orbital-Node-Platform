@@ -97,7 +97,7 @@ const profile = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
         var stdIndex = school_data.sessions[lses].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
 
-        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex], results_status: school_data.sessions[0].terms[0].results });
+        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex], c_term: school_data.sessions[lses].current_term.toUpperCase(), results_status: school_data.sessions[0].terms[0].results });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
