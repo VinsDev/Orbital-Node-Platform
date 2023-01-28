@@ -78,7 +78,12 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#changePasswordModal" data-bs-toggle="modal">
+                <i class="bi bi-grid"></i>
+                <span>Change Login Password</span>
+              </a>
+            </li>
             <li>
               <a class="dropdown-item d-flex align-items-center" href="/admin">
                 <i class="bi bi-box-arrow-right"></i>
@@ -282,10 +287,76 @@
         </div>
       </div>
     </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">Change Password</h5>
+            <button class="close" data-bs-dismiss="modal"
+              style="border: none; background-color: transparent;">&times;</button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/changePassword"
+              id="passwordForm">
+              <div class="col-12">
+                <label for="yourName" class="form-label">Old Password</label>
+                <input type="text" name="oldPass" class="form-control" id="old-psw" required>
+                <div class="invalid-feedback">Please, enter your old password</div>
+              </div>
+              <div class="col-12">
+                <label for="yourName" class="form-label">New Password</label>
+                <input type="text" name="newPass" class="form-control" id="new-psw" required>
+                <div class="invalid-feedback">Please, the new password</div>
+              </div>
+              <button type="submit" id="btnSubmit" style="display: none;"></button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="create" onclick="$('#btnSubmit').click()">Change</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <script>
       $("#create").on("click", function (e) {
         $('#btnSubmit').click()
       });
+
+      $(document).ready(function () {
+        $("#passwordForm").submit(function (event) {
+          event.preventDefault();
+          var form = $(this);
+          var action = form.attr('action');
+          var formData = form.serialize();
+          $.ajax({
+            type: "POST",
+            url: action,
+            data: formData,
+            success: function (data) {
+              if (data.success) {
+                $(".modal-body").html("<h5>Your password was changes successfully.");
+                setTimeout(function () {
+                  window.location.href = "/admin";
+                }, 2000);
+              } else {
+                alert("The Old Password you entered is invalid! Try again.");
+                setTimeout(function () {
+                  location.reload();
+                }, 2000);
+              }
+            },
+            error: function (error) {
+              alert('Oops! Somerhing happened. Pls try again later');
+            }
+          });
+        });
+
+      })
     </script>
 
   </main><!-- End #main -->

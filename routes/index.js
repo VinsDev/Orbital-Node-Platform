@@ -47,6 +47,7 @@ let routes = app => {
   router.post("/admin/:sname/subjects/delete", uploadController.deleteSubject);
   router.post("/admin/:sname/student-info/delete", uploadController.deleteStudent);
   router.post("/admin/:sname/updateCurrentTerm", uploadController.updateCurrentTerm);
+  router.post("/admin/:sname/changePassword", uploadController.updateAdminPassword);
   router.post("/admin/:sname/updateTermDates", uploadController.updateTermDates);
   router.post("/admin/:sname/updateResultStatus", uploadController.updateResultStatus);
   router.post("/admin/login", urlencodedParser, uploadController.login);
