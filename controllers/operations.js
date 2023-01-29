@@ -69,6 +69,7 @@ const schoolRegForm = async (req, res, url) => {
                 fees: req.body.fees,
                 e_register: req.body.e_register,
                 activation: req.body.activation.trim(),
+                agent: regAgent.body.agent.trim(),
                 reg_date: date_obj_converter(st),
                 nodes: 1
             },
@@ -163,7 +164,9 @@ const uploadRegForm = async (req, res) => {
             subject: req.body.name.toUpperCase() + ' REGISTRATION NOTICE!',
             text: `The above metioned school has registered to Orbital Node Platform and an Automatic message has been sent to them already.
 
-            You can go ahead and check from your database if they were referred by one of your agents.
+            Referred by: ${req.body.agent}
+
+            If the above field is empty or 'null', it means that no agent referral code was used in registering ${req.body.name.toUpperCase()}.
             `
         }
 

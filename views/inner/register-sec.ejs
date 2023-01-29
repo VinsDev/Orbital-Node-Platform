@@ -156,6 +156,11 @@
       </div>
 
       <div class="form-group">
+        <label id="email-label" for="email">Agent Referral Code <span class="clue">(optional)</span></label>
+        <input type="text" name="agent" id="agent" class="form-control" placeholder="Type in a referral code" />
+      </div>
+
+      <div class="form-group">
         <label id="email-label" for="email">Activation PIN</label>
         <input type="text" name="activation" id="activation" class="form-control"
           placeholder="Type in your school activation PIN" required />
@@ -199,28 +204,28 @@
       }
     }
    /*  function payWithPaystack() {
-         var ref = "ref" + Math.random().toString(16).slice(2);
-         var handler = PaystackPop.setup({
-           key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
-           email: document.getElementById('email').value,
-           amount: 7000 * 100,
-           currency: 'NGN',
-           ref: ref,
-           callback: function (response) {
-             var reference = response.reference;
-             $.ajax({
-               url: 'verify_transaction?reference=' + response.reference,
-               method: 'get',
-               success: function (data) {
-                 subBtn.click();
-               }
-             });
-           },
-           onClose: function () {
-           },
-         });
-         handler.openIframe();
-       } */
+          var ref = "ref" + Math.random().toString(16).slice(2);
+          var handler = PaystackPop.setup({
+            key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
+            email: document.getElementById('email').value,
+            amount: 7000 * 100,
+            currency: 'NGN',
+            ref: ref,
+            callback: function (response) {
+              var reference = response.reference;
+              $.ajax({
+                url: 'verify_transaction?reference=' + response.reference,
+                method: 'get',
+                success: function (data) {
+                  subBtn.click();
+                }
+              });
+            },
+            onClose: function () {
+            },
+          });
+          handler.openIframe();
+        } */
   </script>
   <!-- <script src="https://js.paystack.co/v1/inline.js"></script> -->
 </body>
