@@ -157,7 +157,25 @@ const uploadRegForm = async (req, res) => {
             Orbital Node Technologies.`
         };
 
+        var mailOptions2 = {
+            from: 'orbitaltech32@gmail.com',
+            to: 'orbitaltech32@gmail.com',
+            subject: req.body.name.toUpperCase() + ' REGISTRATION NOTICE!',
+            text: `The above metioned school has registered to Orbital Node Platform and an Automatic message has been sent to them already.
+
+            You can go ahead and check from your database if they were referred by one of your agents.
+            `
+        }
+
         transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+
+        transporter.sendMail(mailOptions2, function (error, info) {
             if (error) {
                 console.log(error);
             } else {
@@ -1612,14 +1630,12 @@ function htremarkHelper(score) {
         }
     }
 }
-
 function date_obj_converter(date) {
     var mm = ((date.getMonth() + 1) >= 10) ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1);
     var dd = ((date.getDate()) >= 10) ? (date.getDate()) : '0' + (date.getDate());
     var yyyy = date.getFullYear();
     return yyyy + "-" + mm + "-" + dd;
 }
-
 function position_qualifier(pos) {
     if (p(pos, 1) || p(pos, 21) || p(pos, 31) || p(pos, 41) || p(pos, 51) || p(pos, 61) || p(pos, 71) || p(pos, 81) || p(pos, 91) || p(pos, 101) || p(pos, 121) || p(pos, 131) || p(pos, 141) || p(pos, 151) || p(pos, 161) || p(pos, 171) || p(pos, 181) || p(pos, 191) || p(pos, 201)) {
         return pos + "ST";
@@ -1640,11 +1656,9 @@ function position_qualifier(pos) {
         }
     }
 }
-
 function p(pos, num) {
     if (pos === num) { return true; } else { return false; }
 }
-
 function btw(p, a, b) {
     if (p >= a && p <= b) { return true; } else { return false; }
 }
@@ -1684,7 +1698,6 @@ function available_nodes(num) {
         return "no";
     }
 }
-
 function getRandomCharacters() {
     var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var result = "";
