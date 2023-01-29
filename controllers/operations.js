@@ -182,6 +182,7 @@ const uploadRegForm = async (req, res) => {
 const regAgent = async (req, res) => {
     try {
 
+        var code = getRandomCharacters();
         var data = {
             name: req.body.name,
             email: req.body.email,
@@ -190,6 +191,7 @@ const regAgent = async (req, res) => {
             bank: req.body.bank,
             about: req.body.about,
             state: req.body.state,
+            code: code
         }
 
         await mongoClient.connect();
@@ -208,10 +210,15 @@ const regAgent = async (req, res) => {
         var mailOptions = {
             from: 'orbitaltech32@gmail.com',
             to: req.body.email.trim(),
-            subject: 'CONGRATULATIONS,' + req.body.name + ' !',
+            subject: 'CONGRATULATIONS, ' + req.body.name + ' !',
             text: `You have successfully registered as an Orbital Node agent.
 
-            Join the whatsapp group chat throught the link below and get on board with our agent operation.
+            Join the whatsapp group chat throught the link below and get on board with our agent operation:
+            https://chat.whatsapp.com/DdOvMKvdMX6KHZfmkIYBEz
+
+            Your agent referral code is: ${code}
+
+            You can use it to register schools and once we verify your referral code on the registered school, we will send you your commision.
 
             Welcome to the team.
             
@@ -1676,4 +1683,13 @@ function available_nodes(num) {
     else {
         return "no";
     }
+}
+
+function getRandomCharacters() {
+    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var result = "";
+    for (var i = 0; i < 6; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
 }
