@@ -76,6 +76,7 @@ let routes = app => {
   router.get("/admin/:sname/fees-info", pagesController.fees_info);
   router.get("/admin/:sname/student-info", pagesController.student_info);
   router.get("/admin/:sname/student-fees", pagesController.student_fees);
+  router.get("/admin/:sname/blue-print", pagesController.blue_print);
   router.get("/admin/:sname/student-register", pagesController.student_register);
   router.get("/admin/:sname/continous-assessments", pagesController.continous_assessments);
   router.get("/admin/:sname/student-results", pagesController.student_results);

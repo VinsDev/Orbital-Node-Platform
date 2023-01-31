@@ -165,8 +165,9 @@
         <input type="text" name="activation" id="activation" class="form-control"
           placeholder="Type in your school activation PIN" required />
       </div>
-      <p>Please ensure that the activation PIN you are typing in is Correct because your School can be removed if our
-        systems dont Authenticate the PIN entered. Thanks</p>
+      <p>Please ensure that the activation PIN you are typing in is Correct because your School will not be registered
+        if our
+        system is unable to Authenticate the PIN you entered. Thanks</p>
       <button type="submit" id="sub" style="display: none;"></button>
     </form>
     <div class="form-group">
@@ -204,28 +205,28 @@
       }
     }
    /*  function payWithPaystack() {
-          var ref = "ref" + Math.random().toString(16).slice(2);
-          var handler = PaystackPop.setup({
-            key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
-            email: document.getElementById('email').value,
-            amount: 7000 * 100,
-            currency: 'NGN',
-            ref: ref,
-            callback: function (response) {
-              var reference = response.reference;
-              $.ajax({
-                url: 'verify_transaction?reference=' + response.reference,
-                method: 'get',
-                success: function (data) {
-                  subBtn.click();
-                }
-              });
-            },
-            onClose: function () {
-            },
-          });
-          handler.openIframe();
-        } */
+           var ref = "ref" + Math.random().toString(16).slice(2);
+           var handler = PaystackPop.setup({
+             key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f',
+             email: document.getElementById('email').value,
+             amount: 7000 * 100,
+             currency: 'NGN',
+             ref: ref,
+             callback: function (response) {
+               var reference = response.reference;
+               $.ajax({
+                 url: 'verify_transaction?reference=' + response.reference,
+                 method: 'get',
+                 success: function (data) {
+                   subBtn.click();
+                 }
+               });
+             },
+             onClose: function () {
+             },
+           });
+           handler.openIframe();
+         } */
   </script>
   <!-- <script src="https://js.paystack.co/v1/inline.js"></script> -->
 </body>

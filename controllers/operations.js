@@ -69,7 +69,7 @@ const schoolRegForm = async (req, res, url) => {
                 fees: req.body.fees,
                 e_register: req.body.e_register,
                 activation: req.body.activation.trim(),
-                agent: regAgent.body.agent.trim(),
+                agent: req.body.agent.trim(),
                 reg_date: date_obj_converter(st),
                 nodes: 1
             },

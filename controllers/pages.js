@@ -301,6 +301,24 @@ const student_fees = async (req, res) => {
         });
     }
 };
+const blue_print = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        return res.render("../admin/blue-print", {
+            school_obj: school_data.school_info,
+            sessions_data: school_data.sessions,
+            class_data: school_data.classes
+        });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+};
 const student_register = async (req, res) => {
     try {
         var dt = new Date();
@@ -524,6 +542,7 @@ module.exports = {
     fees_info,
     student_info,
     student_fees,
+    blue_print,
     student_register,
     continous_assessments,
     student_results,
