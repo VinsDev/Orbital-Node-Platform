@@ -117,7 +117,7 @@ const uploadRegForm = async (req, res) => {
             service: 'gmail',
             auth: {
                 user: 'orbitaltech32@gmail.com',
-                pass: '207orbital'
+                pass: 'kcmrreiekjdbfzlk'
             }
         });
 
