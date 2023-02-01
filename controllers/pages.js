@@ -196,9 +196,9 @@ const dashboard = async (req, res) => {
                 school_obj: school_data.school_info,
                 students: "Not set yet",
                 nodes: school_data.school_info.nodes,
-                session: "Unknown",
-                current_term: "Unknown",
-                results_status: "false",
+                session: "Not set yet",
+                current_term: "null",
+                results_status: "null",
                 today: date
             });
         }
