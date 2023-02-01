@@ -313,18 +313,11 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="create">Create</button>
+            <button type="button" class="btn btn-primary" onclick=" $('#btnSubmit').click()">Create</button>
           </div>
-
         </div>
       </div>
     </div>
-    <script>
-      $("#create").on("click", function (e) {
-        $('#btnSubmit').click()
-      });
-    </script>
-
 
   </main><!-- End #main -->
 
@@ -388,10 +381,8 @@
         });
       });
 
-    })
-  </script>
+    });
 
-  <script>
     function del(id) {
       var sessionId = '#n' + id;
 
@@ -410,16 +401,16 @@
       })
     }
   </script>
+
   <!-- Vendor JS Files -->
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
-
-  <script
-    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
 
 
