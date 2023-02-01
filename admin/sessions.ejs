@@ -283,8 +283,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary"
-                onclick="$('#pswdSubmit').click()">Change</button>
+              <button type="button" class="btn btn-primary" onclick="$('#pswdSubmit').click()">Change</button>
             </div>
 
           </div>
@@ -367,20 +366,31 @@
           }
         });
       });
+      $("#sessionForm").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serialize();
+        $(".modal-content").LoadingOverlay("show");
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            location.reload();
+          },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            alert('Something went wrong. Please try again.');
+          }
+        });
+      });
 
     })
-
   </script>
 
-  <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
-  <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="../../admin/assets/js/main.js"></script>
-
-  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
   <script>
     function del(id) {
       var sessionId = '#n' + id;
@@ -400,6 +410,18 @@
       })
     }
   </script>
+  <!-- Vendor JS Files -->
+  <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
+  <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../../admin/assets/js/main.js"></script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+
 
 </body>
 

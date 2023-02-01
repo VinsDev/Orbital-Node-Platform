@@ -835,7 +835,7 @@ const createSession = async (req, res) => {
             { $push: { sessions: session_model } }
         );
 
-        return res.redirect(303, '/admin/' + req.params.sname + '/sessions');
+        return res.send({success: true});
     } catch {
         console.log(error);
     }
