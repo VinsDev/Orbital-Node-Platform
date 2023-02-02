@@ -238,7 +238,7 @@
             <div class="row md-3">
               <label class="col-sm-5 col-form-label">Session</label>
               <div class="col-sm-8">
-                <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+                <select class="form-select" aria-label="Session" id="sessionSelector" onchange="updateData()">
                   <% for(var i=0; i < sessions_data.length; i++){ %>
                     <option value="<%= sessions_data[i].name %>">
                       <%= sessions_data[i].name %>
@@ -251,7 +251,7 @@
             <div class="row md-1">
               <label class="col-sm-5 col-form-label">Term</label>
               <div class="col-sm-8">
-                <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+                <select class="form-select" aria-label="Term" id="termSelector" onchange="updateData()">
                   <option value="first" selected>First</option>
                   <option value="second">Second</option>
                   <option value="third">Third</option>
@@ -262,7 +262,7 @@
             <div class="row md-1">
               <label class="col-sm-5 col-form-label">Class</label>
               <div class="col-sm-8">
-                <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
+                <select class="form-select" aria-label="Class" id="classSelector" onchange="updateData()">
                   <% for(var i=0; i < class_data.length; i++){ %>
                     <option value="<%= class_data[i].name %>">
                       <%= class_data[i].name %>
@@ -292,32 +292,30 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <div id="field">
-                      <%counter=1;%>
-                        <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                          <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                            <tr
-                              data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
-                              <th scope="row">
-                                <%=counter %>
-                              </th>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].name %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].gender %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].dob %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].class %>
-                              </td>
-                            </tr>
-                            <%counter++;%>
+                    <%counter=1;%>
+                      <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                        <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                          <tr
+                            data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
+                            <th scope="row">
+                              <%=counter %>
+                            </th>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].name %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].gender %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].dob %>
+                            </td>
+                            <td>
+                              <%= sessions_data[0].terms[0].students[j].class %>
+                            </td>
+                          </tr>
+                          <%counter++;%>
+                            <% } %>
                               <% } %>
-                                <% } %>
-                    </div>
                   </tbody>
                 </table>
                 <!-- End Table with hoverable rows -->
@@ -330,19 +328,18 @@
       </section>
       <% } else { %>
         <div class="text-center">
-          <p>Please ensure that you follow the setup instructions on the user manual in the order stated in other to
-            view the Students Results .</p><br>
+          <p>You have not completed the required steps to setup your admin panel hence you will not be able to preview
+            students results from the database. Please follow the steps highlighted below:</p><br>
           <ul>
             <li>Create a session</li>
-            <li>Set term starting and Ending dates in the E-register section under Students</li>
+            <li>Set term starting and Ending dates in the Students >> E-register section</li>
             <li>Create Classes</li>
-            <li>Add all subjects to classes</li>
-            <li>Add students to class</li>
+            <li>Add <b>all</b> subjects to classes</li>
+            <li>Add students to class from Student >> Student Information</li>
           </ul>
-          <i>Please note that if you do not follow the above instructions in the order stated, you could possibly run
-            into issues
-            while
-            working with our system.</i>
+          <i>Please take note that if you do not follow the above instructions in the order stated above, you could
+            possibly encounter
+            problems while working with our system.</i>
         </div>
         <% } %>
   </main><!-- End #main -->
@@ -394,34 +391,35 @@
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
 
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
-  <!-- Jquery -->
-  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
   <script>
-    function sendData() {
-      const field = document.getElementById('field');
-
-      fetch('/admin/<%= school_obj.name %>/getStudents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+    function updateData() {
+      $.LoadingOverlay("show");
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getStudents',
+        type: 'POST',
+        data: JSON.stringify({
           session: $("#sessionSelector").val(),
           class: $("#classSelector").val(),
           term: $("#termSelector").val(),
-        })
-      }).then(res => res.json()).then(data => {
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          var payload = data.payload;
+          var content = '';
+          if (payload < 1) {
+            $('#myTable tbody').html('Students not added yet');
+            return;
+          }
 
-        var payload = data.payload;
-        var content = '';
-        if (payload < 1) {
-          $('#myTable tbody').html('Students not added yet');
-          return;
-        }
-
-        payload.forEach((item, index) => {
-          content += `
+          payload.forEach((item, index) => {
+            content += `
                    <tr data-url="/admin/<%= school_obj.name %>/result/${item.class}/${item.name}">
                      <th scope="row">${index + 1}</th>
                      <td>${item.name}</td>
@@ -429,10 +427,13 @@
                      <td>${item.dob}</td>
                      <td>${item.class}</td>
                    </tr>`
-        });
-        $('#myTable tbody').html(content);
-        update();
-
+          });
+          $('#myTable tbody').html(content);
+          update();
+        },
+        complete: function () {
+          $.LoadingOverlay("hide", true);
+        },
       });
       return;
     }
@@ -449,9 +450,7 @@
         };
       }
     }
-  </script>
 
-  <script>
     $(document).ready(function () {
       $("#passwordForm").submit(function (event) {
         event.preventDefault();
@@ -481,14 +480,10 @@
         });
       });
 
-    })
+    });
 
-  </script>
-
-  <script>
     var rows = document.getElementsByTagName('tr'),
       url;
-
     for (var i = 0, len = rows.length; i < len; i++) {
       if (i === 0) { continue; }
       rows[i].onclick = function () {
@@ -497,6 +492,7 @@
       };
     }
   </script>
+
 </body>
 
 </html>

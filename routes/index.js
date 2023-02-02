@@ -11,6 +11,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 let routes = app => {
   // LANDING PAGES . . .
+  router.get("/#/delete-images", uploadController.deleteImages);
   router.get("/", homeController.first);
   router.get("/home", homeController.home);
   router.get("/about", pagesController.about);

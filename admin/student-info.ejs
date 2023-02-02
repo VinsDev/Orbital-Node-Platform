@@ -281,45 +281,57 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Students</h5>
+              <b>To delete a student, double click on the Student's row.</b>
+              <div style="height: 20px;"></div>
+              <% if(sessions_data[0].terms[0].students.length<1){ %>
+                <div class="text-center">
+                  <h6>
+                    No student added to selected class yet. You can check other classes or add students to this
+                    one by pressing the button below.
+                  </h6>
+                </div>
+                <% } else { %>
+                  <!-- Table with hoverable rows -->
+                  <table class="table table-hover" id="myTable">
+                    <thead>
+                      <tr>
+                        <th scope="col">S/N</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">DOB</th>
+                        <th scope="col">Class</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <%counter=1;%>
 
-              <!-- Table with hoverable rows -->
-              <table class="table table-hover" id="myTable">
-                <thead>
-                  <tr>
-                    <th scope="col">S/N</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">DOB</th>
-                    <th scope="col">Class</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <%counter=1;%>
-                    <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                      <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                        <tr data-st-id="<%=sessions_data[0].terms[0].students[j].name%>" class="stdRow">
-                          <th scope="row">
-                            <%=counter %>
-                          </th>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].name %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].gender %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].dob %>
-                          </td>
-                          <td>
-                            <%= sessions_data[0].terms[0].students[j].class %>
-                          </td>
-                        </tr>
-                        <%counter++;%>
-                          <% } %>
-                            <% } %>
-                </tbody>
-              </table>
-              <!-- End Table with hoverable rows -->
+                        <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
+                          <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
+                            <tr data-st-id="<%=sessions_data[0].terms[0].students[j].name%>" class="stdRow">
+                              <th scope="row">
+                                <%=counter %>
+                              </th>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].name %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].gender %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].dob %>
+                              </td>
+                              <td>
+                                <%= sessions_data[0].terms[0].students[j].class %>
+                              </td>
+                            </tr>
+
+                    </tbody>
+                  </table>
+                  <!-- End Table with hoverable rows -->
+                  <%counter++;%>
+                    <% } %>
+                      <% } %>
+                        <% } %>
             </div>
           </div>
           <div class="text-center">
@@ -509,19 +521,18 @@
 
       <% } else { %>
         <div class="text-center">
-          <p>Please ensure that you follow the setup instructions on the user manual in the order stated in other to
-            view the students info.</p><br>
+          <p>You have not completed the required steps to setup your admin panel hence you will not be able to view or
+            add students to the database. Please follow the steps highlighted below:</p><br>
           <ul>
             <li>Create a session</li>
-            <li>Set term starting and Ending dates in the E-register section under Students</li>
+            <li>Set term starting and Ending dates in the Students >> E-register section</li>
             <li>Create Classes</li>
-            <li>Add all subjects to classes</li>
-            <li>Add students to class</li>
+            <li>Add <b>all</b> subjects to classes</li>
+            <li>Add students to class from Student >> Student Information</li>
           </ul>
-          <i>Please do note that if you do not follow the above instructions in the order stated, you could possibly run
-            into issues
-            while
-            working with our system.</i>
+          <i>Please take note that if you do not follow the above instructions in the order stated above, you could
+            possibly encounter
+            problems while working with our system.</i>
         </div>
         <% } %>
   </main><!-- End #main -->
@@ -551,24 +562,27 @@
 
   <script>
     function updateData() {
-      fetch('/admin/<%= school_obj.name %>/getStudents', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      $.LoadingOverlay("show");
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getStudents',
+        type: 'POST',
+        data: JSON.stringify({
           session: $("#sessionSelector").val(),
           class: $("#classSelector").val(),
           term: $("#termSelector").val(),
-        })
-      }).then(res => res.json()).then(data => {
-        var payload = data.payload;
-        var content = '';
-        if (payload < 1) {
-          $('#myTable tbody').html('Students not added yet');
-          return;
-        }
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          var payload = data.payload;
+          var content = '';
+          if (payload < 1) {
+            $('#myTable tbody').html('No student added to selected class yet. You can check other classes or add students to thisone by pressing the button below.');
+            return;
+          }
 
-        payload.forEach((item, index) => {
-          content += `
+          payload.forEach((item, index) => {
+            content += `
                   <tr data-st-id="${item.name}" class="stdRow">
                     <th scope="row">${index + 1}</th>
                     <td>
@@ -584,8 +598,12 @@
                       ${item.class}
                     </td>
                   </tr>`
-        });
-        $('#myTable tbody').html(content);
+          });
+          $('#myTable tbody').html(content);
+        },
+        complete: function () {
+          $.LoadingOverlay("hide", true);
+        },
       });
       return;
     }
@@ -602,8 +620,7 @@
           });
           container.html(checkboxes);
         }
-      })
-
+      });
 
       $("#passwordForm").submit(function (event) {
         event.preventDefault();
@@ -629,7 +646,7 @@
             }
           },
           complete: function () {
-            $(".modal-body").LoadingOverlay("hide", true);
+            $(".modal-content").LoadingOverlay("hide", true);
           },
           error: function (error) {
             alert('Oops! Somerhing happened. Pls try again later');
@@ -651,7 +668,7 @@
             location.reload();
           },
           complete: function () {
-            $(".modal-body").LoadingOverlay("hide", true);
+            $(".modal-content").LoadingOverlay("hide", true);
           },
           error: function (error) {
             alert('Oops! Something happened. Pls try again');
@@ -735,7 +752,7 @@
           }
         },
         complete: function () {
-          $(".modal-body").LoadingOverlay("hide", true);
+          $(".modal-content").LoadingOverlay("hide", true);
         },
         error: function (error) {
           alert("Something happened !");

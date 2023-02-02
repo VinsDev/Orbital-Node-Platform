@@ -4,6 +4,8 @@ const dbConfig = require("../config/db");
 
 const MongoClient = require("mongodb").MongoClient;
 const GridFSBucket = require("mongodb").GridFSBucket;
+const ObjectId = require('mongodb').ObjectId;
+
 var PdfPrinter = require('pdfmake');
 var nodemailer = require('nodemailer');
 
@@ -16,6 +18,49 @@ const nweb = "https://www.orbitalnodetechnologies.com/news/";
 const nbaseUrl = nweb;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
+
+
+const deleteImages = async (req, res) => {
+    const imageIds = [
+        new ObjectId("63d8fdb6c853fccd58dc6fcf"),
+        new ObjectId("63d8fdb7c853fccd58dc6fd1"),
+        new ObjectId("63d8fdb7c853fccd58dc6fd2"),
+        new ObjectId("63d8fdb7c853fccd58dc6fd5"),
+        new ObjectId("63d8fdb7c853fccd58dc6fd6"),
+        new ObjectId("63d905a5c853fccd58dc6fd9"),
+        new ObjectId("63d905a6c853fccd58dc6fdb"),
+        new ObjectId("63d905a7c853fccd58dc6fdd"),
+        new ObjectId("63d905a8c853fccd58dc6fdf"),
+        new ObjectId("63d905a9c853fccd58dc6fe1"),
+        new ObjectId("63d90afac853fccd58dc6ffb"),
+        new ObjectId("63d90afac853fccd58dc6ffc"),
+        new ObjectId("63d90afac853fccd58dc6fff"),
+        new ObjectId("63d90afac853fccd58dc7001"),
+        new ObjectId("63d90afac853fccd58dc7002"),
+        new ObjectId("63d90afac853fccd58dc7003"),
+    ];
+    try {
+        var logs = [];
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+
+        const filesCollection = database.collection('photos.files');
+        const chunksCollection = database.collection('photos.chunks');
+
+        imageIds.forEach(async (imageId) => {
+            await filesCollection.deleteOne({ _id: imageId });
+            await chunksCollection.deleteMany({ files_id: imageId });
+            logs.push(`Image with id "${imageId}" deleted successfully.`);
+            console.log(`Image with id "${imageId}" deleted successfully.`);
+        });
+
+        return res.send('Success');
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 // LANDING . . .
 const getSchools = async (req, res) => {
@@ -1353,7 +1398,7 @@ const updateTermDates = async (req, res) => {
                     [{ "sess.name": session }, { "term.name": school_data.sessions[lses].current_term }]
             });
 
-        return res.redirect(303, '/admin/' + req.params.sname + '/student-register');
+        return res.send({ success: true });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1594,6 +1639,7 @@ const updateStudentsAttendance = async (req, res) => {
 }
 
 module.exports = {
+    deleteImages,
     uploadRegForm,
     regAgent,
     verifyTransaction,

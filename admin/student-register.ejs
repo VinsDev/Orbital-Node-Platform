@@ -28,6 +28,9 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
+
 </head>
 
 <body>
@@ -43,13 +46,7 @@
       <i class="bi bi-list toggle-sidebar-btn"></i>
     </div><!-- End Logo -->
 
-    <!--  <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="#">
-        <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-        <button type="submit" title="Search"><i class="bi bi-search"></i></button>
-      </form>
-    </div> -->
-    <!-- End Search Bar -->
+
     <div class="d-flex align-items-center justify-content-between tex">
       <span class="d-none d-lg-block">
         <div class="pad">Manage the contents of your school Website and Database</div>
@@ -250,7 +247,7 @@
               <h5 class="card-title">Current Term: <%= current_term %>
               </h5>
               <% if(start_date==="null" || stop_date==="null" ) { %>
-                <form action="/admin/<%= school_obj.name %>/updateTermDates" method="post">
+                <form action="/admin/<%= school_obj.name %>/updateTermDates" method="post" id="registerForm">
                   <div class="row">
                     <div class="col-xxl-4">
                       <label for="yourEmail" class="form-label">Starting Date</label>
@@ -399,8 +396,8 @@
                   </div>
 
                   <div class="text-center">
-                    <i>For a more detailed breakdown of Students Attendance, please refer to the Orbital Node Teachers
-                      App.</i>
+                    <!-- <i>For a more detailed breakdown of Students Attendance, please refer to the Orbital Node Teachers
+                      App.</i> -->
                   </div>
 
                   <% } %>
@@ -454,6 +451,16 @@
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
 
+
+  <!-- Vendor JS Files -->
+  <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="../../admin/assets/js/main.js"></script>
+
   <script>
     $(document).ready(function () {
       $("#passwordForm").submit(function (event) {
@@ -484,16 +491,31 @@
         });
       });
 
+      $("#registerForm").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serialize();
+        $.LoadingOverlay("show");
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            location.reload();
+          },
+          complete: function () {
+            $.LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            alert('Something went wrong. Please try again.');
+          }
+        });
+      });
+
     })
 
   </script>
-
-  <!-- Vendor JS Files -->
-  <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
-
-  <!-- Template Main JS File -->
-  <script src="../../admin/assets/js/main.js"></script>
 
 </body>
 
