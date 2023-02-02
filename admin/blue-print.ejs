@@ -177,7 +177,7 @@
 
                 <li>
                     <a href="student-results">
-                        <i class="bi bi-circle"></i><span>Students Results</span>
+                        <i class="bi bi-circle"></i><span>Students Results Preview</span>
                     </a>
                 </li>
             </ul>
@@ -236,56 +236,13 @@
             </nav>
         </div><!-- End Page Title -->
 
-        <!-- REFERENCE SELECTOR -->
-        <div class="card">
-            <div class="internal">
-                <div class="rrr">
-                    <div class="row md-3">
-                        <label class="col-sm-5 col-form-label">Session</label>
-                        <div class="col-sm-8">
-                            <select class="form-select" aria-label="Session" id="sessionSelector"
-                                onchange="updateData()">
-                                <% for(var i=0; i < sessions_data.length; i++){ %>
-                                    <option value="<%= sessions_data[i].name %>">
-                                        <%= sessions_data[i].name %>
-                                    </option>
-                                    <% } %>
-                            </select>
-                        </div>
-                    </div>
 
-                    <div class="row md-1">
-                        <label class="col-sm-5 col-form-label">Term</label>
-                        <div class="col-sm-8">
-                            <select class="form-select" aria-label="Term" id="termSelector" onchange="updateData()">
-                                <option value="first" selected>First</option>
-                                <option value="second">Second</option>
-                                <option value="third">Third</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row md-1">
-                        <label class="col-sm-5 col-form-label">Class</label>
-                        <div class="col-sm-8">
-                            <select class="form-select" aria-label="Class" id="classSelector" onchange="updateData()">
-                                <% for(var i=0; i < class_data.length; i++){ %>
-                                    <option value="<%= class_data[i].name %>">
-                                        <%= class_data[i].name %>
-                                    </option>
-                                    <% } %>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <section class="section">
             <div class="col-md-12 offset-md-0">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Students</h5>
+                        <h5 class="card-title">Assessments Blueprint</h5>
                         <div id="contents"></div>
                     </div>
                 </div>
@@ -295,6 +252,7 @@
                 <button class="btn btn-primary" onclick='$("#subBtn").click()'>Save Changes</button>
             </div>
         </section>
+
         <!-- Change Password Modal -->
         <div class="modal fade" id="changePasswordModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -379,7 +337,7 @@
                     }
                 });
             });
-            updateData();
+
             $("#passwordForm").submit(function (event) {
                 event.preventDefault();
                 var form = $(this);

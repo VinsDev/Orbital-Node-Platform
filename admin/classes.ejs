@@ -31,8 +31,6 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
-  <!-- <script src="../../../admin/assets/js/jquery-3.6.1.js"></script> -->
-
   <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
@@ -174,7 +172,7 @@
 
         <li>
           <a href="student-results">
-            <i class="bi bi-circle"></i><span>Students Results</span>
+            <i class="bi bi-circle"></i><span> Students Results Preview</span>
           </a>
         </li>
       </ul>
@@ -235,24 +233,34 @@
 
     <section class="section">
       <div class="columns">
-        <% for(var i=0; i < class_data.length; i++){ %>
-          <div class="col-md-10 offset-md-1">
-            <div class="card" style="position: relative;">
-              <div class="d-flex justify-content-between">
-                <h5 class="session" id="nb_<%=i%>">
-                  <%= class_data[i].name %>
-                </h5>
-                <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
-                  <button class="btn btn-primary" id="b_<%=i%>" onclick="del(this.id)">Delete</button>
+        <% if (class_data.length===0){ %>
+          <div class="text-center">
+            <h5 class="session">
+              No Classes added yet. Click the button below to create one.
+            </h5>
+          </div>
+
+          <% } else { %>
+            <% for(var i=0; i < class_data.length; i++){ %>
+              <div class="col-md-10 offset-md-1">
+                <div class="card" style="position: relative;">
+                  <div class="d-flex justify-content-between">
+                    <h5 class="session" id="nb_<%=i%>">
+                      <%= class_data[i].name %>
+                    </h5>
+                    <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
+                      <button class="btn btn-primary" id="b_<%=i%>" onclick="del(this.id)">Delete</button>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <% } %>
+              <% } %>
+                <% } %>
 
-            <div class="text-center">
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createClassModal">Create</button>
-            </div>
+                  <div class="text-center">
+                    <button class="btn btn-primary" data-bs-toggle="modal"
+                      data-bs-target="#createClassModal">Create Class</button>
+                  </div>
       </div>
     </section>
 
@@ -267,7 +275,7 @@
           </div>
           <div class="modal-body">
             <form class="row g-3 needs-validation class-form" method="post"
-              action="/admin/<%= school_obj.name %>/classes">
+              action="/admin/<%= school_obj.name %>/classes" id="classForm">
               <div class="col-12">
                 <label for="yourName" class="form-label">Class Name</label>
                 <input type="text" name="name" class="form-control" id="name" required>
@@ -323,56 +331,7 @@
       </div>
     </div>
 
-    <script>
-      $(document).ready(function () {
-        $("#passwordForm").submit(function (event) {
-          event.preventDefault();
-          var form = $(this);
-          var action = form.attr('action');
-          var formData = form.serialize();
-          $.ajax({
-            type: "POST",
-            url: action,
-            data: formData,
-            success: function (data) {
-              if (data.success) {
-                $(".modal-body").html("<h5>Your password was changes successfully.");
-                setTimeout(function () {
-                  window.location.href = "/admin";
-                }, 2000);
-              } else {
-                alert("The Old Password you entered is invalid! Try again.");
-                setTimeout(function () {
-                  location.reload();
-                }, 2000);
-              }
-            },
-            error: function (error) {
-              alert('Oops! Somerhing happened. Pls try again later');
-            }
-          });
-        });
 
-      })
-
-      function del(id) {
-        var classId = '#n' + id;
-
-        $.ajax({
-          url: window.location.href + '/delete',
-          type: 'POST',
-          data: {
-            class: $(classId).text().trim()
-          },
-          success: function (data) {
-            location.reload();
-          },
-          error: function (error) {
-            alert("Something happened !")
-          }
-        })
-      }
-    </script>
 
   </main><!-- End #main -->
 
@@ -391,8 +350,83 @@
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
 
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $("#passwordForm").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serialize();
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            if (data.success) {
+              $(".modal-body").html("<h5>Your password was changes successfully.");
+              setTimeout(function () {
+                window.location.href = "/admin";
+              }, 2000);
+            } else {
+              alert("The Old Password you entered is invalid! Try again.");
+              setTimeout(function () {
+                location.reload();
+              }, 2000);
+            }
+          },
+          error: function (error) {
+            alert('Oops! Something happened. Pls try again later');
+          }
+        });
+      });
+      $("#classForm").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serialize();
+        $(".modal-content").LoadingOverlay("show");
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            location.reload();
+          },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            alert('Oops! Something happened. Pls try again');
+          }
+        });
+      });
+
+    })
+
+    function del(id) {
+      var classId = '#n' + id;
+
+      $.ajax({
+        url: window.location.href + '/delete',
+        type: 'POST',
+        data: {
+          class: $(classId).text().trim()
+        },
+        success: function (data) {
+          location.reload();
+        },
+        error: function (error) {
+          alert("Something happened !")
+        }
+      })
+    }
+  </script>
 
 
 </body>

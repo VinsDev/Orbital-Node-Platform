@@ -172,7 +172,7 @@
         </li>
         <li>
           <a href="student-results">
-            <i class="bi bi-circle"></i><span>Students Results</span>
+            <i class="bi bi-circle"></i><span>Students Results Preview</span>
           </a>
         </li>
       </ul>
@@ -240,7 +240,7 @@
                 <div class="row md-3">
                   <label class="col-sm-5 col-form-label">Session</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Session" id="sessionSelector" onchange="sendData()">
+                    <select class="form-select" aria-label="Session" id="sessionSelector" onchange="updateData()">
                       <% for(var i=0; i < sessions_data.length; i++){ %>
                         <option value="<%= sessions_data[i].name %>">
                           <%= sessions_data[i].name %>
@@ -253,7 +253,7 @@
                 <div class="row md-1">
                   <label class="col-sm-5 col-form-label">Term</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Term" id="termSelector" onchange="sendData()">
+                    <select class="form-select" aria-label="Term" id="termSelector" onchange="updateData()">
                       <option value="first" selected>First</option>
                       <option value="second">Second</option>
                       <option value="third">Third</option>
@@ -264,7 +264,7 @@
                 <div class="row md-1">
                   <label class="col-sm-5 col-form-label">Class</label>
                   <div class="col-sm-8">
-                    <select class="form-select" aria-label="Class" id="classSelector" onchange="sendData()">
+                    <select class="form-select" aria-label="Class" id="classSelector" onchange="updateData()">
                       <% for(var i=0; i < class_data.length; i++){ %>
                         <option value="<%= class_data[i].name %>">
                           <%= class_data[i].name %>
@@ -341,7 +341,8 @@
                 style="border: none; background-color: transparent;">&times;</button>
             </div>
             <div class="modal-body">
-              <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/students">
+              <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/students"
+                id="addStudentFormId">
                 <div class="col-12">
                   <label for="yourName" class="form-label">Student Full Name</label>
                   <input type="text" name="name" class="form-control" id="yourName" required>
@@ -408,19 +409,18 @@
 
 
                 <div class="col-12">
-                  <button id="btnSubmit" type="submit" style="display: none;"></button>
+                  <button id="studentSubmit" type="submit" style="display: none;"></button>
                 </div>
               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="create">Create</button>
+              <button type="button" class="btn btn-primary" id="createStudent">Create</button>
             </div>
 
           </div>
         </div>
       </div>
-
 
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nodes" id="nbutt"
         style="display: none;">Nbutt</button>
@@ -473,7 +473,39 @@
         </div>
       </div>
 
+      <!-- Change Password Modal -->
+      <div class="modal fade" id="changePasswordModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Change Password</h5>
+              <button class="close" data-bs-dismiss="modal"
+                style="border: none; background-color: transparent;">&times;</button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/changePassword"
+                id="passwordForm">
+                <div class="col-12">
+                  <label for="yourName" class="form-label">Old Password</label>
+                  <input type="text" name="oldPass" class="form-control" id="old-psw" required>
+                  <div class="invalid-feedback">Please, enter your old password</div>
+                </div>
+                <div class="col-12">
+                  <label for="yourName" class="form-label">New Password</label>
+                  <input type="text" name="newPass" class="form-control" id="new-psw" required>
+                  <div class="invalid-feedback">Please, the new password</div>
+                </div>
+                <button type="submit" id="pswdSubmit" style="display: none;"></button>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" onclick="$('#pswdSubmit').click()">Change</button>
+            </div>
 
+          </div>
+        </div>
+      </div>
 
       <% } else { %>
         <div class="text-center">
@@ -493,39 +525,8 @@
         </div>
         <% } %>
   </main><!-- End #main -->
-  <!-- Change Password Modal -->
-  <div class="modal fade" id="changePasswordModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Change Password</h5>
-          <button class="close" data-bs-dismiss="modal"
-            style="border: none; background-color: transparent;">&times;</button>
-        </div>
-        <div class="modal-body">
-          <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/changePassword"
-            id="passwordForm">
-            <div class="col-12">
-              <label for="yourName" class="form-label">Old Password</label>
-              <input type="text" name="oldPass" class="form-control" id="old-psw" required>
-              <div class="invalid-feedback">Please, enter your old password</div>
-            </div>
-            <div class="col-12">
-              <label for="yourName" class="form-label">New Password</label>
-              <input type="text" name="newPass" class="form-control" id="new-psw" required>
-              <div class="invalid-feedback">Please, the new password</div>
-            </div>
-            <button type="submit" id="btnSubmit" style="display: none;"></button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" id="create" onclick="$('#btnSubmit').click()">Change</button>
-        </div>
 
-      </div>
-    </div>
-  </div>
+
   <!-- ======= Footer ======= -->
   <footer id="footer" class="footer">
     <div class="copyright">
@@ -542,52 +543,14 @@
   <script src="../../admin/assets/vendor/quill/quill.min.js"></script>
   <script src="../../admin/assets/vendor/tinymce/tinymce.min.js"></script>
 
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
-  <!-- Click -->
   <script>
-    $("#create").on("click", function (e) {
-      $.ajax({
-        url: '/admin/<%= school_obj.name %>/getTermStatus/',
-        data: {
-          session: $('#session').val(),
-          term: $('#term').val()
-        },
-        type: 'POST',
-        success: function (data) {
-          if (data.status === "true") {
-            $('#btnSubmit').click();
-          }
-          else {
-            if (data.av_nodes === "yes") {
-              $('#nbutt').click();
-            } else {
-              alert("You do not have available nodes to activate this term. Please purchase more nodes from the Dashboard or Orbital Node Official Website");
-            }
-          }
-        }
-      })
-    });
-
-    function activateTerm() {
-      $.ajax({
-        url: '/admin/<%= school_obj.name %>/activateTerm/',
-        data: {
-          session: $('#session').val(),
-          term: $('#term').val()
-        },
-        type: 'POST',
-        success: function (data) {
-          $('#adstd').click()
-        }
-      })
-    }
-  </script>
-
-  <script>
-    function sendData() {
-
+    function updateData() {
       fetch('/admin/<%= school_obj.name %>/getStudents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -647,6 +610,7 @@
         var form = $(this);
         var action = form.attr('action');
         var formData = form.serialize();
+        $(".modal-content").LoadingOverlay("show");
         $.ajax({
           type: "POST",
           url: action,
@@ -664,15 +628,38 @@
               }, 2000);
             }
           },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
           error: function (error) {
             alert('Oops! Somerhing happened. Pls try again later');
           }
         });
       });
 
-    })
-
-
+      $("#addStudentFormId").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serialize();
+        $(".modal-content").LoadingOverlay("show");
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            location.reload();
+          },
+          complete: function () {
+            $(".modal-body").LoadingOverlay("hide", true);
+          },
+          error: function (error) {
+            alert('Oops! Something happened. Pls try again');
+            location.reload();
+          }
+        });
+      });
+    });
 
     function updateCheckableSubjects() {
       var container = $('.chk_subs');
@@ -696,6 +683,7 @@
 
     // delete student request . . .
     function deleteStudent() {
+      $(".modal-content").LoadingOverlay("show");
       $.ajax({
         url: window.location.href + '/delete',
         type: 'POST',
@@ -706,6 +694,9 @@
         },
         success: function (data) {
           location.reload();
+        },
+        complete: function () {
+          $(".modal-body").LoadingOverlay("hide", true);
         },
         error: function (error) {
           alert("Something happened !")
@@ -719,6 +710,53 @@
       $('#dellbutt').click();
       $("#stname").html('<b id="vins">' + rowId + '</b>');
     });
+
+    // click
+    $("#createStudent").on("click", function (e) {
+      $(".modal-content").LoadingOverlay("show");
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getTermStatus/',
+        data: {
+          session: $('#session').val(),
+          term: $('#term').val()
+        },
+        type: 'POST',
+        success: function (data) {
+          if (data.status === "true") {
+            $('#studentSubmit').click();
+          }
+          else {
+            if (data.av_nodes === "yes") {
+              $('#nbutt').click();
+            } else {
+              alert("You do not have available nodes to activate this term. Please purchase more nodes from the Dashboard or Orbital Node Official Website");
+              location.reload();
+            }
+          }
+        },
+        complete: function () {
+          $(".modal-body").LoadingOverlay("hide", true);
+        },
+        error: function (error) {
+          alert("Something happened !");
+          location.reload();
+        }
+      })
+    });
+
+    function activateTerm() {
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/activateTerm/',
+        data: {
+          session: $('#session').val(),
+          term: $('#term').val()
+        },
+        type: 'POST',
+        success: function (data) {
+          $('#adstd').click()
+        }
+      })
+    }
   </script>
 
 </body>

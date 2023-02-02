@@ -96,16 +96,13 @@
 
     </header><!-- End Header -->
 
-
-
-
     <div class="pagetitle">
         <h1>Term Assessments</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/admin/<%=school_obj.name%>/dashboard">Home</a></li>
-                <li class="breadcrumb-item">English</li>
-                <li class="breadcrumb-item active">PRI 3
+                <li class="breadcrumb-item">Term Assessments</li>
+                <li class="breadcrumb-item active">Student
                 </li>
             </ol>
         </nav>
@@ -161,85 +158,6 @@
                             </b><em> Results</em>
                         </h5>
 
-                        <!-- TABLE LOGIC -->
-                        <script type="text/javascript">
-                            var stdModel = {};
-                            var subjectsRes = [];
-                            $(document).ready(function ($) {
-                                fetch('/admin/<%= school_obj.name %>/getStudentResults', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        name: $("#stdname").text().trim(),
-                                        session: $("#sessionSelector").val(),
-                                        class: $("#cls").text().trim(),
-                                        term: $("#termSelector").val(),
-                                    })
-                                }).then(res => res.json()).then(data => {
-                                    stdModel = data.payload;
-                                    subjectsRes = stdModel.subjects;
-
-                                    //--->create data table > start
-                                    var tbl = '';
-                                    tbl += '<table class="table table-bordered">'
-                                    tbl += '<thead>';
-                                    tbl += '<tr>';
-                                    tbl += '<th>S/N</th>';
-                                    tbl += '<th>Subject</th>';
-                                    tbl += '<th>Total</th>';
-                                    tbl += '<th>Sub. Avr.</th>';
-                                    tbl += '<th>Pos.</th>';
-                                    tbl += '<th>Grade</th>';
-                                    tbl += '</tr>';
-                                    tbl += '</thead>';
-                                    tbl += '<tbody>';
-                                    $.each(subjectsRes, function (index, val) {
-                                        var row_id = index;
-                                        tbl += '<tr row_id="' + row_id + '">';
-                                        tbl += '<td col_name="sn">' + (index + 1) + '</td>';
-                                        tbl += '<td col_name="name">' + val['name'] + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
-                                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
-                                    });
-                                    tbl += '</tbody>';
-                                    tbl += '</table>'
-
-                                    $(document).find('.tbl_user_data').html(tbl);
-                                });
-                            });
-
-                            function gradeHelper(score) {
-                                if (score <= 100 && score >= 75) {
-                                    return "A";
-                                }
-                                else {
-                                    if (score < 75 && score >= 65) {
-                                        return "B";
-                                    }
-                                    else {
-                                        if (score < 65 && score >= 55) {
-                                            return "C";
-                                        }
-                                        else {
-                                            if (score < 55 && score >= 40) {
-                                                return "D";
-                                            }
-                                            else {
-                                                if (score < 40 && score >= 0) {
-                                                    return "E";
-                                                }
-                                                else {
-                                                    return "Q"
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        </script>
-
                         <!-- TABLE DIVS -->
                         <div class="panel panel-default">
                             <div class="panel-body">
@@ -279,6 +197,87 @@
     <script src="../../../../admin/assets/js/main.js"></script>
 
     <script>
+        // Table logic ...
+        var stdModel = {};
+        var subjectsRes = [];
+        $(document).ready(function ($) {
+            fetch('/admin/<%= school_obj.name %>/getStudentResults', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: $("#stdname").text().trim(),
+                    session: $("#sessionSelector").val(),
+                    class: $("#cls").text().trim(),
+                    term: $("#termSelector").val(),
+                })
+            }).then(res => res.json()).then(data => {
+                stdModel = data.payload;
+                subjectsRes = stdModel.subjects;
+
+                //--->create data table > start
+                var tbl = '';
+                tbl += '<table class="table table-bordered">'
+                tbl += '<thead>';
+                tbl += '<tr>';
+                tbl += '<th>S/N</th>';
+                tbl += '<th>Subject</th>';
+                tbl += '<th>Total</th>';
+                tbl += '<th>Average</th>';
+                tbl += '<th>Position</th>';
+                tbl += '<th>Grade</th>';
+                tbl += '</tr>';
+                tbl += '</thead>';
+                tbl += '<tbody>';
+                $.each(subjectsRes, function (index, val) {
+                    var row_id = index;
+                    tbl += '<tr row_id="' + row_id + '">';
+                    tbl += '<td col_name="sn">' + (index + 1) + '</td>';
+                    tbl += '<td col_name="name">' + val['name'] + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
+                });
+                tbl += '</tbody>';
+                tbl += '</table>';
+                tbl += '<p>Total Score: ' + stdModel.total + '</p>';
+                tbl += '<p>Average Score: ' + stdModel.average.toFixed(2) + '</p>';
+                tbl += '<p>Position in Class: ' + stdModel.position + '</p>';
+
+                $(document).find('.tbl_user_data').html(tbl);
+            });
+        });
+
+        function gradeHelper(score) {
+            if (score <= 100 && score >= 75) {
+                return "A";
+            }
+            else {
+                if (score < 75 && score >= 65) {
+                    return "B";
+                }
+                else {
+                    if (score < 65 && score >= 55) {
+                        return "C";
+                    }
+                    else {
+                        if (score < 55 && score >= 40) {
+                            return "D";
+                        }
+                        else {
+                            if (score < 40 && score >= 0) {
+                                return "E";
+                            }
+                            else {
+                                return "Q"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
         function sendData() {
             fetch('/admin/<%= school_obj.name %>/getStudentResults', {
                 method: 'POST',

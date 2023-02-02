@@ -835,7 +835,7 @@ const createSession = async (req, res) => {
             { $push: { sessions: session_model } }
         );
 
-        return res.send({success: true});
+        return res.send({ success: true });
     } catch {
         console.log(error);
     }
@@ -877,7 +877,11 @@ const createSubject = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         database.collection("schools").findOneAndUpdate({ "school_info.name": req.params.sname }, { $push: { "classes.$[t].subjects": class_subject } }, { arrayFilters: [{ "t.name": req.body.class_name }] });
 
-        return res.redirect(303, '/admin/' + req.params.sname + '/subjects');
+        if (req.xhr || req.accepts('json,html') === 'json') {
+            return res.send({ success: true });
+        } else {
+            return res.redirect(303, '/admin/' + req.params.sname + '/classes');
+        }
     } catch {
         console.log(error);
     }
@@ -946,7 +950,11 @@ const createStudent = async (req, res) => {
                     { "term.name": req.body.term }]
             })
 
-        return res.redirect(303, '/admin/' + req.params.sname + '/student-info');
+        if (req.xhr || req.accepts('json,html') === 'json') {
+            return res.send({ success: true });
+        } else {
+            return res.redirect(303, '/admin/' + req.params.sname + '/classes');
+        }
     } catch (error) {
         console.log(error);
     }
@@ -1352,6 +1360,26 @@ const updateTermDates = async (req, res) => {
         });
     }
 }
+const deleteNews = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        school_data.news.reverse().splice(Number(req.body.news_index), 1);
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "news": school_data.news } });
+
+        return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 const deleteSession = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -1598,6 +1626,7 @@ module.exports = {
     updateAdminPassword,
     updateStudentsAttendance,
     updateTermDates,
+    deleteNews,
     deleteSession,
     deleteClass,
     deleteStudent,
