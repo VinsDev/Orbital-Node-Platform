@@ -90,6 +90,9 @@ const schoolRegForm = async (req, res, url) => {
         // var temp = new Date(date_obj_converter(st));
         // var exp = new Date(temp.setDate(temp.getDate() + 120));
 
+        var stpname = '';
+        if (url[5].filename != null) stpname = url[5].filename;
+
         var school_model = {
             school_info: {
                 name: req.body.name.trim(),
@@ -107,7 +110,7 @@ const schoolRegForm = async (req, res, url) => {
                 ppic: baseUrl + url[3].filename,
                 vp1name: req.body.vp1name.trim(),
                 vp1pic: baseUrl + url[4].filename,
-                stamp: baseUrl + url[5].filename,
+                stamp: baseUrl + stpname,
                 mission: req.body.mission.trim(),
                 vision: req.body.vision.trim(),
                 anthem: req.body.anthem.trim(),
