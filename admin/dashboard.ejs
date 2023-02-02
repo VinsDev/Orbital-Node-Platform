@@ -332,70 +332,77 @@
           </div>
         </div>
 
-        <% var c1="" %>
-          <% var c2="" %>
-            <% var c3="" %>
-              <% if(current_term==="first" ) c1='checked' ; %>
-                <% if(current_term==="second" ) c2='checked' ; %>
-                  <% if(current_term==="third" ) c3='checked' ; %>
-                    <fieldset class="row mb-3" id="fs">
-                      <legend class="col-form-label col-sm-2 pt-0">Portal Access Term</legend>
-                      <div class="col-sm-10">
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="term" id="first" value="first" <%=c1 %>>
-                          <label class="form-check-label" for="first">
-                            First Term
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="term" id="second" value="second" <%=c2 %>>
-                          <label class="form-check-label" for="second">
-                            Second Term
-                          </label>
-                        </div>
-                        <div class="form-check">
-                          <input class="form-check-input" type="radio" name="term" id="third" value="third" <%=c3 %>>
-                          <label class="form-check-label" for="third">
-                            Third Term
-                          </label>
-                        </div>
-                      </div>
-                    </fieldset>
+        <% if(session==="Not set yet" ) { %>
+          <div></div>
+          <% } else { %>
+
+            <% var c1="" %>
+              <% var c2="" %> Not set yet
+                <% var c3="" %>
+                  <% if(current_term==="first" ) c1='checked' ; %>
+                    <% if(current_term==="second" ) c2='checked' ; %>
+                      <% if(current_term==="third" ) c3='checked' ; %>
+                        <fieldset class="row mb-3" id="fs">
+                          <legend class="col-form-label col-sm-2 pt-0">Portal Access Term</legend>
+                          <div class="col-sm-10">
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="term" id="first" value="first" <%=c1
+                                %>>
+                              <label class="form-check-label" for="first">
+                                First Term
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="term" id="second" value="second" <%=c2
+                                %>>
+                              <label class="form-check-label" for="second">
+                                Second Term
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="term" id="third" value="third" <%=c3
+                                %>>
+                              <label class="form-check-label" for="third">
+                                Third Term
+                              </label>
+                            </div>
+                          </div>
+                        </fieldset>
 
 
-                    <% var e1="" %>
-                      <% var e2="" %>
-                        <% var e3="" %>
-                          <% if(results_status==='1' ) e1='checked' ; %>
-                            <% if(results_status==='2' ) e2='checked' ; %>
-                              <% if(results_status==='3' ) e3='checked' ; %>
-                                <fieldset class="row mb-3">
-                                  <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
-                                  <div class="col-sm-10">
-                                    <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="status" id="released-for-all"
-                                        value="released-for-all" <%=e1 %>>
-                                      <label class="form-check-label" for="gridRadios1">
-                                        Released for all Students.
-                                      </label>
-                                    </div>
-                                    <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="status" id="released-for-some"
-                                        value="released-for-some" <%=e2 %>>
-                                      <label class="form-check-label" for="gridRadios1">
-                                        Released for only Students who paid their fees.
-                                      </label>
-                                    </div>
-                                    <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="status" id="not-released"
-                                        value="not-released" <%=e3 %>>
-                                      <label class="form-check-label" for="gridRadios2">
-                                        Not Released
-                                      </label>
-                                    </div>
-                                  </div>
-                                </fieldset>
-
+                        <% var e1="" %>
+                          <% var e2="" %>
+                            <% var e3="" %>
+                              <% if(results_status==='1' ) e1='checked' ; %>
+                                <% if(results_status==='2' ) e2='checked' ; %>
+                                  <% if(results_status==='3' ) e3='checked' ; %>
+                                    <fieldset class="row mb-3">
+                                      <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
+                                      <div class="col-sm-10">
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="status"
+                                            id="released-for-all" value="released-for-all" <%=e1 %>>
+                                          <label class="form-check-label" for="gridRadios1">
+                                            Released for all Students.
+                                          </label>
+                                        </div>
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="status"
+                                            id="released-for-some" value="released-for-some" <%=e2 %>>
+                                          <label class="form-check-label" for="gridRadios1">
+                                            Released for only Students who paid their fees.
+                                          </label>
+                                        </div>
+                                        <div class="form-check">
+                                          <input class="form-check-input" type="radio" name="status" id="not-released"
+                                            value="not-released" <%=e3 %>>
+                                          <label class="form-check-label" for="gridRadios2">
+                                            Not Released
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </fieldset>
+                                    <% } %>
 
     </section>
 
