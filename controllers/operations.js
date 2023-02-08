@@ -1764,7 +1764,7 @@ function gradeHelper(score) {
                         return "E";
                     }
                     else {
-                        return "Q"
+                        return "-"
                     }
                 }
             }

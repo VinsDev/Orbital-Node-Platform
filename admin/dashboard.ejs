@@ -369,6 +369,9 @@
                           </div>
                         </fieldset>
 
+                        <div class="text-center">
+                          <p>Ensure that every subject teacher has uploaded his/her assessments before clicking on release results.</p>
+                        </div>
 
                         <% var e1="" %>
                           <% var e2="" %>
@@ -466,7 +469,7 @@
           },
           success: function (data) {
             if (data.success) {
-              alert("success");
+              alert("Result released for all students");
             } else {
               alert("Network Error");
             }
@@ -485,7 +488,7 @@
           },
           success: function (data) {
             if (data.success) {
-              alert("success");
+              alert("Results released for only students who paid fees");
             } else {
               alert("Network Error");
             }
@@ -504,7 +507,7 @@
           },
           success: function (data) {
             if (data.success) {
-              alert("success");
+              alert("Results unreleased");
             } else {
               alert("Network Error");
             }
