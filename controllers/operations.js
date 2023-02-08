@@ -968,7 +968,7 @@ const createStudent = async (req, res) => {
                     position: -1,
                     highest: -1,
                     lowest: -1,
-                    average: -1
+                    average: -1 
                 }
             )
         }
