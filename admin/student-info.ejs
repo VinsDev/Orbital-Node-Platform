@@ -732,7 +732,7 @@
     $("#createStudent").on("click", function (e) {
       $(".modal-content").LoadingOverlay("show");
       $.ajax({
-        url: '/admin/<%= school_obj.name %>/students/',
+        url: '/admin/<%= school_obj.name %>/getTermStatus/',
         data: {
           session: $('#session').val(),
           term: $('#term').val()

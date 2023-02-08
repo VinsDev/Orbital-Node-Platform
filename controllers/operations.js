@@ -968,7 +968,7 @@ const createStudent = async (req, res) => {
                     position: -1,
                     highest: -1,
                     lowest: -1,
-                    average: -1 
+                    average: -1
                 }
             )
         }
@@ -1001,7 +1001,7 @@ const createStudent = async (req, res) => {
         if (req.xhr || req.accepts('json,html') === 'json') {
             return res.send({ success: true });
         } else {
-            return res.redirect(303, '/admin/' + req.params.sname + '/classes');
+            return res.redirect(303, '/admin/' + req.params.sname + '/students');
         }
     } catch (error) {
         console.log(error);
