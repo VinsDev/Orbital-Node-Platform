@@ -270,50 +270,20 @@
 
                     <div class="row">
                         <% for(var i=0; i < news.length; i++){ %>
-                            <% if(i===0 || i===2 || i===4){ %>
-                                <div class="col-sm-12 events_full_box">
-                                    <div class="events_single">
-                                        <div class="event_banner">
-                                            <a href="#"><img src="<%= news[i].image %>" alt="" class="img-fluid"></a>
-                                        </div>
-                                        <div class="event_info">
-                                            <h3>
-                                                <%= news[i].header %>
-                                            </h3>
-                                            <p>
-                                                <%= news[i].details %>
-                                            </p>
-                                            <div class="event_dete">
-                                                <span class="date">.</span>
-                                                <span>News</span>
-                                            </div>
-                                        </div>
+                            <div class="col-sm-12 events_full_box">
+                                <div class="events_single">
+
+                                    <div class="event_info">
+                                        <h3>
+                                            <%= news[i].header %>
+                                        </h3>
+                                        <p>
+                                            <%= news[i].details %>
+                                        </p>
                                     </div>
                                 </div>
-                                <% } %>
-                                    <% if(i===1 || i===3 || i===5){ %>
-                                        <div class="col-sm-12 events_full_box">
-                                            <div class="events_single events_single_left">
-                                                <div class="event_info">
-                                                    <h3>"<%= news[i].header %>
-                                                    </h3>
-                                                    <p>
-                                                        <%= news[i].details %>
-                                                    </p>
-                                                </div>
-                                                <div class="event_banner">
-                                                    <a href="#"><img src="<%= news[i].image %>" alt=""
-                                                            class="img-fluid"></a>
-                                                </div>
-                                                <div class="event_dete">
-                                                    <span class="date">.</span>
-                                                    <span>News</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <% } %>
-                                            <% } %>
-
+                            </div>
+                            <% } %>
                     </div>
                     <% } %>
         </div>

@@ -1,5 +1,4 @@
 const upload = require("../middleware/upload");
-const newsImages = require("../middleware/newsImages");
 const dbConfig = require("../config/db");
 
 const MongoClient = require("mongodb").MongoClient;
@@ -816,12 +815,10 @@ const login = async (req, res) => {
 }
 const upload_news = async (req, res) => {
     try {
-        await newsImages(req, res);
 
         var news_model = {
             header: req.body.heading,
             details: req.body.details,
-            image: nbaseUrl + req.file.filename
         }
 
         await mongoClient.connect();

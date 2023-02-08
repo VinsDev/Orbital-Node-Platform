@@ -258,7 +258,6 @@
                       <%= news[i].details %>
                     </p>
                   </div>
-                  <img src="<%= news[i].image %>" class="card-img-bottom" alt="image" style="max-height: 450px;">
                 </div><!-- End Card with an image on bottom -->
                 <% } %>
                   <% } %>
@@ -289,15 +288,6 @@
                 <label for="details" class="col-sm-2 col-form-label">Details</label>
                 <div class="col-sm-10">
                   <textarea class="form-control" name="details" id="details" style="height: 100px" required></textarea>
-                </div>
-              </div>
-
-              <div class="row g-3">
-                <div class="form-group">
-                  <label for="image" id="logo-label">News Image</label>
-                  <input type="file" name="image" id="image" accept="image/*"
-                    onchange="loadFile(event, 'image-i')"><br />
-                  <img id="image-i" />
                 </div>
               </div>
 
@@ -405,14 +395,12 @@
         event.preventDefault();
         var form = $(this);
         var action = form.attr('action');
-        var formData = new FormData(this);
+        var formData = $(this).serialize();
         $(".modal-content").LoadingOverlay("show");
         $.ajax({
           type: "POST",
           url: action,
           data: formData,
-          processData: false,
-          contentType: false,
           success: function (data) {
             location.reload();
           },
