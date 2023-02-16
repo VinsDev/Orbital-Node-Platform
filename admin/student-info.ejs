@@ -233,7 +233,7 @@
       && stop_date !="null" ) { %>
       <section class="section">
         <div class="col-md-12 offset-md-0">
-          <!-- REFERENCE SELECTOR -->
+          <!-- REFERENCE SELECTORS -->
           <div class="card">
             <div class="internal">
               <div class="rrr">
@@ -277,61 +277,20 @@
             </div>
           </div>
 
-
+          <!-- Info -->
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Students</h5>
-              <b>To delete a student, double click on the Student's row.</b>
-              <div style="height: 20px;"></div>
-              <% if(sessions_data[0].terms[0].students.length<1){ %>
-                <div class="text-center">
-                  <h6>
-                    No student added to selected class yet. You can check other classes or add students to this
-                    one by pressing the button below.
-                  </h6>
-                </div>
-                <% } else { %>
-                  <!-- Table with hoverable rows -->
-                  <table class="table table-hover" id="myTable">
-                    <thead>
-                      <tr>
-                        <th scope="col">S/N</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Gender</th>
-                        <th scope="col">DOB</th>
-                        <th scope="col">Class</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <%counter=1;%>
+              <div style="height: 10px;"></div>
 
-                        <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                          <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                            <tr data-st-id="<%=sessions_data[0].terms[0].students[j].name%>" class="stdRow">
-                              <th scope="row">
-                                <%=counter %>
-                              </th>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].name %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].gender %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].dob %>
-                              </td>
-                              <td>
-                                <%= sessions_data[0].terms[0].students[j].class %>
-                              </td>
-                            </tr>
+              <!-- Table with hoverable rows -->
+              <div style="width: 100%; overflow-x: auto;">
+                <table class="table table-hover" id="myTable">
+                </table>
+              </div>
 
-                    </tbody>
-                  </table>
-                  <!-- End Table with hoverable rows -->
-                  <%counter++;%>
-                    <% } %>
-                      <% } %>
-                        <% } %>
+              <!-- End Table with hoverable rows -->
+
             </div>
           </div>
           <div class="text-center">
@@ -348,7 +307,8 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add Student</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add Student to <b id="c"></b> [<i id="s"></i> - <i
+                  id="t"></i> term ]</h5>
               <button class="close" data-bs-dismiss="modal"
                 style="border: none; background-color: transparent;">&times;</button>
             </div>
@@ -374,44 +334,6 @@
                   <label for="yourEmail" class="form-label">Date of birth</label>
                   <input type="date" name="dob" class="form-control" id="dob" required>
                   <div class="invalid-feedback">Please enter date of birth!</div>
-                </div>
-
-                <div class="row md-3">
-                  <label class="col-sm-5 col-form-label">Session</label>
-                  <div class="col-sm-8">
-                    <select class="form-select" aria-label="Session" name="session" id="session">
-                      <% for(var i=0; i < sessions_data.length; i++){ %>
-                        <option>
-                          <%= sessions_data[i].name %>
-                        </option>
-                        <% } %>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row md-1">
-                  <label class="col-sm-5 col-form-label">Term</label>
-                  <div class="col-sm-8">
-                    <select class="form-select" aria-label="Term" name="term" id="term">
-                      <option value="first" selected>First</option>
-                      <option value="second">Second</option>
-                      <option value="third">Third</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="row md-1">
-                  <label class="col-sm-5 col-form-label">Class</label>
-                  <div class="col-sm-8">
-                    <select class="form-select" aria-label="Class" name="class" id="clsvalue"
-                      onchange="updateCheckableSubjects()">
-                      <% for(var i=0; i < class_data.length; i++){ %>
-                        <option>
-                          <%= class_data[i].name %>
-                        </option>
-                        <% } %>
-                    </select>
-                  </div>
                 </div>
 
                 <label class="col-sm-5 col-form-label">Subjects</label>
@@ -576,11 +498,22 @@
         success: function (data) {
           var payload = data.payload;
           var content = '';
-          if (payload < 1) {
-            $('#myTable tbody').html('No student added to selected class yet. You can check other classes or add students to thisone by pressing the button below.');
+          if (payload.length === 0) {
+            $('#myTable').html('No student found in your current selections. You can check another session, term or class. You can also add students to the current selection by pressing the add button below.');
             return;
           }
-
+          content += `
+                <thead>
+                  <tr>
+                    <th scope="col">S/N</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Gender</th>
+                    <th scope="col">DOB</th>
+                    <th scope="col">Class</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>`;
+          content += ' <tbody>';
           payload.forEach((item, index) => {
             content += `
                   <tr data-st-id="${item.name}" class="stdRow">
@@ -597,75 +530,49 @@
                     <td>
                       ${item.class}
                     </td>
+                    <td>
+                      <button onclick="passDeleteData('${item.name}')"
+                style="border: none; background-color: transparent; color: blue; font-weight: bold;">REMOVE</button>
+                    </td>
                   </tr>`
           });
-          $('#myTable tbody').html(content);
+          content += ' </tbody>';
+          $('#myTable').html(content);
         },
         complete: function () {
           $.LoadingOverlay("hide", true);
         },
       });
+      $('#s').html($("#sessionSelector").val());
+      $('#c').html($("#classSelector").val());
+      $('#t').html($("#termSelector").val());
+      updateCheckableSubjects();
       return;
     }
 
     $(document).ready(function () {
-      var container = $('.chk_subs');
-      var checkboxes = '';
-      $.ajax({
-        url: '/admin/<%= school_obj.name %>/getClassSubjects/' + $('#clsvalue').val(),
-        type: 'GET',
-        success: function (data) {
-          $.each(data.payload, function (index, value) {
-            checkboxes += '<input type="checkbox" id="sub_' + index + '" name="sub_' + index + '"' + 'value = "' + value.name + '" checked >' + '<label for="sub_' + index + '">' + value.name + ' </label> <br>';
-          });
-          container.html(checkboxes);
-        }
-      });
-
-      $("#passwordForm").submit(function (event) {
-        event.preventDefault();
-        var form = $(this);
-        var action = form.attr('action');
-        var formData = form.serialize();
-        $(".modal-content").LoadingOverlay("show");
-        $.ajax({
-          type: "POST",
-          url: action,
-          data: formData,
-          success: function (data) {
-            if (data.success) {
-              $(".modal-body").html("<h5>Your password was changes successfully.");
-              setTimeout(function () {
-                window.location.href = "/admin";
-              }, 2000);
-            } else {
-              alert("The Old Password you entered is invalid! Try again.");
-              setTimeout(function () {
-                location.reload();
-              }, 2000);
-            }
-          },
-          complete: function () {
-            $(".modal-content").LoadingOverlay("hide", true);
-          },
-          error: function (error) {
-            alert('Oops! Somerhing happened. Pls try again later');
-          }
-        });
-      });
+      updateData();
 
       $("#addStudentFormId").submit(function (event) {
         event.preventDefault();
         var form = $(this);
         var action = form.attr('action');
-        var formData = form.serialize();
+        var formData = form.serializeArray();
+        formData.push({ name: "session", value: $("#sessionSelector").val() });
+        formData.push({ name: "term", value: $("#termSelector").val() });
+        formData.push({ name: "class", value: $("#classSelector").val() });
+        formData = $.param(formData);
         $(".modal-content").LoadingOverlay("show");
         $.ajax({
           type: "POST",
           url: action,
           data: formData,
           success: function (data) {
-            location.reload();
+
+            $('#addStudentForm').modal('hide');
+            $('#addStudentFormId')[0].reset();
+            $('#addStudentFormId').removeClass('was-validated')
+            updateData();
           },
           complete: function () {
             $(".modal-content").LoadingOverlay("hide", true);
@@ -676,26 +583,22 @@
           }
         });
       });
+
     });
 
     function updateCheckableSubjects() {
       var container = $('.chk_subs');
       var checkboxes = '';
       $.ajax({
-        url: '/admin/<%= school_obj.name %>/getClassSubjects/' + $('#clsvalue').val(),
+        url: '/admin/<%= school_obj.name %>/getClassSubjects/' + $("#classSelector").val(),
         type: 'GET',
         success: function (data) {
           $.each(data.payload, function (index, value) {
-            checkboxes += '<input type="checkbox" id="sub_' + index + '" name="sub_' + '"' + 'value = "' + value.name + '" checked >' + '<label for="sub_' + index + '">' + value.name + ' </label> <br>';
+            checkboxes += '<input type="checkbox" id="sub_' + index + '" name="sub_' + index + '"' + 'value = "' + value.name + '" checked >' + '<label for="sub_' + index + '">' + value.name + ' </label> <br>';
           });
           container.html(checkboxes);
         }
       })
-    }
-
-    // click delete button
-    function verifyStudentDelete() {
-      $('#dellbutt').click();
     }
 
     // delete student request . . .
@@ -710,10 +613,12 @@
           student: $("#vins").text().trim(),
         },
         success: function (data) {
-          location.reload();
+          $(".modal-content").LoadingOverlay("hide", true);
+          $('#deleteStudentVerification').modal('hide');
+          updateData();
         },
-        complete: function () {
-          $(".modal-body").LoadingOverlay("hide", true);
+        complete: function (data) {
+          $(".modal-content").LoadingOverlay("hide", true);
         },
         error: function (error) {
           alert("Something happened !")
@@ -722,11 +627,11 @@
     }
 
     // pass data to modal . . .
-    $(document).on("dblclick", ".stdRow", function () {
-      var rowId = $(this).data('st-id');
+    function passDeleteData(id) {
+      // var rowId = row.data('st-id');
+      $("#stname").html('<b id="vins">' + id + '</b>');
       $('#dellbutt').click();
-      $("#stname").html('<b id="vins">' + rowId + '</b>');
-    });
+    };
 
     // click
     $("#createStudent").on("click", function (e) {
@@ -734,8 +639,8 @@
       $.ajax({
         url: '/admin/<%= school_obj.name %>/getTermStatus/',
         data: {
-          session: $('#session').val(),
-          term: $('#term').val()
+          session: $("#sessionSelector").val(),
+          term: $("#termSelector").val(),
         },
         type: 'POST',
         success: function (data) {
@@ -765,8 +670,8 @@
       $.ajax({
         url: '/admin/<%= school_obj.name %>/activateTerm/',
         data: {
-          session: $('#session').val(),
-          term: $('#term').val()
+          session: $("#sessionSelector").val(),
+          term: $("#termSelector").val(),
         },
         type: 'POST',
         success: function (data) {
@@ -774,6 +679,39 @@
         }
       })
     }
+
+    $("#passwordForm").submit(function (event) {
+      event.preventDefault();
+      var form = $(this);
+      var action = form.attr('action');
+      var formData = form.serialize();
+      $(".modal-content").LoadingOverlay("show");
+      $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        success: function (data) {
+          if (data.success) {
+            $(".modal-body").html("<h5>Your password was changed successfully.");
+            setTimeout(function () {
+              window.location.href = "/admin";
+            }, 2000);
+          } else {
+            alert("The Old Password you entered is invalid! Try again.");
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          }
+        },
+        complete: function () {
+          $(".modal-content").LoadingOverlay("hide", true);
+        },
+        error: function (error) {
+          alert('Oops! Somerhing happened. Pls try again later');
+        }
+      });
+    });
+
   </script>
 
 </body>

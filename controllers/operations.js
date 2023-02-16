@@ -21,22 +21,18 @@ const orbital = require("../computations/compile-results");
 
 const deleteImages = async (req, res) => {
     const imageIds = [
-        new ObjectId("63d8fdb6c853fccd58dc6fcf"),
-        new ObjectId("63d8fdb7c853fccd58dc6fd1"),
-        new ObjectId("63d8fdb7c853fccd58dc6fd2"),
-        new ObjectId("63d8fdb7c853fccd58dc6fd5"),
-        new ObjectId("63d8fdb7c853fccd58dc6fd6"),
-        new ObjectId("63d905a5c853fccd58dc6fd9"),
-        new ObjectId("63d905a6c853fccd58dc6fdb"),
-        new ObjectId("63d905a7c853fccd58dc6fdd"),
-        new ObjectId("63d905a8c853fccd58dc6fdf"),
-        new ObjectId("63d905a9c853fccd58dc6fe1"),
-        new ObjectId("63d90afac853fccd58dc6ffb"),
-        new ObjectId("63d90afac853fccd58dc6ffc"),
-        new ObjectId("63d90afac853fccd58dc6fff"),
-        new ObjectId("63d90afac853fccd58dc7001"),
-        new ObjectId("63d90afac853fccd58dc7002"),
-        new ObjectId("63d90afac853fccd58dc7003"),
+        new ObjectId("63d0eba3ecb17cf3a945d2bc"),
+        new ObjectId("63d0eba3ecb17cf3a945d2be"),
+        new ObjectId("63d0eba3ecb17cf3a945d2bf"),
+        new ObjectId("63d0eba3ecb17cf3a945d2c1"),
+        new ObjectId("63d0eba3ecb17cf3a945d2c0"),
+        new ObjectId("63d0eba3ecb17cf3a945d2bd"),
+        new ObjectId("63d0ec0acdc0c255f5c2e40f"),
+        new ObjectId("63d0ec0acdc0c255f5c2e411"),
+        new ObjectId("63d0ec0bcdc0c255f5c2e417"),
+        new ObjectId("63d0ec0bcdc0c255f5c2e412"),
+        new ObjectId("63d0ec0bcdc0c255f5c2e413"),
+        new ObjectId("63d0ec0bcdc0c255f5c2e416"),
     ];
     try {
         var logs = [];
@@ -911,9 +907,8 @@ const createClass = async (req, res) => {
 const createSubject = async (req, res) => {
     try {
 
-        class_subject = {
+        var class_subject = {
             name: req.body.name.trim(),
-            class: req.body.class_name,
             teacher: req.body.teacher.trim(),
         }
 
@@ -934,7 +929,6 @@ const createSubject = async (req, res) => {
 const createStudent = async (req, res) => {
     try {
 
-
         await mongoClient.connect();
         const database = mongoClient.db(dbConfig.database);
 
@@ -952,7 +946,6 @@ const createStudent = async (req, res) => {
                 subs.push(req.body[itr]);
             }
         }
-
 
         var s_subjects = [];
         // Assign class subjects to a subjects list
@@ -1006,7 +999,6 @@ const createStudent = async (req, res) => {
 }
 const getSubjects = async (req, res) => {
     try {
-        let payload = req.body.payload.trim();
         await mongoClient.connect();
 
         const database = mongoClient.db(dbConfig.database);
@@ -1205,7 +1197,8 @@ const getSubjectsResults = async (req, res) => {
 
     var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
     var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.term);
-    var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+    // var classIndex = school_data.classes.findIndex(i => i.name === req.body.class);
+
 
     for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
         if (school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.body.class && school_data.sessions[sessionIndex].terms[termIndex].students[i].subjects.findIndex(i => i.name === req.body.subject) >= 0) {

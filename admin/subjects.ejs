@@ -239,7 +239,8 @@
             <div class="row md-3">
               <label class="col-sm-5 col-form-label">Class</label>
               <div class="col-sm-12">
-                <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
+                <select class="form-select" aria-label="Session" onchange="fetchSubjects($('#selected-class').val())"
+                  id="selected-class">
                   <% for(var i=0; i < class_data.length; i++){ %>
                     <option>
                       <%= class_data[i].name %>
@@ -254,29 +255,6 @@
 
       <section class="section">
         <div class="columns" id="subject-field">
-          <% if (class_data[0].subjects.length===0){ %>
-            <div class="text-center">
-              <h5 class="session">
-                No Subjects added yet. Click the button below to add one.
-              </h5>
-            </div>
-
-            <% } else { %>
-              <% for(var j=0; j < class_data[0].subjects.length; j++){ %>
-                <div class="col-md-10 offset-md-1">
-                  <div class="card" style="position: relative;">
-                    <div class="d-flex justify-content-between">
-                      <h5 class="session" id="nb_<%=j%>">
-                        <%= class_data[0].subjects[j].name %>
-                      </h5>
-                      <div style="position: absolute; top: 50%; right: 10px; transform: translate(0, -50%);">
-                        <button class="btn btn-primary" id="b_<%=j%>" onclick="del(this.id)">Delete</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <% } %>
-                  <% } %>
         </div>
         <div class="text-center">
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSubjectModal">Add
@@ -329,7 +307,8 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Add Subject</h5>
+              <h5 class="modal-title" id="exampleModalLongTitle">Add Subject to <p id="slct"></p>
+              </h5>
               <button class="close" data-bs-dismiss="modal"
                 style="border: none; background-color: transparent;">&times;</button>
             </div>
@@ -342,19 +321,6 @@
                   <div class="invalid-feedback">Please, enter the subject name!</div>
                 </div>
 
-                <div class="row g-3">
-                  <label for="category" class="col-sm-2 col-form-label">Class</label>
-                  <div class="col-sm-10">
-                    <select id="class_name" name="class_name" class="form-control">
-                      <option disabled selected value>Select your class</option>
-                      <% for(var i=0; i < class_data.length; i++){ %>
-                        <option>
-                          <%= class_data[i].name %>
-                        </option>
-                        <% } %>
-                    </select>
-                  </div>
-                </div>
                 <div class="col-12">
                   <label for="yourName" class="form-label">Teacher's Name</label>
                   <input type="text" name="teacher" class="form-control" id="teacher" required>
@@ -403,80 +369,32 @@
 
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
-
   <script>
-    $(document).ready(function () {
-      $("#passwordForm").submit(function (event) {
-        event.preventDefault();
-        var form = $(this);
-        var action = form.attr('action');
-        var formData = form.serialize();
-        $.ajax({
-          type: "POST",
-          url: action,
-          data: formData,
-          success: function (data) {
-            if (data.success) {
-              $(".modal-body").html("<h5>Your password was changes successfully.");
-              setTimeout(function () {
-                window.location.href = "/admin";
-              }, 2000);
-            } else {
-              alert("The Old Password you entered is invalid! Try again.");
-              setTimeout(function () {
-                location.reload();
-              }, 2000);
-            }
-          },
-          error: function (error) {
-            alert('Oops! Something happened. Pls try again later');
-          }
-        });
-      });
-
-      $("#subjectForm").submit(function (event) {
-        event.preventDefault();
-        var form = $(this);
-        var action = form.attr('action');
-        var formData = form.serialize();
-        $(".modal-content").LoadingOverlay("show");
-        $.ajax({
-          type: "POST",
-          url: action,
-          data: formData,
-          success: function (data) {
-            location.reload();
-          },
-          complete: function () {
-            $(".modal-body").LoadingOverlay("hide", true);
-          },
-          error: function (error) {
-            alert('Oops! Something happened. Pls try again');
-          }
-        });
-      });
-
-    });
-
-    function sendData(e) {
+    function fetchSubjects(className) {
       const field = document.getElementById('subject-field');
+      const modal_cls = document.getElementById('slct');
 
-      fetch('/admin/<%= school_obj.name %>/getSubjects', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ payload: e.value })
-      }).then(res => res.json()).then(data => {
-        var payload = data.payload;
-        field.innerHTML = '';
-        if (payload < 1) {
-          field.innerHTML = '<p> Subjects not added yet</p>';
-          return;
-        }
-        payload.forEach((item, index) => {
+      modal_cls.innerHTML = className;
 
-          if (item.name === e.value) {
-            item.subjects.forEach((item, i) => {
-              field.innerHTML += `<div class="col-md-10 offset-md-1">
+      var data = { class: className };
+      $("#subject-field").LoadingOverlay("show");
+      $.ajax({
+        type: "POST",
+        url: "/admin/<%= school_obj.name %>/getSubjects",
+        data: JSON.stringify(data),
+        contentType: "application/json",
+        success: function (data) {
+          var payload = data.payload;
+          field.innerHTML = '';
+
+          payload.forEach((item, index) => {
+            if (item.name === className) {
+              if (item.subjects.length === 0) {
+                field.innerHTML = '<p> Subjects not added yet</p>';
+                return;
+              }
+              item.subjects.forEach((item, i) => {
+                field.innerHTML += `<div class="col-md-10 offset-md-1">
                 <div class="card" style="position: relative;">
                 <div class="d-flex justify-content-between">
                   <h5 class="session" id="nb_${i}">
@@ -488,13 +406,18 @@
                 </div>
               </div>
         </div>`
-            })
-          }
-        });
-      });
-      return;
+              });
 
-      field.innerHTML = '';
+            }
+          });
+        },
+        complete: function () {
+          $("#subject-field").LoadingOverlay("hide", true);
+        },
+        error: function (xhr, status, error) {
+          console.error(error);
+        }
+      });
     }
 
     function del(id) {
@@ -508,14 +431,77 @@
           subject: $(subjectId).text().trim()
         },
         success: function (data) {
-          location.reload();
+          fetchSubjects($('#selected-class').val());
         },
         error: function (error) {
           alert("Something happened !")
         }
       })
     }
+
   </script>
+  <script>
+    $(document).ready(function () {
+      fetchSubjects($('#selected-class').val());
+
+      $("#subjectForm").submit(function (event) {
+        event.preventDefault();
+        var form = $(this);
+        var action = form.attr('action');
+        var formData = form.serializeArray();
+        formData.push({ name: "class_name", value: $('#selected-class').val() });
+        formData = $.param(formData);
+        $(".modal-content").LoadingOverlay("show");
+        $.ajax({
+          type: "POST",
+          url: action,
+          data: formData,
+          success: function (data) {
+            $(".modal-content").LoadingOverlay("hide", true);
+            $('#subjectForm')[0].reset();
+            $('#subjectForm').removeClass('was-validated')
+            $('#addSubjectModal').modal('hide');
+            fetchSubjects($('#selected-class').val());
+          },
+          complete: function () {
+          },
+          error: function (error) {
+            alert('Oops! Something happened. Pls try again');
+          }
+        });
+      });
+    });
+
+    $("#passwordForm").submit(function (event) {
+      event.preventDefault();
+      var form = $(this);
+      var action = form.attr('action');
+      var formData = form.serialize();
+      $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        success: function (data) {
+          if (data.success) {
+            $(".modal-body").html("<h5>Your password was changes successfully.");
+            setTimeout(function () {
+              window.location.href = "/admin";
+            }, 2000);
+          } else {
+            alert("The Old Password you entered is invalid! Try again.");
+            setTimeout(function () {
+              location.reload();
+            }, 2000);
+          }
+        },
+        error: function (error) {
+          alert('Oops! Something happened. Pls try again later');
+        }
+      });
+    });
+
+  </script>
+
 </body>
 
 </html>
