@@ -1051,7 +1051,9 @@ const getStudents = async (req, res) => {
             }
         })
 
-        res.status(200).send({ payload: studentsList, results_status: school_data.sessions[sessionIndex].terms[termIndex].results });
+        res.status(200).send({
+            payload: studentsList, results_status: school_data.sessions[sessionIndex].terms[termIndex].results
+        });
 
     } catch (error) {
         return res.status(500).send({
@@ -1239,6 +1241,56 @@ const getStudentResults = async (req, res) => {
 
         res.status(200).send({ payload: std });
 
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const importStudents = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === req.body.session);
+        var targetTermIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.target);
+        // var destinationTermIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === req.body.destination);
+
+        var stds = [];
+
+        for (var i = 0; i < school_data.sessions[sessionIndex].terms[targetTermIndex].students.length; i++) {
+            if (school_data.sessions[sessionIndex].terms[targetTermIndex].students[i].class === req.body.class) {
+                stds.push(school_data.sessions[sessionIndex].terms[targetTermIndex].students[i]);
+            }
+        }
+
+        for (var i = 0; i < stds.length; i++) {
+            stds[i].term = req.body.destination;
+            for (var j = 0; j < stds[i].subjects.length; j++) {
+                stds[i].subjects[j].ass = [-1, -1, -1, -1, -1];
+                stds[i].subjects[j].total = -1;
+                stds[i].subjects[j].average = -1;
+                stds[i].subjects[j].position = -1;
+                stds[i].subjects[j].highest = -1;
+                stds[i].subjects[j].lowest = -1;
+            }
+            stds[i].total = -1;
+            stds[i].average = -1;
+            stds[i].position = -1;
+        }
+
+        schools.updateOne({ "school_info.name": req.params.sname },
+            { $push: { "sessions.$[sess].terms.$[term].students": { $each: stds } } },
+            {
+                arrayFilters:
+                    [{ "sess.name": req.body.session },
+                    { "term.name": req.body.destination }]
+            });
+
+        return res.send({ students: stds.length });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1662,6 +1714,7 @@ module.exports = {
     updateSubjectsResults,
     updateCurrentTerm,
     updateResultStatus,
+    importStudents,
     updateAdminPassword,
     updateStudentsAttendance,
     updateTermDates,

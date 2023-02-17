@@ -295,8 +295,12 @@
           </div>
           <div class="text-center">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentForm"
-              id="adstd">Add
+              id="adstd" style="margin-right: 15px;">Add
               Student</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#import"
+              id="impstd">Import
+              Students</button>
+
           </div>
         </div>
         </div>
@@ -358,6 +362,27 @@
 
       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nodes" id="nbutt"
         style="display: none;">Nbutt</button>
+
+      <!-- Import Students Modal -->
+      <div class="modal fade" id="import" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Import Students from</h5>
+              <button class="close" data-bs-dismiss="modal"
+                style="border: none; background-color: transparent;">&times;</button>
+            </div>
+            <div class="modal-body text-center">
+              <button type="button" class="btn btn-primary" onclick="importStuds('first');" id="t1">First term</button>
+              <button type="button" class="btn btn-primary" onclick="importStuds('second');" id="t2">Second
+                term</button>
+              <button type="button" class="btn btn-primary" onclick="importStuds('third');" id="t3">Third term</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
 
       <!-- Activate Term Modal -->
       <div class="modal fade" id="nodes" tabindex="-1">
@@ -485,6 +510,31 @@
   <script>
     function updateData() {
       $.LoadingOverlay("show");
+
+      if ($("#termSelector").val() === 'first') {
+        $('#t1').attr('disabled', true);
+        $('#t1').attr('class', 'btn btn-secondary');
+      } else {
+        $('#t1').attr('disabled', false);
+        $('#t1').attr('class', 'btn btn-primary');
+      }
+
+      if ($("#termSelector").val() === 'second') {
+        $('#t2').attr('disabled', true);
+        $('#t2').attr('class', 'btn btn-secondary');
+      } else {
+        $('#t2').attr('disabled', false);
+        $('#t2').attr('class', 'btn btn-primary');
+      }
+
+      if ($("#termSelector").val() === 'third') {
+        $('#t3').attr('disabled', true);
+        $('#t3').attr('class', 'btn btn-secondary');
+      } else {
+        $('#t3').attr('disabled', false);
+        $('#t3').attr('class', 'btn btn-primary');
+      }
+
       $.ajax({
         url: '/admin/<%= school_obj.name %>/getStudents',
         type: 'POST',
@@ -538,16 +588,49 @@
           });
           content += ' </tbody>';
           $('#myTable').html(content);
+
+          $('#s').html($("#sessionSelector").val());
+          $('#c').html($("#classSelector").val());
+          $('#t').html($("#termSelector").val());
+
+          updateCheckableSubjects();
+
         },
         complete: function () {
           $.LoadingOverlay("hide", true);
         },
       });
-      $('#s').html($("#sessionSelector").val());
-      $('#c').html($("#classSelector").val());
-      $('#t').html($("#termSelector").val());
-      updateCheckableSubjects();
+
       return;
+    }
+
+    function importStuds(target) {
+      const data = {
+        target: target,
+        destination: $("#termSelector").val(),
+        session: $("#sessionSelector").val(),
+        class: $("#classSelector").val()
+      };
+
+      // make the AJAX request using jQuery
+      $.ajax({
+        url: window.location.href + '/import',
+        type: 'POST',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function (response) {
+          if (response.students.length === 0) {
+            alert("Students not found in selected term!");
+          } else {
+            $('#import').modal('hide');
+            updateData();
+          }
+
+        },
+        error: function (xhr, status, error) {
+          console.log(`Request failed with status ${xhr.status}: ${error}`);
+        }
+      });
     }
 
     $(document).ready(function () {
