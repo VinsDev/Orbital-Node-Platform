@@ -550,6 +550,13 @@
           var content = '';
           if (payload.length === 0) {
             $('#myTable').html('No student found in your current selections. You can check another session, term or class. You can also add students to the current selection by pressing the add button below.');
+
+            ($('#s').html($("#sessionSelector").val()));
+            $('#c').html($("#classSelector").val());
+            $('#t').html($("#termSelector").val());
+
+            updateCheckableSubjects();
+
             return;
           }
           content += `
@@ -589,7 +596,7 @@
           content += ' </tbody>';
           $('#myTable').html(content);
 
-          $('#s').html($("#sessionSelector").val());
+          ($('#s').html($("#sessionSelector").val()));
           $('#c').html($("#classSelector").val());
           $('#t').html($("#termSelector").val());
 

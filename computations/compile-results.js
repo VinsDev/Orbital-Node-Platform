@@ -40,7 +40,9 @@ function subjectsTotal(sname, session, term, students, s_class, subjects) {
     var total = 0;
     for (var i = 0; i < classStudents.length; i++) {
         for (var j = 0; j < classStudents[i].subjects.length; j++) {
-            total = classStudents[i].subjects[j].ass.reduce((a, b) => a + b, 0);
+            for (var a = 0; a < 4; a++) {
+                total += classStudents[i].subjects[j].ass[a];
+            }
             schools.updateOne({ "school_info.name": sname },
                 { $set: { "sessions.$[sess].terms.$[term].students.$[stud].subjects.$[sub].total": total } },
                 {

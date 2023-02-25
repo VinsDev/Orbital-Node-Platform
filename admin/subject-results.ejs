@@ -31,6 +31,8 @@
   <!-- Template Main CSS File -->
   <link href="../../admin/assets/css/style.css" rel="stylesheet">
 
+  <!-- Jquery -->
+  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
 </head>
 
 <body>
@@ -176,7 +178,7 @@
         </li>
       </ul>
     </li><!-- End Results Nav -->
- 
+
     <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
         <i class="bi bi-person-check"></i><span>Parents</span><i class="bi bi-chevron-down ms-auto"></i>
@@ -238,7 +240,7 @@
             <div class="row md-3">
               <label class="col-sm-5 col-form-label">Class</label>
               <div class="col-sm-12">
-                <select class="form-select" aria-label="Session" onchange="sendData(this)" id="selected-class">
+                <select class="form-select" aria-label="Session" onchange="updateData(this)" id="selected-class">
                   <% for(var i=0; i < class_data.length; i++){ %>
                     <option value="<%= class_data[i].name %>">
                       <%= class_data[i].name %>
@@ -268,25 +270,6 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <% for(var i=0; i < class_data[0].subjects.length; i++) { %>
-                      <tr
-                        data-url="/admin/<%= school_obj.name %>/assessment/<%= class_data[0].subjects[i].class %>/<%= class_data[0].subjects[i].name %>">
-                        <div>
-                          <th scope="row">
-                            <%= i+1 %>
-                          </th>
-                          <td>
-                            <%= class_data[0].subjects[i].name %>
-                          </td>
-                          <td>
-                            <%= class_data[0].subjects[i].teacher %>
-                          </td>
-                          <td>
-                            <%= class_data[0].subjects[i].class %>
-                          </td>
-                        </div>
-                      </tr>
-                      <% } %>
                   </tbody>
                 </table>
                 <!-- End Table with hoverable rows -->
@@ -366,33 +349,46 @@
   <!-- Template Main JS File -->
   <script src="../../admin/assets/js/main.js"></script>
 
-  <!-- Jquery -->
-  <script src="../../admin/assets/js/jquery-3.6.1.js"></script>
-  <script>
-    function sendData(e) {
-      fetch('/admin/<%= school_obj.name %>/getSubjectsResultsList', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ class: e.value })
-      }).then(res => res.json()).then(data => {
-        var payload = data.payload;
-        var content = '';
-        if (payload < 1) {
-          $('#myTable tbody').html('Subjects not added yet');
-          return;
-        }
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
-        payload.forEach((item, index) => {
-          content += `
-                    <tr data-url="/admin/<%= school_obj.name %>/assessment/${item.class}/${item.name}">
+
+  <script>
+    function updateData() {
+      $.LoadingOverlay("show");
+
+      var cls = $("#selected-class").val();
+      $.ajax({
+        url: '/admin/<%= school_obj.name %>/getSubjectsResultsList',
+        type: 'POST',
+        data: JSON.stringify({
+          class: cls,
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          var payload = data.payload;
+          var content = '';
+          if (payload < 1) {
+            $('#myTable tbody').html('Subjects not added yet');
+            return;
+          }
+
+          payload.forEach((item, index) => {
+            content += `
+                    <tr data-url="/admin/<%= school_obj.name %>/assessment/${cls}/${item.name}">
                       <th scope="row">${index + 1}</th>
                       <td>${item.name}</td>
                       <td>${item.teacher}</td>
-                      <td>${item.class}</td> 
+                      <td>${cls}</td> 
                   </tr>`
-        });
-        $('#myTable tbody').html(content);
-        update();
+          });
+          $('#myTable tbody').html(content);
+          update();
+        },
+        complete: function () {
+          $.LoadingOverlay("hide", true);
+        },
       });
       return;
     }
@@ -453,7 +449,7 @@
           }
         });
       });
-
+      updateData();
     })
 
   </script>

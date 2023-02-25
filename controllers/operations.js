@@ -446,18 +446,23 @@ const downloadPdf = async (req, res) => {
         const fetch = require('node-fetch');
         var url = school_data.school_info.logo;
         var rest = await fetch(url, { encoding: null });
-        imageBuffer = await rest.buffer();
-        img = new Buffer.from(imageBuffer, 'base64');
+        var imageBuffer = await rest.buffer();
+        var img = new Buffer.from(imageBuffer, 'base64');
+        
+        var url1 = school_data.school_info.stamp;
+        var rest1 = await fetch(url1, { encoding: null });
+        var imageBuffer1 = await rest1.buffer();
+        var img1 = new Buffer.from(imageBuffer1, 'base64');
 
         var Roboto = require('../fonts/Roboto');
 
         let tableItems = [
-            [{ rowSpan: 2, text: 'Subjects', alignment: 'center', style: 'tableHeader' }, { text: 'C. Assessments', style: 'tableHeader', colSpan: 5, alignment: 'center' }, {}, {}, {}, {}, { text: 'Total', style: 'tableHeader', alignment: 'center' }, { text: 'Average', style: 'tableHeader', alignment: 'center' }, { text: 'Highest', style: 'tableHeader', alignment: 'center' }, { text: 'Lowest', style: 'tableHeader', alignment: 'center' }, { text: 'Rank', style: 'tableHeader', alignment: 'center' }, { text: 'Grade', style: 'tableHeader', alignment: 'center' }],
-            ['', { text: '1ST\nCA', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nCA', style: 'tableHeader', alignment: 'center' }, { text: '1ST\nTEST', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nTEST', style: 'tableHeader', alignment: 'center' }, { text: 'EXAMS', style: 'tableHeader', alignment: 'center' }, '', '', '', '', '', ''],
+            [{ rowSpan: 2, text: 'Subjects', alignment: 'center', style: 'tableHeader' }, { text: 'C. Assessments', style: 'tableHeader', colSpan: 4, alignment: 'center' }, {}, {}, {}, {}, { text: 'Total', style: 'tableHeader', alignment: 'center' }, { text: 'Average', style: 'tableHeader', alignment: 'center' }, { text: 'Highest', style: 'tableHeader', alignment: 'center' }, { text: 'Lowest', style: 'tableHeader', alignment: 'center' }, { text: 'Rank', style: 'tableHeader', alignment: 'center' }, { text: 'Grade', style: 'tableHeader', alignment: 'center' }],
+            ['', { text: '1ST\nCA', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nCA', style: 'tableHeader', alignment: 'center' }, { text: '3RD\nTEST', style: 'tableHeader', alignment: 'center' }, { text: 'EXAMS', style: 'tableHeader', alignment: 'center' }, '', '', '', '', '', ''],
         ];
 
         for (var i = 0; i < student_data.subjects.length; i++) {
-            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[4], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average.toFixed(2), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: position_qualifier(student_data.subjects[i].position), style: 'tableHeader', alignment: 'center' }, { text: gradeHelper(student_data.subjects[i].total), style: 'tableHeader', alignment: 'center' }])
+            tableItems.push([{ text: student_data.subjects[i].name, style: 'tableHeader' }, { text: student_data.subjects[i].ass[0], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[1], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[2], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].ass[3], style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].total, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].average.toFixed(2), style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].highest, style: 'tableHeader', alignment: 'center' }, { text: student_data.subjects[i].lowest, style: 'tableHeader', alignment: 'center' }, { text: position_qualifier(student_data.subjects[i].position), style: 'tableHeader', alignment: 'center' }, { text: gradeHelper(student_data.subjects[i].total), style: 'tableHeader', alignment: 'center' }])
         }
 
         var dt = new Date();
@@ -603,6 +608,11 @@ const downloadPdf = async (req, res) => {
                             width: '*',
                             style: 'bottom',
                             text: 'SIGNATURE/STAMP:'
+                        },
+                        {
+                            image: img,
+                            fit: [60, 60],
+                            style: "bottom"
                         },
                         {
                             width: 'auto',
@@ -953,7 +963,7 @@ const createStudent = async (req, res) => {
             s_subjects.push(
                 {
                     name: subs[i],
-                    ass: [-1, -1, -1, -1, -1],
+                    ass: [-1, -1, -1, -1],
                     total: -1,
                     position: -1,
                     highest: -1,
@@ -1270,7 +1280,7 @@ const importStudents = async (req, res) => {
         for (var i = 0; i < stds.length; i++) {
             stds[i].term = req.body.destination;
             for (var j = 0; j < stds[i].subjects.length; j++) {
-                stds[i].subjects[j].ass = [-1, -1, -1, -1, -1];
+                stds[i].subjects[j].ass = [-1, -1, -1, -1];
                 stds[i].subjects[j].total = -1;
                 stds[i].subjects[j].average = -1;
                 stds[i].subjects[j].position = -1;
