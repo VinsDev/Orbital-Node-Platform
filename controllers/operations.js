@@ -7,6 +7,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 var PdfPrinter = require('pdfmake');
 var nodemailer = require('nodemailer');
+// const fetch = require('node-fetch');
 
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
@@ -445,20 +446,19 @@ const downloadPdf = async (req, res) => {
 
         const fetch = require('node-fetch');
         var url = school_data.school_info.logo;
+        var stampUrl = school_data.school_info.stamp;
         var rest = await fetch(url, { encoding: null });
-        var imageBuffer = await rest.buffer();
+        var stampRest = await fetch(stampUrl, { encoding: null });
+        imageBuffer = await rest.buffer();
+        stampBuffer = await stampRest.buffer();
         var img = new Buffer.from(imageBuffer, 'base64');
-        
-        var url1 = school_data.school_info.stamp;
-        var rest1 = await fetch(url1, { encoding: null });
-        var imageBuffer1 = await rest1.buffer();
-        var img1 = new Buffer.from(imageBuffer1, 'base64');
+        var stamp = new Buffer.from(stampBuffer, 'base64');
 
         var Roboto = require('../fonts/Roboto');
 
         let tableItems = [
-            [{ rowSpan: 2, text: 'Subjects', alignment: 'center', style: 'tableHeader' }, { text: 'C. Assessments', style: 'tableHeader', colSpan: 4, alignment: 'center' }, {}, {}, {}, {}, { text: 'Total', style: 'tableHeader', alignment: 'center' }, { text: 'Average', style: 'tableHeader', alignment: 'center' }, { text: 'Highest', style: 'tableHeader', alignment: 'center' }, { text: 'Lowest', style: 'tableHeader', alignment: 'center' }, { text: 'Rank', style: 'tableHeader', alignment: 'center' }, { text: 'Grade', style: 'tableHeader', alignment: 'center' }],
-            ['', { text: '1ST\nCA', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nCA', style: 'tableHeader', alignment: 'center' }, { text: '3RD\nTEST', style: 'tableHeader', alignment: 'center' }, { text: 'EXAMS', style: 'tableHeader', alignment: 'center' }, '', '', '', '', '', ''],
+            [{ rowSpan: 2, text: 'Subjects', alignment: 'center', style: 'tableHeader' }, { text: 'C. Assessments', style: 'tableHeader', colSpan: 4, alignment: 'center' }, {}, {}, {}, { text: 'Total', style: 'tableHeader', alignment: 'center' }, { text: 'Average', style: 'tableHeader', alignment: 'center' }, { text: 'Highest', style: 'tableHeader', alignment: 'center' }, { text: 'Lowest', style: 'tableHeader', alignment: 'center' }, { text: 'Rank', style: 'tableHeader', alignment: 'center' }, { text: 'Grade', style: 'tableHeader', alignment: 'center' }],
+            ['', { text: '1ST\nC.A', style: 'tableHeader', alignment: 'center' }, { text: '2ND\nC.A', style: 'tableHeader', alignment: 'center' }, { text: '3RD\nC.A', style: 'tableHeader', alignment: 'center' }, { text: 'EXAMS', style: 'tableHeader', alignment: 'center' }, '', '', '', '', '', ''],
         ];
 
         for (var i = 0; i < student_data.subjects.length; i++) {
@@ -514,7 +514,7 @@ const downloadPdf = async (req, res) => {
                         {
                             width: 'auto',
                             style: 'top',
-                            text: `Sex: ${student_data.gender}`
+                            text: `Sex: ${student_data.gender.charAt(0).toUpperCase() + student_data.gender.slice(1)}`
                         },
                     ]
                 },
@@ -523,7 +523,7 @@ const downloadPdf = async (req, res) => {
                         {
                             width: '*',
                             style: 'top',
-                            text: `Term: ${school_data.sessions[lses].terms[currTermIndex].name}`
+                            text: `Term: ${school_data.sessions[lses].terms[currTermIndex].name.charAt(0).toUpperCase() + school_data.sessions[lses].terms[currTermIndex].name.slice(1)}`
                         },
                         {
                             width: 'auto',
@@ -550,7 +550,7 @@ const downloadPdf = async (req, res) => {
                     style: 'tableExample',
                     color: '#000',
                     table: {
-                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
+                        widths: ['*', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto', 'auto'],
                         // headerRows: 2,
                         body: tableItems
                     }
@@ -605,14 +605,15 @@ const downloadPdf = async (req, res) => {
                             text: `NAME OF PRINCIPAL: ${school_data.school_info.p_name}`
                         },
                         {
-                            width: '*',
+                            width: 'auto',
                             style: 'bottom',
-                            text: 'SIGNATURE/STAMP:'
+                            text: 'SIGNATURE/STAMP:   '
                         },
                         {
-                            image: img,
-                            fit: [60, 60],
-                            style: "bottom"
+                            width: 'auto',
+                            image: stamp,
+                            fit: [40, 40],
+
                         },
                         {
                             width: 'auto',
@@ -669,9 +670,6 @@ const downloadPdf = async (req, res) => {
             }
         };
 
-        var options = {
-            // ...
-        }
         var printer = new PdfPrinter(Roboto);
 
         var pdfDoc = printer.createPdfKitDocument(docDefinition);
@@ -681,6 +679,7 @@ const downloadPdf = async (req, res) => {
 
 
     } catch (error) {
+        console.log(error);
         return res.status(500).send({
             message: error.message,
         });
@@ -1771,23 +1770,28 @@ function date_obj_converter(date) {
     return yyyy + "-" + mm + "-" + dd;
 }
 function position_qualifier(pos) {
-    if (p(pos, 1) || p(pos, 21) || p(pos, 31) || p(pos, 41) || p(pos, 51) || p(pos, 61) || p(pos, 71) || p(pos, 81) || p(pos, 91) || p(pos, 101) || p(pos, 121) || p(pos, 131) || p(pos, 141) || p(pos, 151) || p(pos, 161) || p(pos, 171) || p(pos, 181) || p(pos, 191) || p(pos, 201)) {
-        return pos + "ST";
-    }
-    else {
-        if (p(pos, 2) || p(pos, 22) || p(pos, 32) || p(pos, 42) || p(pos, 52) || p(pos, 62) || p(pos, 72) || p(pos, 82) || p(pos, 92) || p(pos, 102) || p(pos, 122) || p(pos, 132) || p(pos, 142) || p(pos, 152) || p(pos, 162) || p(pos, 172) || p(pos, 182) || p(pos, 192) || p(pos, 202)) {
-            return pos + "ND";
-        } else {
-            if (p(pos, 3) || p(pos, 23) || p(pos, 33) || p(pos, 43) || p(pos, 53) || p(pos, 63) || p(pos, 73) || p(pos, 83) || p(pos, 93) || p(pos, 103) || p(pos, 123) || p(pos, 133) || p(pos, 143) || p(pos, 153) || p(pos, 163) || p(pos, 173) || p(pos, 183) || p(pos, 193) || p(pos, 203)) {
-                return pos + "RD";
+    if (!isNaN(pos)) {
+        if (p(pos, 1) || p(pos, 21) || p(pos, 31) || p(pos, 41) || p(pos, 51) || p(pos, 61) || p(pos, 71) || p(pos, 81) || p(pos, 91) || p(pos, 101) || p(pos, 121) || p(pos, 131) || p(pos, 141) || p(pos, 151) || p(pos, 161) || p(pos, 171) || p(pos, 181) || p(pos, 191) || p(pos, 201)) {
+            return pos + "ST";
+        }
+        else {
+            if (p(pos, 2) || p(pos, 22) || p(pos, 32) || p(pos, 42) || p(pos, 52) || p(pos, 62) || p(pos, 72) || p(pos, 82) || p(pos, 92) || p(pos, 102) || p(pos, 122) || p(pos, 132) || p(pos, 142) || p(pos, 152) || p(pos, 162) || p(pos, 172) || p(pos, 182) || p(pos, 192) || p(pos, 202)) {
+                return pos + "ND";
             } else {
-                if (btw(pos, 4, 20) || btw(pos, 24, 30) || btw(pos, 34, 40) || btw(pos, 44, 50) || btw(pos, 54, 60) || btw(pos, 64, 70) || btw(pos, 74, 80) || btw(pos, 84, 90) || btw(pos, 94, 100) || btw(pos, 104, 120) || btw(pos, 124, 130) || btw(pos, 134, 140) || btw(pos, 144, 150) || btw(pos, 154, 160) || btw(pos, 164, 170) || btw(pos, 174, 180) || btw(pos, 184, 190) || btw(pos, 194, 200)) {
-                    return pos + "TH";
+                if (p(pos, 3) || p(pos, 23) || p(pos, 33) || p(pos, 43) || p(pos, 53) || p(pos, 63) || p(pos, 73) || p(pos, 83) || p(pos, 93) || p(pos, 103) || p(pos, 123) || p(pos, 133) || p(pos, 143) || p(pos, 153) || p(pos, 163) || p(pos, 173) || p(pos, 183) || p(pos, 193) || p(pos, 203)) {
+                    return pos + "RD";
                 } else {
-                    return pos;
+                    if (btw(pos, 4, 20) || btw(pos, 24, 30) || btw(pos, 34, 40) || btw(pos, 44, 50) || btw(pos, 54, 60) || btw(pos, 64, 70) || btw(pos, 74, 80) || btw(pos, 84, 90) || btw(pos, 94, 100) || btw(pos, 104, 120) || btw(pos, 124, 130) || btw(pos, 134, 140) || btw(pos, 144, 150) || btw(pos, 154, 160) || btw(pos, 164, 170) || btw(pos, 174, 180) || btw(pos, 184, 190) || btw(pos, 194, 200)) {
+                        return pos + "TH";
+                    } else {
+                        return pos;
+                    }
                 }
             }
         }
+    }
+    else {
+        return ''
     }
 }
 function p(pos, num) {
@@ -1797,32 +1801,38 @@ function btw(p, a, b) {
     if (p >= a && p <= b) { return true; } else { return false; }
 }
 function gradeHelper(score) {
-    if (score <= 100 && score >= 75) {
-        return "A";
-    }
-    else {
-        if (score < 75 && score >= 65) {
-            return "B";
+    if (!isNaN(score)) {
+        if (score <= 100 && score >= 75) {
+            return "A";
         }
         else {
-            if (score < 65 && score >= 55) {
-                return "C";
+            if (score < 75 && score >= 65) {
+                return "B";
             }
             else {
-                if (score < 55 && score >= 40) {
-                    return "D";
+                if (score < 65 && score >= 55) {
+                    return "C";
                 }
                 else {
-                    if (score < 40 && score >= 0) {
-                        return "E";
+                    if (score < 55 && score >= 40) {
+                        return "D";
                     }
                     else {
-                        return "-"
+                        if (score < 40 && score >= 0) {
+                            return "E";
+                        }
+                        else {
+                            return "-"
+                        }
                     }
                 }
             }
         }
     }
+    else {
+        return "-"
+    }
+
 }
 function available_nodes(num) {
     if (num > 0) {
