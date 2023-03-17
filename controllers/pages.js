@@ -21,6 +21,19 @@ const register_pri = (req, res) => {
 const purchase_node = (req, res) => {
     return res.render("inner/purchase-node");
 };
+const subscribe_node_page = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ "school_info.email": req.body.email.trim() });
+
+        return res.render("inner/purchase-node-page", { data: school_data });
+    } catch (error) {
+        console.log(error);
+    }
+}
 const register_sec = (req, res) => {
     return res.render("inner/register-sec");
 };
@@ -552,5 +565,6 @@ module.exports = {
     subjects,
     assessment,
     result,
-    profile
+    profile,
+    subscribe_node_page
 };

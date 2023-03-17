@@ -310,19 +310,36 @@ const subscribeNode = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
 
-        let school_data = await schools.findOne({ "school_info.email": req.body.email.trim() });
-        var nodes = school_data.school_info.nodes;
+        const nodePin = database.collection("nodes");
+        let nodePinData = await nodePin.findOne({ 'pin': req.body.pin.trim() });
+        if (nodePinData) {
+            if (!nodePinData.used) {
+                let school_data = await schools.findOne({ "school_info.email": req.body.email.trim() });
+                var nodes = school_data.school_info.nodes;
 
-        schools.findOneAndUpdate({ "school_info.email": req.body.email.trim() },
-            { $set: { "school_info.nodes": nodes + Number(req.body.quantity) } },
-        )
+                schools.findOneAndUpdate(
+                    { "school_info.email": req.body.email.trim() },
+                    { $set: { "school_info.nodes": nodes + Number(nodePinData.value) } },
+                );
 
+                nodePin.findOneAndUpdate(
+                    { "pin": req.body.pin.trim() },
+                    { $set: { "used": true } },
+                );
 
-        return res.status(200).render("inner/success_node", { name: school_data.school_info.name, quantity: req.body.quantity });
+                return res.send({ feedback: 'ok', value: nodePinData.value });
+            } else {
+                return res.send({ feedback: 'used' });
+            }
+        }
+        else {
+            return res.send({ feedback: "no" });
+        }
     } catch (error) {
         console.log(error);
     }
 }
+
 const verifyTransaction = async (req, res) => {
     const axios = require("axios");
     try {
@@ -486,7 +503,7 @@ const downloadPdf = async (req, res) => {
                     alignment: 'center'
                 },
                 {
-                    text: `${school_data.school_info.state} Nigeria`,
+                    text: `${school_data.school_info.state}, Nigeria`,
                     style: 'subheader',
                     alignment: 'center'
                 },
@@ -1704,6 +1721,7 @@ module.exports = {
     getStudents,
     getListFiles,
     getTermStatus,
+
     downloadImage,
     downloadPdf,
     downloadNewsImage,
@@ -1735,7 +1753,7 @@ module.exports = {
     staffLogin,
     getClassList,
     getAttendanceForClass,
-    subscribeNode
+    subscribeNode,
 };
 
 function htremarkHelper(score) {

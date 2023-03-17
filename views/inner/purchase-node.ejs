@@ -27,120 +27,29 @@
     </header>
 
     <p id="description" class="description text-center">
-      Nodes are used to activate terms on your school profile.
+      Enter the email address used to register your school.
     </p>
-    <form action="/subscribeNode" method="post">
+    <form action="/subscribeNodePage" method="post">
       <div class="form-group">
         <label id="email-label" for="email">School Email</label>
         <input type="email" name="email" id="email" class="form-control" placeholder="Enter your School Email"
           required />
       </div>
 
-      <div class="form-group">
-        <label id="phone-label" for="email">Phone Number</label>
-        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your School Phone Number"
-          required />
+      <div class="form-group" style="display: flex; justify-content: center;">
+        <button type="submit" id="regist_b" class="submit-button"
+          style="display: inline-block; min-width: 100px; width: auto;">
+          Proceed
+        </button>
       </div>
 
-      <div class="form-group">
-        <label id="phone-label" for="email">Node Recharge PIN</label>
-        <input type="text" name="phone" id="phone" class="form-control" placeholder="Enter your Node Recharge PIN"
-          required />
-      </div>
-
-     <!--  <div class="form-group">
-        <p>How many Nodes would you like to purchase?</p>
-        <select aria-label="Numbers" name="quantity" id="rad" onchange="update_price()"
-          style="font-size: 20px;width: 50px; font-weight: bold;">
-          <option value="1">
-            1
-          </option>
-          <option value="2">
-            2
-          </option>
-          <option value="3">
-            3
-          </option>
-        </select>
-      </div>
-
-      <div id="price"></div> -->
-
-      <button type="submit" id="sub" style="display: none;"></button>
     </form>
-    <div class="form-group">
-      <button type="button" id="regist_b" class="submit-button" onclick="pay()">
-        Recharge
-      </button>
-    </div>
+
     <div class="text-center" style="margin-bottom: 30px;">
       <a href="/" style="color: white;text-decoration: none;">Orbital Node Website</a>
     </div>
-
-    <script>
-      var loadFile = function (event, id) {
-        var output = document.getElementById(id);
-        output.src = URL.createObjectURL(event.target.files[0]); output.onload = function () {
-          URL.revokeObjectURL(output.src)
-        }
-      }
-
-      $(document).ready(function () {
-        $("#price").html('<p>Price: ₦' + Number($("#rad").val()) * 7000 + '</p>');
-      });
-
-      function update_price() {
-        $("#price").html('<p>Price: ₦' + Number($("#rad").val()) * 7000 + '</p>');
-      }
-    </script>
   </div>
 
-  <script>
-    var paymentForm = document.getElementById('reg-form');
-    var email = document.getElementById('email');
-    var phone = document.getElementById('phone');
-    var subBtn = document.getElementById('sub');
-
-    function pay() {
-      if (phone.value === '' || email.value === '') {
-        subBtn.click();
-      }
-      else {
-        // payWithPaystack();
-      }
-    }
-
-    function payWithPaystack() {
-      var ref = "ref" + Math.random().toString(16).slice(2);
-      var handler = PaystackPop.setup({
-        key: 'pk_live_b3760d28c299381e3506524e5da656d549c3e60f', // Replace with your public key
-        email: document.getElementById('email').value,
-        amount: Number($("#rad").val()) * 7000 * 100, // the amount value is multiplied by 100 to convert to the lowest currency unit
-        currency: 'NGN', // Use GHS for Ghana Cedis or USD for US Dollars
-        ref: ref, // Replace with a reference you generated
-        callback: function (response) {
-          //this happens after the payment is completed successfully
-          var reference = response.reference;
-          // alert('Payment complete! Reference: ' + reference);
-          // Make an AJAX call to your server with the reference to verify the transaction
-          $.ajax({
-            url: 'verify_transaction?reference=' + response.reference,
-            method: 'get',
-            success: function (data) {
-              // the transaction status is in response.data.status
-              subBtn.click();
-            }
-          });
-        },
-        onClose: function () {
-          // alert('Transaction was not completed, window closed.');
-        },
-      });
-      handler.openIframe();
-    }
-  </script>
-
-  <script src="https://js.paystack.co/v1/inline.js"></script>
 </body>
 
 </html>

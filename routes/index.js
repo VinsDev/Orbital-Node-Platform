@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const homeController = require("../controllers/home");
-const uploadController = require("../controllers/operations");
+const operationsController = require("../controllers/operations");
 const pagesController = require("../controllers/pages");
 
 const bodyParser = require("body-parser");
@@ -11,56 +11,57 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 let routes = app => {
   // LANDING PAGES . . .
-  router.get("/delete-images", uploadController.deleteImages);
+  router.get("/delete-images", operationsController.deleteImages);
   router.get("/", homeController.first);
   router.get("/home", homeController.home);
   router.get("/about", pagesController.about);
   router.get("/services", pagesController.services);
   router.get("/contact", pagesController.contact);
   router.get("/purchase-node", pagesController.purchase_node);
+  router.post("/subscribeNodePage", pagesController.subscribe_node_page);
   router.get("/register-pri", pagesController.register_pri);
   router.get("/register-sec", pagesController.register_sec);
   router.get("/agent", pagesController.agent);
 
   // OPERATIONS . . .
-  router.post("/register", uploadController.uploadRegForm);
-  router.get("/verify_transaction", uploadController.verifyTransaction);
-  router.post("/agent", uploadController.regAgent);
-  router.post("/verify", uploadController.verifyActivationPin);
-  router.get("/files", uploadController.getListFiles);
-  router.get("/files/:name", uploadController.downloadImage);
-  router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", uploadController.downloadPdf);
-  router.get("/news/:name", uploadController.downloadNewsImage);
-  router.post("/getSchools", uploadController.getSchools);
-  router.post("/subscribeNode", uploadController.subscribeNode);
-  router.post("/admin/:sname/getSubjects", uploadController.getSubjects);
-  router.get("/admin/:sname/getClassSubjects/:class", uploadController.getClassSubjects);
-  router.post("/admin/:sname/getStudents", uploadController.getStudents);
-  router.post("/admin/:sname/student-fees", uploadController.setStudentFees);
-  router.post("/admin/:sname/getSubjectsResultsList", uploadController.getSubjectsResultsList);
-  router.post("/admin/:sname/getSubjectsResults", uploadController.getSubjectsResults);
-  router.post("/admin/:sname/getStudentResults", uploadController.getStudentResults);
-  router.post("/admin/:sname/getTermStatus", uploadController.getTermStatus);
-  router.post("/admin/:sname/activateTerm", uploadController.activateTerm);
-  router.post("/admin/:sname/updateSubjectsResults", uploadController.updateSubjectsResults);
-  router.post("/admin/:sname/upcoming-news/delete", uploadController.deleteNews);
-  router.post("/admin/:sname/sessions/delete", uploadController.deleteSession);
-  router.post("/admin/:sname/classes/delete", uploadController.deleteClass);
-  router.post("/admin/:sname/subjects/delete", uploadController.deleteSubject);
-  router.post("/admin/:sname/student-info/import", uploadController.importStudents);
-  router.post("/admin/:sname/student-info/delete", uploadController.deleteStudent);
-  router.post("/admin/:sname/updateCurrentTerm", uploadController.updateCurrentTerm);
-  router.post("/admin/:sname/changePassword", uploadController.updateAdminPassword);
-  router.post("/admin/:sname/updateTermDates", uploadController.updateTermDates);
-  router.post("/admin/:sname/updateResultStatus", uploadController.updateResultStatus);
-  router.post("/admin/login", urlencodedParser, uploadController.login);
-  router.post("/schools/:sname/portal/login", urlencodedParser, uploadController.portaLogin);
-  router.post("/schools/:sname/follow", urlencodedParser, uploadController.upload_feedbacks);
-  router.post("/admin/:sname/upcoming-news", uploadController.upload_news);
-  router.post("/admin/:sname/sessions", uploadController.createSession);
-  router.post("/admin/:sname/classes", uploadController.createClass);
-  router.post("/admin/:sname/subjects", uploadController.createSubject);
-  router.post("/admin/:sname/students", uploadController.createStudent);
+  router.post("/register", operationsController.uploadRegForm);
+  router.get("/verify_transaction", operationsController.verifyTransaction);
+  router.post("/agent", operationsController.regAgent);
+  router.post("/verify", operationsController.verifyActivationPin);
+  router.get("/files", operationsController.getListFiles);
+  router.get("/files/:name", operationsController.downloadImage);
+  router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", operationsController.downloadPdf);
+  router.get("/news/:name", operationsController.downloadNewsImage);
+  router.post("/getSchools", operationsController.getSchools);
+  router.post("/subscribeNode", operationsController.subscribeNode);
+  router.post("/admin/:sname/getSubjects", operationsController.getSubjects);
+  router.get("/admin/:sname/getClassSubjects/:class", operationsController.getClassSubjects);
+  router.post("/admin/:sname/getStudents", operationsController.getStudents);
+  router.post("/admin/:sname/student-fees", operationsController.setStudentFees);
+  router.post("/admin/:sname/getSubjectsResultsList", operationsController.getSubjectsResultsList);
+  router.post("/admin/:sname/getSubjectsResults", operationsController.getSubjectsResults);
+  router.post("/admin/:sname/getStudentResults", operationsController.getStudentResults);
+  router.post("/admin/:sname/getTermStatus", operationsController.getTermStatus);
+  router.post("/admin/:sname/activateTerm", operationsController.activateTerm);
+  router.post("/admin/:sname/updateSubjectsResults", operationsController.updateSubjectsResults);
+  router.post("/admin/:sname/upcoming-news/delete", operationsController.deleteNews);
+  router.post("/admin/:sname/sessions/delete", operationsController.deleteSession);
+  router.post("/admin/:sname/classes/delete", operationsController.deleteClass);
+  router.post("/admin/:sname/subjects/delete", operationsController.deleteSubject);
+  router.post("/admin/:sname/student-info/import", operationsController.importStudents);
+  router.post("/admin/:sname/student-info/delete", operationsController.deleteStudent);
+  router.post("/admin/:sname/updateCurrentTerm", operationsController.updateCurrentTerm);
+  router.post("/admin/:sname/changePassword", operationsController.updateAdminPassword);
+  router.post("/admin/:sname/updateTermDates", operationsController.updateTermDates);
+  router.post("/admin/:sname/updateResultStatus", operationsController.updateResultStatus);
+  router.post("/admin/login", urlencodedParser, operationsController.login);
+  router.post("/schools/:sname/portal/login", urlencodedParser, operationsController.portaLogin);
+  router.post("/schools/:sname/follow", urlencodedParser, operationsController.upload_feedbacks);
+  router.post("/admin/:sname/upcoming-news", operationsController.upload_news);
+  router.post("/admin/:sname/sessions", operationsController.createSession);
+  router.post("/admin/:sname/classes", operationsController.createClass);
+  router.post("/admin/:sname/subjects", operationsController.createSubject);
+  router.post("/admin/:sname/students", operationsController.createStudent);
 
   // SCHOOL PAGES . . .
   router.all("/schools/:sname/home", pagesController.s_home);
@@ -91,9 +92,9 @@ let routes = app => {
   router.get("/admin/:sname/result/:class/:student", pagesController.result);
 
   // TEACHERS APP . . .
-  router.post("/ontap/staffLogin", uploadController.staffLogin);
-  router.get("/ontap/:sname/getClassList", uploadController.getClassList);
-  router.get("/ontap/:sname/getAttendanceForClass/:class", uploadController.getAttendanceForClass);
+  router.post("/ontap/staffLogin", operationsController.staffLogin);
+  router.get("/ontap/:sname/getClassList", operationsController.getClassList);
+  router.get("/ontap/:sname/getAttendanceForClass/:class", operationsController.getAttendanceForClass);
 
   return app.use("/", router);
 };
