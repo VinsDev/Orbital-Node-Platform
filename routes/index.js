@@ -37,6 +37,7 @@ let routes = app => {
   router.post("/admin/:sname/getSubjects", operationsController.getSubjects);
   router.get("/admin/:sname/getClassSubjects/:class", operationsController.getClassSubjects);
   router.post("/admin/:sname/getStudents", operationsController.getStudents);
+  router.get("/admin/:sname/getBatch2Data", operationsController.getBatch2Data);
   router.post("/admin/:sname/student-fees", operationsController.setStudentFees);
   router.post("/admin/:sname/getSubjectsResultsList", operationsController.getSubjectsResultsList);
   router.post("/admin/:sname/getSubjectsResults", operationsController.getSubjectsResults);
@@ -51,6 +52,7 @@ let routes = app => {
   router.post("/admin/:sname/student-info/import", operationsController.importStudents);
   router.post("/admin/:sname/student-info/delete", operationsController.deleteStudent);
   router.post("/admin/:sname/updateCurrentTerm", operationsController.updateCurrentTerm);
+  router.post("/admin/:sname/updateCurrentSession", operationsController.updateCurrentSession);
   router.post("/admin/:sname/changePassword", operationsController.updateAdminPassword);
   router.post("/admin/:sname/updateTermDates", operationsController.updateTermDates);
   router.post("/admin/:sname/updateResultStatus", operationsController.updateResultStatus);

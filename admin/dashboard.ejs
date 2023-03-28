@@ -40,7 +40,7 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="/admin/<%= school_obj.name %>/dashboard" class="logo d-flex align-items-center">
+      <a href="/admin/<%= info.name %>/dashboard" class="logo d-flex align-items-center">
         <img src="../../admin/assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">Orbital Admin</span>
       </a>
@@ -59,16 +59,16 @@
 
         <li class="nav-item dropdown pe-3">
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="<%= school_obj.logo %>" alt="Profile">
+            <img src="<%= info.logo %>" alt="Profile">
             <span class="d-none d-md-block dropdown-toggle ps-2">
-              <%= school_obj.name %>
+              <%= info.name %>
             </span>
           </a><!-- End Profile Iamge Icon -->
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
               <h6>
-                <%= school_obj.name %>
+                <%= info.name %>
               </h6>
               <span>Admin Account</span>
             </li>
@@ -103,7 +103,7 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item">
-        <a class="nav-link " href="/admin/<%=school_obj.name%>/dashboard">
+        <a class="nav-link " href="/admin/<%=info.name%>/dashboard">
           <i class="bi bi-grid"></i>
           <span>Dashboard</span>
         </a>
@@ -248,8 +248,7 @@
                       <i class="bi bi-people"></i>
                     </div>
                     <div class="ps-3">
-                      <h6>
-                        <%= students %>
+                      <h6 id="num">
                       </h6>
 
                     </div>
@@ -293,7 +292,7 @@
                     </div>
                     <div class="ps-3">
                       <h6>
-                        <%= nodes %>
+                        <%=info.nodes%>
                       </h6>
                     </div>
                   </div>
@@ -305,107 +304,77 @@
                 </div>
               </div>
             </div><!-- End Subscription Card -->
-
-            <div class="col-xxl-12 col-xl-12">
-
-              <div class="card info-card customers-card">
-                <div class="card-body">
-                  <h5 class="card-title">Current Session</h5>
-                  <div class="d-flex align-items-center">
-                    <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                      <i class="bi bi-collection"></i>
-                    </div>
-                    <div class="ps-3">
-                      <h6>
-                        <p id="sess">
-                          <%= session %>
-                        </p> Academic Session
-                      </h6>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
           </div>
         </div>
 
-        <% if(session==="Not set yet" ) { %>
-          <div></div>
-          <% } else { %>
+        <fieldset class="row mb-3" id="fs">
+          <legend class="col-form-label col-sm-2 pt-0"><b> Current Session</b></legend>
+          <div class="col-sm-10">
+            <label for="dropdown">Select an option:</label>
+            <select id="dropdown" name="dropdown">
+              <option value="option1" disabled selected>Select</option>
+            </select>
+          </div>
+        </fieldset>
 
-            <% var c1="" %>
-              <% var c2="" %> Not set yet
-                <% var c3="" %>
-                  <% if(current_term==="first" ) c1='checked' ; %>
-                    <% if(current_term==="second" ) c2='checked' ; %>
-                      <% if(current_term==="third" ) c3='checked' ; %>
-                        <fieldset class="row mb-3" id="fs">
-                          <legend class="col-form-label col-sm-2 pt-0">Portal Access Term</legend>
-                          <div class="col-sm-10">
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="term" id="first" value="first" <%=c1
-                                %>>
-                              <label class="form-check-label" for="first">
-                                First Term
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="term" id="second" value="second" <%=c2
-                                %>>
-                              <label class="form-check-label" for="second">
-                                Second Term
-                              </label>
-                            </div>
-                            <div class="form-check">
-                              <input class="form-check-input" type="radio" name="term" id="third" value="third" <%=c3
-                                %>>
-                              <label class="form-check-label" for="third">
-                                Third Term
-                              </label>
-                            </div>
-                          </div>
-                        </fieldset>
 
-                        <div class="text-center">
-                          <p>Ensure that every subject teacher has uploaded his/her assessments before clicking on release results.</p>
-                        </div>
+        <fieldset class="row mb-3" id="fs">
+          <legend class="col-form-label col-sm-2 pt-0"><b> Portal Access Term</b> <br><i>(What term's data students and
+              parents can
+              access on
+              the portal)</i></legend>
+          <div class="col-sm-10" id="trms">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="term" id="first" value="first">
+              <label class="form-check-label" for="first">
+                First Term
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="term" id="second" value="second">
+              <label class="form-check-label" for="second">
+                Second Term
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="term" id="third" value="third">
+              <label class="form-check-label" for="third">
+                Third Term
+              </label>
+            </div>
+          </div>
+        </fieldset>
 
-                        <% var e1="" %>
-                          <% var e2="" %>
-                            <% var e3="" %>
-                              <% if(results_status==='1' ) e1='checked' ; %>
-                                <% if(results_status==='2' ) e2='checked' ; %>
-                                  <% if(results_status==='3' ) e3='checked' ; %>
-                                    <fieldset class="row mb-3">
-                                      <legend class="col-form-label col-sm-2 pt-0">Current Term Result Status</legend>
-                                      <div class="col-sm-10">
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="status"
-                                            id="released-for-all" value="released-for-all" <%=e1 %>>
-                                          <label class="form-check-label" for="gridRadios1">
-                                            Released for all Students.
-                                          </label>
-                                        </div>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="status"
-                                            id="released-for-some" value="released-for-some" <%=e2 %>>
-                                          <label class="form-check-label" for="gridRadios1">
-                                            Released for only Students who paid their fees.
-                                          </label>
-                                        </div>
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="radio" name="status" id="not-released"
-                                            value="not-released" <%=e3 %>>
-                                          <label class="form-check-label" for="gridRadios2">
-                                            Not Released
-                                          </label>
-                                        </div>
-                                      </div>
-                                    </fieldset>
-                                    <% } %>
+        <div class="text-center">
+          <p>Ensure that every subject teacher has uploaded his/her assessments before clicking on release results.</p>
+        </div>
+
+
+        <fieldset class="row mb-3">
+          <legend class="col-form-label col-sm-2 pt-0"><b> Current Term Result Status</b></legend>
+          <div class="col-sm-10" id="res">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="released-for-all" value="released-for-all">
+              <label class="form-check-label" for="released-for-all">
+                Released for all Students.
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="released-for-some"
+                value="released-for-some">
+              <label class="form-check-label" for="released-for-some">
+                Released for only Students who paid their fees.
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="status" id="not-released" value="not-released">
+              <label class="form-check-label" for="not-released">
+                Not Released
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
 
     </section>
 
@@ -428,7 +397,7 @@
             style="border: none; background-color: transparent;">&times;</button>
         </div>
         <div class="modal-body">
-          <form class="row g-3 needs-validation" method="post" action="/admin/<%= school_obj.name %>/changePassword"
+          <form class="row g-3 needs-validation" method="post" action="/admin/<%= info.name %>/changePassword"
             id="passwordForm">
             <div class="col-12">
               <label for="yourName" class="form-label">Old Password</label>
@@ -456,20 +425,87 @@
       class="bi bi-arrow-up-short"></i></a>
 
 
-
-
   <script>
     $(document).ready(function () {
+      // Loading Overlays activate...
+      $("#dropdown").LoadingOverlay("show");
+      $("#num").LoadingOverlay("show");
+      $("#trms").LoadingOverlay("show");
+      $("#res").LoadingOverlay("show");
+
+      $.ajax({
+        url: '/admin/<%= info.name %>/getBatch2Data',
+        method: 'GET',
+        dataType: 'json',
+        success: function (data) {
+          $('#num').text(data.no_of_students);
+          // Loop through the data and add each option to the dropdown menu
+          $.each(data.sessions, function (key, value) {
+            $('#dropdown').append('<option value="' + value + '" >' + value + '</option>');
+          });
+          if (data.current_session != "") {
+            $('#dropdown').val(data.current_session);
+          }
+
+          $('input[name=term][value=' + data.current_term + ']').prop('checked', true);
+
+          var st = "";
+          switch (data.result_status) {
+            case "1": st = "released-for-all";
+              break;
+            case "2": st = "released-for-some";
+              break;
+            case "3": st = "not-released";
+              break;
+            default: st = "not-released";
+              break;
+          }
+          $('input[name=status][value=' + st + ']').prop('checked', true);
+
+        },
+        complete: function () {
+          // Loading Overlays deactivate ...
+          $('#dropdown').LoadingOverlay("hide", true);
+          $('#num').LoadingOverlay("hide", true);
+          $('#trms').LoadingOverlay("hide", true);
+          $('#res').LoadingOverlay("hide", true);
+        },
+        error: function (xhr, status, error) {
+          console.log('Error: ' + error);
+        }
+      });
+
+      $('#dropdown option').click(function () {
+        var selectedValue = $(this).val();
+        $.ajax({
+          url: '/admin/<%= info.name %>/updateCurrentSession',
+          type: 'POST',
+          data: {
+            current_session: selectedValue
+          },
+          success: function (data) {
+            if (data.success) {
+              location.reload();
+            } else {
+              alert("Network Error");
+            }
+          },
+          error: function (error) {
+            alert('There was a problem.');
+          }
+        });
+      });
+
       $("#released-for-all").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateResultStatus',
+          url: '/admin/<%= info.name %>/updateResultStatus',
           type: 'POST',
           data: {
             results_status: '1'
           },
           success: function (data) {
             if (data.success) {
-              alert("Result released for all students");
+              location.reload();
             } else {
               alert("Network Error");
             }
@@ -479,16 +515,17 @@
           }
         });
       });
+
       $("#released-for-some").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateResultStatus',
+          url: '/admin/<%= info.name %>/updateResultStatus',
           type: 'POST',
           data: {
             results_status: '2'
           },
           success: function (data) {
             if (data.success) {
-              alert("Results released for only students who paid fees");
+              location.reload();
             } else {
               alert("Network Error");
             }
@@ -498,16 +535,17 @@
           }
         });
       });
+
       $("#not-released").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateResultStatus',
+          url: '/admin/<%= info.name %>/updateResultStatus',
           type: 'POST',
           data: {
             results_status: '3'
           },
           success: function (data) {
             if (data.success) {
-              alert("Results unreleased");
+              location.reload();
             } else {
               alert("Network Error");
             }
@@ -517,9 +555,10 @@
           }
         })
       });
+
       $("#first").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateCurrentTerm',
+          url: '/admin/<%= info.name %>/updateCurrentTerm',
           type: 'POST',
           data: {
             current_term: $(this).val(),
@@ -536,9 +575,10 @@
           }
         });
       });
+
       $("#second").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateCurrentTerm',
+          url: '/admin/<%= info.name %>/updateCurrentTerm',
           type: 'POST',
           data: {
             current_term: $(this).val(),
@@ -551,13 +591,14 @@
             }
           },
           error: function (error) {
-            alert('Oops! Change not updated. Please ensure that a session is already created.');
+            alert('Oops! Changes were not updated. Please ensure that you have created a session.');
           }
         })
       });
+
       $("#third").click(function () {
         $.ajax({
-          url: '/admin/<%= school_obj.name %>/updateCurrentTerm',
+          url: '/admin/<%= info.name %>/updateCurrentTerm',
           type: 'POST',
           data: {
             current_term: $(this).val(),
@@ -605,6 +646,9 @@
 
     });
   </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
   <!-- Vendor JS Files -->
   <script src="../../admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

@@ -115,7 +115,10 @@ const schoolRegForm = async (req, res, url) => {
                 activation: req.body.activation.trim(),
                 agent: req.body.agent.trim(),
                 reg_date: date_obj_converter(st),
-                nodes: 1
+                nodes: 1,
+                current_session: "",
+                current_term: "",
+                results: "3"
             },
             news: [],
             fees_info: {
@@ -814,11 +817,20 @@ const login = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'admin.admin_username': req.body.username.trim() });
-        if (school_data) {
-            if (school_data.admin.admin_password === req.body.password.trim()) {
+
+        let school_info = await schools.findOne(
+            { 'admin.admin_username': req.body.username.trim() },
+            { projection: { 'school_info.name': 1, _id: 0 } }
+        );
+        let admin_info = await schools.findOne(
+            { 'admin.admin_username': req.body.username.trim() },
+            { projection: { 'admin.admin_username': 1, 'admin.admin_password': 1, _id: 0 } }
+        );
+
+        if (school_info) {
+            if (admin_info.admin.admin_password === req.body.password.trim()) {
                 if (req.xhr || req.accepts('json,html') === 'json') {
-                    return res.send({ success: true, school_name: school_data.school_info.name });
+                    return res.send({ success: true, school_name: school_info.school_info.name });
                 } else {
                     return res.redirect(303, '/admin');
                 }
@@ -900,6 +912,10 @@ const createSession = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
             { $push: { sessions: session_model } }
+        );
+
+        database.collection("schools").updateOne({ 'school_info.name': req.params.sname },
+            { $set: { 'school_info.current_session': session_model.name, 'school_info.current_term': "first" } }
         );
 
         return res.send({ success: true });
@@ -1370,16 +1386,25 @@ const updateCurrentTerm = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
 
-        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        var lses = school_data.sessions.length - 1;
-        var session = school_data.sessions[lses].name;
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "school_info.current_term": req.body.current_term } },
+        ).then(res.send({ success: true }));
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+const updateCurrentSession = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
 
         schools.findOneAndUpdate({ "school_info.name": req.params.sname },
-            { $set: { "sessions.$[sess].current_term": req.body.current_term } },
-            {
-                arrayFilters:
-                    [{ "sess.name": session }]
-            }).then(res.send({ success: true }));
+            { $set: { "school_info.current_session": req.body.current_session } },
+        ).then(res.send({ success: true }));
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1416,18 +1441,9 @@ const updateResultStatus = async (req, res) => {
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
 
-        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
-        var lses = school_data.sessions.length - 1;
-        var session = school_data.sessions[lses].name;
-        // var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
-
-
         schools.findOneAndUpdate({ "school_info.name": req.params.sname },
-            { $set: { "sessions.$[sess].terms.$[term].results": req.body.results_status } },
-            {
-                arrayFilters:
-                    [{ "sess.name": session }, { "term.name": school_data.sessions[lses].current_term }]
-            }).then(res.send({ success: true }));
+            { $set: { "school_info.results": req.body.results_status } },
+        ).then(res.send({ success: true }));
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1508,7 +1524,10 @@ const deleteSession = async (req, res) => {
         school_data.sessions.splice(sessionIndex, 1);
 
         schools.findOneAndUpdate({ "school_info.name": req.params.sname },
-            { $set: { "sessions": school_data.sessions } });
+            { $set: { sessions: school_data.sessions } });
+
+        schools.findOneAndUpdate({ "school_info.name": req.params.sname },
+            { $set: { "school_info.current_session": "" } });
 
         return res.send({});
     } catch (error) {
@@ -1585,6 +1604,61 @@ const deleteStudent = async (req, res) => {
         });
 
         return res.send({});
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
+// New endpoints ...
+const getBatch2Data = async (req, res) => {
+    try {
+        await mongoClient.connect();
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let curr_session = await schools.findOne(
+            { 'school_info.name': req.params.sname },
+            { projection: { 'school_info.current_session': 1, 'school_info.current_term': 1, _id: 0 } }
+        );
+
+
+        let sessions_data = await schools.findOne(
+            { 'school_info.name': req.params.sname },
+            {
+                projection: {
+                    'sessions': {
+                        $elemMatch: {
+                            name: curr_session.school_info.current_session,
+                        }
+                    },
+                    'school_info.results': 1,
+                    'school_info.current_session': 1,
+                    'school_info.current_term': 1,
+                    _id: 0,
+                }
+            }
+        );
+
+        var session_names = [];
+        for (var i = 0; i < sessions_data.sessions.length; i++) {
+            session_names.push(sessions_data.sessions[i].name);
+        }
+
+        var noOfStudents = 0;
+
+        var currentSessionIndex = sessions_data.sessions.findIndex(i => i.name === sessions_data.school_info.current_session);
+
+        if (currentSessionIndex != -1) {
+            var currentTermIndex = sessions_data.sessions[currentSessionIndex].terms.findIndex(i => i.name === sessions_data.school_info.current_term);
+            if (currentTermIndex != -1) {
+                noOfStudents = sessions_data.sessions[currentSessionIndex].terms[currentTermIndex].students.length;
+            }
+        }
+
+        res.status(200).send({ sessions: session_names, no_of_students: noOfStudents, current_session: sessions_data.school_info.current_session, current_term: sessions_data.school_info.current_term, result_status: sessions_data.school_info.results });
+
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -1721,7 +1795,10 @@ module.exports = {
     getStudents,
     getListFiles,
     getTermStatus,
+    // New Endpoints ...
+    getBatch2Data,
 
+    /* ... */
     downloadImage,
     downloadPdf,
     downloadNewsImage,
@@ -1740,6 +1817,7 @@ module.exports = {
     setStudentFees,
     updateSubjectsResults,
     updateCurrentTerm,
+    updateCurrentSession,
     updateResultStatus,
     importStudents,
     updateAdminPassword,
