@@ -26,27 +26,28 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700,900" rel="stylesheet">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="../../../../school/css/assets/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/bootstrap.min.css">
     <!-- Font awsome CSS -->
-    <link rel="stylesheet" href="../../../../school/css/assets/font-awesome.min.css">
-    <link rel="stylesheet" href="../../../../school/css/assets/flaticon.css">
-    <link rel="stylesheet" href="../../../../school/css/assets/magnific-popup.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/flaticon.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/magnific-popup.css">
     <!-- owl carousel -->
-    <link rel="stylesheet" href="../../../../school/css/assets/owl.carousel.css">
-    <link rel="stylesheet" href="../../../../school/css/assets/owl.theme.css">
-    <link rel="stylesheet" href="../../../../school/css/assets/animate.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/owl.carousel.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/owl.theme.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/animate.css">
     <!-- Slick Carousel -->
-    <link rel="stylesheet" href="../../../../school/css/assets/slick.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/slick.css">
 
     <!-- Mean Menu-->
-    <link rel="stylesheet" href="../../../../school/css/assets/meanmenu.css">
+    <link rel="stylesheet" href="../../../../../school/css/assets/meanmenu.css">
     <!-- main style-->
-    <link rel="stylesheet" href="../../../../school/css/style.css">
-    <link rel="stylesheet" href="../../../../school/css/responsive.css">
+    <link rel="stylesheet" href="../../../../../school/css/style.css">
+    <link rel="stylesheet" href="../../../../../school/css/responsive.css">
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8866208116280869"
         crossorigin="anonymous"></script>
 
+    <script src="../../../../../school/js/jquery-3.2.1.min.js"></script>
 </head>
 
 <body>
@@ -101,8 +102,8 @@
                                         <!-- Person Icon -->
                                         <div class=""></div>
                                     </div>
-                                    <h3 class="f-w-600" style="margin-bottom: 20px; color: rgb(130, 230, 255)">Student
-                                        Portal
+                                    <h3 class="f-w-600" style="margin-bottom: 20px; color: rgb(130, 230, 255)">Results
+                                        Preview
                                     </h3>
                                     <h4 class="f-w-600" style="color: white; font-style: bold;">
                                         <%= student_info.name %>
@@ -112,66 +113,13 @@
                                 </div>
                             </div>
                             <div class="col-sm-8">
-                                <div class="card-block">
-                                    <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Full Name</p>
-                                            <h6 class="text-muted f-w-400">
-                                                <%= student_info.name %>
-                                            </h6>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Date of Birth</p>
-                                            <h6 class="text-muted f-w-400">
-                                                <%= student_info.dob %>
-                                            </h6>
+                                <!-- TABLE DIVS -->
+                                <div class="panel panel-default">
+                                    <div style="width: 98%; overflow-x: auto;">
+                                        <div class="panel-body">
+                                            <div class="tbl_user_data"></div>
                                         </div>
                                     </div>
-                                    <div class="row" style="margin-top: 20px;">
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Gender</p>
-                                            <h6 class="text-muted f-w-400">
-                                                <%= student_info.gender %>
-                                            </h6>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Class</p>
-                                            <h6 class="text-muted f-w-400">
-                                                <%= student_info.class %>
-                                            </h6>
-                                        </div>
-                                    </div>
-                                    <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600" style="margin-top: 30px;">
-                                        Results</h6>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">
-                                                <%= c_term %> Term Result
-                                            </p>
-                                            <h6 class="text-muted f-w-400"><a id="termres"
-                                                    href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/preview">View
-                                                    Results</a></h6>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-b-10 f-w-600">Annual Result</p>
-                                            <h6 class="text-muted f-w-400">Not Ready Yet</h6>
-                                        </div>
-                                    </div>
-                                    <ul class="social-link list-unstyled m-t-40 m-b-10">
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title=""
-                                                data-original-title="facebook" data-abc="true"><i
-                                                    class="mdi mdi-facebook feather icon-facebook facebook"
-                                                    aria-hidden="true"></i></a></li>
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title=""
-                                                data-original-title="twitter" data-abc="true"><i
-                                                    class="mdi mdi-twitter feather icon-twitter twitter"
-                                                    aria-hidden="true"></i></a></li>
-                                        <li><a href="#!" data-toggle="tooltip" data-placement="bottom" title=""
-                                                data-original-title="instagram" data-abc="true"><i
-                                                    class="mdi mdi-instagram feather icon-instagram instagram"
-                                                    aria-hidden="true"></i></a></li>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -180,9 +128,21 @@
             </div>
         </div>
     </div>
+
     <div class="text-center">
-        <a href="/schools/<%= school_obj.name %>/portal"><button class="btn btn-primary"
-                style="margin-bottom: 40px;">Back</button></a>
+        <a href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/term-result"><button
+                class="btn btn-primary">Download
+                Results</button></a>
+
+    </div>
+    <div class="text-center" style="margin-bottom: 40px; margin-top: 5px;">
+        <i>Works on Web Browsers Only</i>
+    </div>
+
+    <div class="text-center">
+        <a href="/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>"><button
+                class="btn btn-primary" style="margin-bottom: 40px;">Go Back</button></a>
+
     </div>
 
     <style>
@@ -366,8 +326,8 @@
             </div>
         </div>
         <div class="shapes_bg">
-            <img src="../../../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
-            <img src="../../../../images/shapes/footer_2.png" alt="" class="shape_1">
+            <img src="../../../../../images/shapes/testimonial_2_shpe_1.png" alt="" class="shape_3">
+            <img src="../../../../../images/shapes/footer_2.png" alt="" class="shape_1">
         </div>
     </footer><!-- End Footer -->
 
@@ -379,19 +339,117 @@
     </section>
 
     <!--  JavaScript -->
-    <script src="../../../../school/js/jquery-3.2.1.min.js"></script>
-    <script src="../../../../school/js/popper.min.js"></script>
-    <script src="../../../../school/js/bootstrap.min.js"></script>
-    <script src="../../../../school/js/jquery.magnific-popup.min.js"></script>
-    <script src="../../../../school/js/owl.carousel.min.js"></script>
-    <script src="../../../../school/js/map-helper.js"></script>
-    <script src="../../../../school/js/slick.min.js"></script>
-    <script src="../../../../school/js/jquery.meanmenu.min.js"></script>
-    <script src="../../../../school/js/wow.min.js"></script>
+
+    <script src="../../../../../school/js/popper.min.js"></script>
+    <script src="../../../../../school/js/bootstrap.min.js"></script>
+    <script src="../../../../../school/js/jquery.magnific-popup.min.js"></script>
+    <script src="../../../../../school/js/owl.carousel.min.js"></script>
+    <script src="../../../../../school/js/map-helper.js"></script>
+    <script src="../../../../../school/js/slick.min.js"></script>
+    <script src="../../../../../school/js/jquery.meanmenu.min.js"></script>
+    <script src="../../../../../school/js/wow.min.js"></script>
     <!-- Counter Script -->
-    <script src="../../../../school/js/waypoints.min.js"></script>
-    <script src="../../../../school/js/jquery.counterup.min.js"></script>
-    <script src="../../../../school/js/custom.js"></script>
+    <script src="../../../../../school/js/waypoints.min.js"></script>
+    <script src="../../../../../school/js/jquery.counterup.min.js"></script>
+    <script src="../../../../../school/js/custom.js"></script>
+
+    <script>
+        // Table logic ...
+        var stdModel = {};
+        var subjectsRes = [];
+        $(document).ready(function ($) {
+            sendData();
+        });
+
+        function gradeHelper(score) {
+            if (score <= 100 && score >= 75) {
+                return "A";
+            }
+            else {
+                if (score < 75 && score >= 65) {
+                    return "B";
+                }
+                else {
+                    if (score < 65 && score >= 55) {
+                        return "C";
+                    }
+                    else {
+                        if (score < 55 && score >= 40) {
+                            return "D";
+                        }
+                        else {
+                            if (score < 40 && score >= 0) {
+                                return "E";
+                            }
+                            else {
+                                return "-"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function negative(number) {
+            if (number < 0) {
+                return '';
+            }
+            else {
+                return number;
+            }
+        }
+
+        function refr() {
+            location.reload();
+        }
+
+        function sendData() {
+            $.ajax({
+                url: '/schools/<%= school_obj.name %>/portal/<%= student_info.class %>/<%= student_info.name %>/preview-result',
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    stdModel = data.payload;
+                    subjectsRes = stdModel.subjects;
+
+                    //--->create data table > start
+                    var tbl = '';
+                    tbl += '<table class="table table-bordered">'
+                    tbl += '<thead>';
+                    tbl += '<tr>';
+                    tbl += '<th>S/N</th>';
+                    tbl += '<th>Subject</th>';
+                    tbl += '<th>Total</th>';
+                    tbl += '<th>Average</th>';
+                    tbl += '<th>Position</th>';
+                    tbl += '<th>Grade</th>';
+                    tbl += '</tr>';
+                    tbl += '</thead>';
+                    tbl += '<tbody>';
+                    $.each(subjectsRes, function (index, val) {
+                        var row_id = index;
+                        tbl += '<tr row_id="' + row_id + '">';
+                        tbl += '<td col_name="sn">' + (index + 1) + '</td>';
+                        tbl += '<td col_name="name">' + val['name'] + '</td>';
+                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
+                        tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
+                        tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
+                        tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
+                    });
+                    tbl += '</tbody>';
+                    tbl += '</table>';
+                    tbl += '<p>Total Score: ' + stdModel.total + '</p>';
+                    tbl += '<p>Average Score: ' + stdModel.average.toFixed(2) + '</p>';
+                    tbl += '<p>Position in Class: ' + stdModel.position + '</p>';
+
+                    $(document).find('.tbl_user_data').html(tbl);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error:', error);
+                }
+            });
+        }
+    </script>
 
 </body>
 

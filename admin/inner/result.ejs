@@ -235,6 +235,18 @@
             }
         }
 
+        function negative(number) {
+            if (number < 0) {
+                return '';
+            }
+            else {
+                return number;
+            }
+        }
+
+        function refr() {
+            location.reload();
+        }
 
         function sendData() {
             fetch('/admin/<%= school_obj.name %>/getStudentResults', {
@@ -282,21 +294,6 @@
 
                 $(document).find('.tbl_user_data').html(tbl);
             });
-        }
-    </script>
-
-    <script>
-        function negative(number) {
-            if (number < 0) {
-                return '';
-            }
-            else {
-                return number;
-            }
-        }
-
-        function refr() {
-            location.reload();
         }
     </script>
 </body>

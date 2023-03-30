@@ -31,6 +31,7 @@ let routes = app => {
   router.get("/files", operationsController.getListFiles);
   router.get("/files/:name", operationsController.downloadImage);
   router.get("/schools/:sname/portal/:stdclass/:stdname/term-result", operationsController.downloadPdf);
+  router.get("/schools/:sname/portal/:stdclass/:stdname/preview-result", operationsController.getStudentProfileResults);
   router.get("/news/:name", operationsController.downloadNewsImage);
   router.post("/getSchools", operationsController.getSchools);
   router.post("/subscribeNode", operationsController.subscribeNode);
@@ -71,6 +72,7 @@ let routes = app => {
   router.get("/schools/:sname/fees", pagesController.fees);
   router.get("/schools/:sname/portal", pagesController.portal);
   router.get("/schools/:sname/portal/:stdclass/:studname", pagesController.profile);
+  router.get("/schools/:sname/portal/:stdclass/:studname/preview", pagesController.profile_results);
   router.get("/schools/:sname/follow", pagesController.follow_up);
   router.get("/schools/:sname/about", pagesController.s_about);
 

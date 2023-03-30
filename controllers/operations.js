@@ -1289,6 +1289,36 @@ const getStudentResults = async (req, res) => {
         });
     }
 }
+const getStudentProfileResults = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        var std = {};
+
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+
+
+        var sessionIndex = school_data.sessions.findIndex(i => i.name === school_data.school_info.current_session);
+        var termIndex = school_data.sessions[sessionIndex].terms.findIndex(i => i.name === school_data.school_info.current_term);
+        // var classIndex = school_data.classes.findIndex(i => i.name === req.body.class.trim());
+
+        for (var i = 0; i < school_data.sessions[sessionIndex].terms[termIndex].students.length; i++) {
+            if (school_data.sessions[sessionIndex].terms[termIndex].students[i].name === req.params.stdname && school_data.sessions[sessionIndex].terms[termIndex].students[i].class === req.params.stdclass) {
+                std = school_data.sessions[sessionIndex].terms[termIndex].students[i];
+                break;
+            }
+        }
+
+        res.status(200).send({ payload: std });
+
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+}
 const importStudents = async (req, res) => {
     try {
         await mongoClient.connect();
@@ -1793,6 +1823,7 @@ module.exports = {
     getSubjects,
     getClassSubjects,
     getStudents,
+    getStudentProfileResults,
     getListFiles,
     getTermStatus,
     // New Endpoints ...

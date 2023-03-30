@@ -107,10 +107,31 @@ const profile = async (req, res) => {
         let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
 
         var lses = school_data.sessions.length - 1;
-        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
-        var stdIndex = school_data.sessions[lses].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
+        var currSessionIndex = school_data.sessions.findIndex(i => i.name === school_data.school_info.current_session);
+        var currTermIndex = school_data.sessions[currSessionIndex].terms.findIndex(i => i.name === school_data.school_info.current_term);
+        var stdIndex = school_data.sessions[currSessionIndex].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
 
-        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[lses].terms[currTermIndex].students[stdIndex], c_term: school_data.sessions[lses].current_term.toUpperCase(), results_status: school_data.school_info.results });
+        return res.render("../school/inner/profile", { school_obj: school_data.school_info, student_info: school_data.sessions[currSessionIndex].terms[currTermIndex].students[stdIndex], c_term: school_data.school_info.current_term.toUpperCase(), results_status: school_data.school_info.results });
+    } catch (error) {
+        return res.status(500).send({
+            message: error.message,
+        });
+    }
+
+};
+const profile_results = async (req, res) => {
+    try {
+        await mongoClient.connect();
+        const database = mongoClient.db(dbConfig.database);
+        const schools = database.collection("schools");
+        let school_data = await schools.findOne({ 'school_info.name': { $regex: new RegExp('^' + req.params.sname + '.*', 'i') } });
+
+        var lses = school_data.sessions.length - 1;
+        var currSessionIndex = school_data.sessions.findIndex(i => i.name === school_data.school_info.current_session);
+        var currTermIndex = school_data.sessions[currSessionIndex].terms.findIndex(i => i.name === school_data.school_info.current_term);
+        var stdIndex = school_data.sessions[currSessionIndex].terms[currTermIndex].students.findIndex(i => i.name === req.params.studname);
+
+        return res.render("../school/inner/results", { school_obj: school_data.school_info, student_info: school_data.sessions[currSessionIndex].terms[currTermIndex].students[stdIndex], c_term: school_data.school_info.current_term.toUpperCase(), results_status: school_data.school_info.results });
     } catch (error) {
         return res.status(500).send({
             message: error.message,
@@ -526,6 +547,7 @@ module.exports = {
     register_pri,
     register_sec,
     agent,
+    profile_results,
     s_home,
     admissions,
     portal,
