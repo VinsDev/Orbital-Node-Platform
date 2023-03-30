@@ -203,51 +203,7 @@
         var stdModel = {};
         var subjectsRes = [];
         $(document).ready(function ($) {
-            fetch('/admin/<%= school_obj.name %>/getStudentResults', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name: $("#stdname").text().trim(),
-                    session: $("#sessionSelector").val(),
-                    class: $("#cls").text().trim(),
-                    term: $("#termSelector").val(),
-                })
-            }).then(res => res.json()).then(data => {
-                stdModel = data.payload;
-                subjectsRes = stdModel.subjects;
-
-                //--->create data table > start
-                var tbl = '';
-                tbl += '<table class="table table-bordered">'
-                tbl += '<thead>';
-                tbl += '<tr>';
-                tbl += '<th>S/N</th>';
-                tbl += '<th>Subject</th>';
-                tbl += '<th>Total</th>';
-                tbl += '<th>Average</th>';
-                tbl += '<th>Position</th>';
-                tbl += '<th>Grade</th>';
-                tbl += '</tr>';
-                tbl += '</thead>';
-                tbl += '<tbody>';
-                $.each(subjectsRes, function (index, val) {
-                    var row_id = index;
-                    tbl += '<tr row_id="' + row_id + '">';
-                    tbl += '<td col_name="sn">' + (index + 1) + '</td>';
-                    tbl += '<td col_name="name">' + val['name'] + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
-                });
-                tbl += '</tbody>';
-                tbl += '</table>';
-                tbl += '<p>Total Score: ' + stdModel.total + '</p>';
-                tbl += '<p>Average Score: ' + stdModel.average.toFixed(2) + '</p>';
-                tbl += '<p>Position in Class: ' + stdModel.position + '</p>';
-
-                $(document).find('.tbl_user_data').html(tbl);
-            });
+            sendData();
         });
 
         function gradeHelper(score) {
@@ -292,13 +248,6 @@
                 })
             }).then(res => res.json()).then(data => {
                 stdModel = data.payload;
-                if (stdModel === {}) {
-                    var tbl = '';
-                    tbl += '<p>No students found in your current selection</p>';
-                    $(document).find('.tbl_user_data tbody').html(tbl);
-                    return;
-                }
-
                 subjectsRes = stdModel.subjects;
 
                 //--->create data table > start
@@ -309,8 +258,8 @@
                 tbl += '<th>S/N</th>';
                 tbl += '<th>Subject</th>';
                 tbl += '<th>Total</th>';
-                tbl += '<th>Avr</th>';
-                tbl += '<th>Pos</th>';
+                tbl += '<th>Average</th>';
+                tbl += '<th>Position</th>';
                 tbl += '<th>Grade</th>';
                 tbl += '</tr>';
                 tbl += '</thead>';
@@ -321,12 +270,15 @@
                     tbl += '<td col_name="sn">' + (index + 1) + '</td>';
                     tbl += '<td col_name="name">' + val['name'] + '</td>';
                     tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.total) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="ass1">' + negative(val.average.toFixed(2)) + '</td>';
                     tbl += '<td class="row_data" edit_type="click" col_name="test2">' + negative(val.position) + '</td>';
-                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(val.grade) + '</td>';
+                    tbl += '<td class="row_data" edit_type="click" col_name="exams">' + negative(gradeHelper(val.total)) + '</td>';
                 });
                 tbl += '</tbody>';
-                tbl += '</table>'
+                tbl += '</table>';
+                tbl += '<p>Total Score: ' + stdModel.total + '</p>';
+                tbl += '<p>Average Score: ' + stdModel.average.toFixed(2) + '</p>';
+                tbl += '<p>Position in Class: ' + stdModel.position + '</p>';
 
                 $(document).find('.tbl_user_data').html(tbl);
             });
