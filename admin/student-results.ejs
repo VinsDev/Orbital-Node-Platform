@@ -404,8 +404,8 @@
                      <td>${item.dob}</td>
                      <td>${item.class}</td>
                      <td> 
-                      <a href="/schools/<%= school_obj.name %>/portal/${item.class}/${item.name}/term-result" target="_blank"><button style="border: none; background-color: transparent; color: blue; font-weight: bold;">DOWNLOAD</button></a>
-                      
+                      <button onclick="passStudentData('${item.class}, ${item.name}')"
+                style="border: none; background-color: transparent; color: blue; font-weight: bold;">DOWNLOAD</button>
                     </td>
                    </tr>`
           });
@@ -421,7 +421,7 @@
 
     function passStudentData(studentClass, name) {
       $.ajax({
-        url: "/schools/<%= school_obj.name %>/portal/${item.class}/${item.name}/term-result",
+        url: "/schools/<%= school_obj.name %>/portal/" + studentClass + "/" + name + "/term-result",
         method: "GET",
         success: function (response) {
           console.log("Server response:", response);

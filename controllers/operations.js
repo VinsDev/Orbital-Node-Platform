@@ -776,11 +776,7 @@ const portaLogin = async (req, res) => {
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
             if (req.body.name.trim().toLowerCase() === school_data.sessions[lses].terms[currTermIndex].students[i].name.toLowerCase()) {
-                if (req.body.password.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].password) {
-                    return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
-                } else {
-                    return res.send({ success: false });
-                }
+                return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
             }
         }
         return res.send({ success: false });
