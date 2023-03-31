@@ -292,30 +292,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <%counter=1;%>
-                      <% for(var j=0; j < sessions_data[0].terms[0].students.length; j++){ %>
-                        <% if(sessions_data[0].terms[0].students[j].class===class_data[0].name) { %>
-                          <tr
-                            data-url="/admin/<%= school_obj.name %>/result/<%= class_data[0].name%>/<%= sessions_data[0].terms[0].students[j].name %>">
-                            <th scope="row">
-                              <%=counter %>
-                            </th>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].name %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].gender %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].dob %>
-                            </td>
-                            <td>
-                              <%= sessions_data[0].terms[0].students[j].class %>
-                            </td>
-                          </tr>
-                          <%counter++;%>
-                            <% } %>
-                              <% } %>
+
                   </tbody>
                 </table>
                 <!-- End Table with hoverable rows -->
@@ -426,6 +403,10 @@
                      <td>${item.gender}</td>
                      <td>${item.dob}</td>
                      <td>${item.class}</td>
+                     <td> 
+                      <a href="/schools/<%= school_obj.name %>/portal/${item.class}/${item.name}/term-result" target="_blank"><button style="border: none; background-color: transparent; color: blue; font-weight: bold;">DOWNLOAD</button></a>
+                      
+                    </td>
                    </tr>`
           });
           $('#myTable tbody').html(content);
@@ -437,6 +418,20 @@
       });
       return;
     }
+
+    function passStudentData(studentClass, name) {
+      $.ajax({
+        url: "/schools/<%= school_obj.name %>/portal/${item.class}/${item.name}/term-result",
+        method: "GET",
+        success: function (response) {
+          console.log("Server response:", response);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+          console.log("AJAX request failed: " + textStatus, errorThrown);
+        }
+      });
+
+    };
 
     function update() {
       var rows = document.getElementsByTagName('tr'),
@@ -452,6 +447,7 @@
     }
 
     $(document).ready(function () {
+      updateData();
       $("#passwordForm").submit(function (event) {
         event.preventDefault();
         var form = $(this);
