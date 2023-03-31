@@ -403,10 +403,6 @@
                      <td>${item.gender}</td>
                      <td>${item.dob}</td>
                      <td>${item.class}</td>
-                     <td> 
-                      <button onclick="passStudentData('${item.class}, ${item.name}')"
-                style="border: none; background-color: transparent; color: blue; font-weight: bold;">DOWNLOAD</button>
-                    </td>
                    </tr>`
           });
           $('#myTable tbody').html(content);
@@ -418,20 +414,6 @@
       });
       return;
     }
-
-    function passStudentData(studentClass, name) {
-      $.ajax({
-        url: "/schools/<%= school_obj.name %>/portal/" + studentClass + "/" + name + "/term-result",
-        method: "GET",
-        success: function (response) {
-          console.log("Server response:", response);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-          console.log("AJAX request failed: " + textStatus, errorThrown);
-        }
-      });
-
-    };
 
     function update() {
       var rows = document.getElementsByTagName('tr'),
