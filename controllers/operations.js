@@ -62,15 +62,17 @@ const deleteImages = async (req, res) => {
 const getSchools = async (req, res) => {
     try {
         let schoolList = [];
-        let payload = req.body.payload.trim();
-        await mongoClient.connect();
 
+        await mongoClient.connect();
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        var cursor = schools.find({ 'school_info.name': { $regex: new RegExp('^' + payload + '.*', 'i') } });
 
+        let schools_info_cursor = schools.find(
+            { 'school_info.name': { $regex: new RegExp('^' + req.body.payload.trim() + '.*', 'i') } },
+            { projection: { 'school_info.name': 1, _id: 0 } }
+        );
 
-        cursor.forEach(school => schoolList.push(school)).then(() => {
+        schools_info_cursor.forEach(school => schoolList.push(school)).then(() => {
             res.status(200).send({ payload: schoolList.slice(0, 8) });
         });
 

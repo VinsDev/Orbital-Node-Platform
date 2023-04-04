@@ -48,7 +48,8 @@ const s_home = async (req, res) => {
 
         const database = mongoClient.db(dbConfig.database);
         const schools = database.collection("schools");
-        let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
+        let school_data = await schools.findOne({ 'school_info.name': req.params.sname },
+            { projection: { school_info: 1, news: 1, _id: 0 } });
         return res.render("../school/index", {
             school_obj: school_data.school_info,
             news: school_data.news.reverse().slice(0, 4)

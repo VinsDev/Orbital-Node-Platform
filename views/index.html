@@ -92,14 +92,14 @@
       <div class="header-text caption">
         <h2>Visit your school Website</h2>
         <div id="search-section">
-          <form id="suggestion_form" name="gs" method="post">
+          <form id="suggestion_form" name="gs" method="post" onsubmit="return validateForm()">
             <div class="search-wrapper">
               <input type="text" id="search-field" class="searchText" placeholder="Enter your School name"
-                autocomplete="on" onkeyup="sendData(this)" required />
+                autocomplete="on" onkeyup="searchSchool(this)" required />
               <section id="searchResults"></section>
               <div class="icon">
                 <input type="button" name="school" value="Go" class="gradient-button" placeholder="go"
-                  onclick="submitForm()" />
+                  onclick="submitForm($('#search-field').val())" />
               </div>
 
             </div>
@@ -129,7 +129,8 @@
         <p style="margin: 20px 0px ; color: rgb(173, 173, 173); font-size: 18px;"></p>
         <div class="text-center">
           <div class="row">
-            <img style="margin-left: auto; width: 30px; height: 30px; margin-right: 18px;" src="../../admin/assets/img/logo.png" alt="">
+            <img style="margin-left: auto; width: 30px; height: 30px; margin-right: 18px;"
+              src="../../admin/assets/img/logo.png" alt="">
             <a id="regnow" target="_blank"
               href="https://drive.google.com/file/d/1KB1YcWu0ORppCQ9kICH4HyOY5ye6KFUZ/view?usp=sharing"
               style="color: rgb(253, 253, 253); font-size: 16px; margin-right: auto; font-weight: 600;">Download Our
@@ -559,45 +560,62 @@
   <script>
 
     var suggestion_hidden = true;
+    var school_names = [];
 
-    function sendData(e) {
-      const searchResults = document.getElementById('searchResults');
+    function searchSchool(e) {
+      const searchResults = $('#searchResults');
 
       if (e.value.length === 0) {
-        searchResults.classList.add("hide");
+        searchResults.addClass("hide");
         suggestion_hidden = true;
-      }
-      else {
-        searchResults.classList.remove("hide");
+      } else {
+        searchResults.removeClass("hide");
         suggestion_hidden = false;
       }
 
       let match = e.value.match(/^[a-zA-Z .]*/);
       let match2 = e.value.match(/\s*/);
       if (match2[0] === e.value) {
-        searchResults.innerHTML = '';
+        searchResults.html('');
         return;
       }
+
+      // Get school from server ...
       if (match[0] === e.value) {
-        fetch('/getSchools', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ payload: e.value })
-        }).then(res => res.json()).then(data => {
-          var payload = data.payload;
-          searchResults.innerHTML = '';
-          if (payload < 1) {
-            searchResults.innerHTML = '<p> Sorry school not found. Check your spelling</p>';
-            return;
-          }
-          payload.forEach((item, index) => {
-            if (index === payload.length - 1) { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.school_info.name}</p><p></p>`; }
-            else { searchResults.innerHTML += `<p class="item" onclick="select(this)">${item.school_info.name}</p>`; }
-          });
+        searchResults.removeClass("hide");
+        suggestion_hidden = false;
+        $('#searchResults').LoadingOverlay("show", {
+          color: "#fff",
+        });
+        $.ajax({
+          url: '/getSchools',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ payload: e.value }),
+          success: function (data) {
+            var payload = data.payload;
+            searchResults.html('');
+            if (payload < 1) {
+              searchResults.html('<p> Sorry school not found. Check your spelling</p>');
+              return;
+            }
+            payload.forEach((item, index) => {
+              school_names.push(item.school_info.name);
+              if (index === payload.length - 1) {
+                searchResults.append(`<p class="item" onclick="select(this)">${item.school_info.name}</p><p></p>`);
+              } else {
+                searchResults.append(`<p class="item" onclick="select(this)">${item.school_info.name}</p>`);
+              }
+            });
+          },
+          complete: function () {
+            $('#searchResults').LoadingOverlay("hide", true);
+          },
         });
         return;
       }
-      searchResults.innerHTML = '';
+
+      searchResults.html('');
     }
 
 
@@ -608,17 +626,17 @@
       box.value = selectedItem;
       result_wrapper.classList.add("hide");
       suggestion_hidden = true;
+      submitForm(element.textContent);
     }
 
-    function submitForm() {
+    function submitForm(query) {
       var myForm = document.getElementById("suggestion_form");
-      var myInput = document.getElementById("search-field");
 
-      let match = myInput.value.match(/^[a-zA-Z.' ]*/);
-      if (myInput.value) {
-        if (match[0] === myInput.value) {
+      let match = query.match(/^[a-zA-Z.' ]*/);
+      if (query) {
+        if (match[0] === query) {
           if (suggestion_hidden) {
-            var inputValue = myInput.value;
+            var inputValue = query;
             console.log(inputValue);
             let url = "schools/" + inputValue + "/home";
             myForm.action = url;
@@ -633,7 +651,7 @@
         }
       }
       else {
-        alert("You need to type in your school name in the field provided!")
+        // alert("You need to type in your school name in the field provided!")
       }
     }
   </script>
@@ -647,12 +665,34 @@
         t.style.color = '#fff';
       }
     }
+
+
+
   </script>
 
 
   <!-- Ajax Form Data Handling -->
   <script>
     $(document).ready(function () {
+
+      $("#suggestion_form").submit(function (event) {
+        // Prevent the form from submitting by default
+        event.preventDefault();
+
+        // Get the value of the search field
+        var searchField = $("#search-field").val();
+
+        // Check if the search field is empty
+        if (!school_names.includes(searchField)) {
+          alert("Please select from the search suggestions provided on the field below.");
+          return;
+        }
+
+        // If the search field is not empty, submit the form
+        this.submit();
+      });
+
+
       $('#priModForm').on('submit', function (evt) {
         evt.preventDefault();
         var form = $(this);
@@ -730,6 +770,9 @@
       return json;
     }
   </script>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
 
 </body>
 
