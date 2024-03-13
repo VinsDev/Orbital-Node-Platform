@@ -334,9 +334,15 @@
                 </div>
 
                 <div class="col-12">
-                  <label for="yourEmail" class="form-label">Date of birth</label>
-                  <input type="date" name="dob" class="form-control" id="dob" required>
-                  <div class="invalid-feedback">Please enter date of birth!</div>
+                  <label for="yourEmail" class="form-label">Admission Number</label>
+                  <input type="text" name="admission" class="form-control" id="admission" required>
+                  <div class="invalid-feedback">Please enter Admission Number!</div>
+                </div>
+
+                <div class="col-12">
+                  <label for="yourEmail" class="form-label">Pin</label>
+                  <input type="text" name="pin" class="form-control" id="pin" required>
+                  <div class="invalid-feedback">Please enter pin!</div>
                 </div>
 
                 <label class="col-sm-5 col-form-label">Subjects</label>
@@ -564,7 +570,7 @@
                     <th scope="col">S/N</th>
                     <th scope="col">Name</th>
                     <th scope="col">Gender</th>
-                    <th scope="col">DOB</th>
+                    <th scope="col">Admission No.</th>
                     <th scope="col">Class</th>
                     <th scope="col"></th>
                   </tr>
@@ -581,7 +587,7 @@
                       ${item.gender}
                     </td>
                     <td>
-                      ${item.dob}
+                      ${item.admission}
                     </td>
                     <td>
                       ${item.class}

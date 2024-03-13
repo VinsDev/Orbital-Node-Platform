@@ -125,13 +125,12 @@
                         </p>
                         <form id="loginForm" method="POST" action="portal/login">
                             <div class="form-group">
-                                <input type="text" name="name" id="name" class="form-control" placeholder="Username"
+                                <input type="text" name="admission" id="admission" class="form-control" placeholder="Admission Number"
                                     required />
                             </div>
-                            <!-- <div class="form-group">
-                                <input type="text" name="password" id="password" class="form-control"
-                                    placeholder="Password" required />
-                            </div> -->
+                         <div class="form-group">
+                                <input type="text" name="pin" id="pin" class="form-control" placeholder="Pin" required />
+                            </div>
                             <div class="form-group">
                                 <button type="submit" id="submit" class="submit-button">
                                     Login
@@ -157,6 +156,7 @@
                     type: 'POST',
                     data: convertFormToJSON(form),
                     success: function (data) {
+                        console.log(data)
                         if (data.success) {
                             $container.html('<h2>Login Successful</h2>');
                             var uri = window.location.href += '/' + data.student_info.class + '/' + data.student_info.name;
@@ -170,7 +170,7 @@
                                 }
                             })
                         } else {
-                            alert("Wrong Username or password!");
+                            alert("Wrong details!");
                         }
                     },
                     error: function (error) {

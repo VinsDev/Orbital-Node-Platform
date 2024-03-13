@@ -777,7 +777,8 @@ const portaLogin = async (req, res) => {
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
-            if (req.body.name.trim().toLowerCase() === school_data.sessions[lses].terms[currTermIndex].students[i].name.toLowerCase()) {
+            console.log(school_data.sessions[lses].terms[currTermIndex].students[i].admission)
+            if (req.body.admission.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].admission && req.body.pin.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].pin) {
                 return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
             }
         }
@@ -1007,7 +1008,8 @@ const createStudent = async (req, res) => {
             name: req.body.name.trim(),
             password: req.body.dob,
             gender: req.body.gender,
-            dob: req.body.dob,
+            admission: req.body.admission,
+            pin: req.body.pin,
             session: req.body.session,
             term: req.body.term,
             fees: false,
