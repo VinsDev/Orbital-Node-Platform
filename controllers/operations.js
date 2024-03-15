@@ -774,10 +774,9 @@ const portaLogin = async (req, res) => {
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname.trim() });
 
         var lses = school_data.sessions.length - 1;
-        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
-
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.school_info.current_term);
+        console.log(currTermIndex)
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
-            console.log(school_data.sessions[lses].terms[currTermIndex].students[i].admission)
             if (req.body.admission.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].admission && req.body.pin.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].pin) {
                 return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
             }
