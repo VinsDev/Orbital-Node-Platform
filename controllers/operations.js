@@ -449,7 +449,7 @@ const downloadPdf = async (req, res) => {
         let school_data = await schools.findOne({ 'school_info.name': req.params.sname });
 
         var lses = school_data.sessions.length - 1;
-        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.sessions[lses].current_term);
+        var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.school_info.current_term);
 
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
             if (school_data.sessions[lses].terms[currTermIndex].students[i].name === req.params.stdname && school_data.sessions[lses].terms[currTermIndex].students[i].class === req.params.stdclass) {
@@ -463,7 +463,7 @@ const downloadPdf = async (req, res) => {
                 stdNumber++;
             }
         }
-
+        console.log(stdNumber)
 
 
         const fetch = require('node-fetch');
@@ -775,7 +775,6 @@ const portaLogin = async (req, res) => {
 
         var lses = school_data.sessions.length - 1;
         var currTermIndex = school_data.sessions[lses].terms.findIndex(i => i.name === school_data.school_info.current_term);
-        console.log(currTermIndex)
         for (var i = 0; i < school_data.sessions[lses].terms[currTermIndex].students.length; i++) {
             if (req.body.admission.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].admission && req.body.pin.trim() === school_data.sessions[lses].terms[currTermIndex].students[i].pin) {
                 return res.send({ success: true, school_name: school_data.school_info.name, student_info: school_data.sessions[lses].terms[currTermIndex].students[i] });
