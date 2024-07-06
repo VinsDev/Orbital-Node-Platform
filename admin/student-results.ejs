@@ -389,6 +389,10 @@
         dataType: "json",
         success: function (data) {
           var payload = data.payload;
+          
+          payload.sort(function (a, b) {
+            return b.total - a.total; // Descending order
+          });
           var content = '';
           if (payload < 1) {
             $('#myTable tbody').html('Students not added yet');
