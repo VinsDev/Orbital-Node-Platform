@@ -15,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 initRoutes(app);
+// From routers . . .
 
 let PORT = 3000;
 app.listen(process.env.PORT || PORT, () => {
