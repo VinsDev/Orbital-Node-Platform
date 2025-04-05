@@ -11,10 +11,10 @@ var nodemailer = require('nodemailer');
 
 const url = dbConfig.url;
 const local = "http://localhost:3000/files/";
-const web = "https://orbitaltech.com.ng/files/";
+const web = "https://resultsphere.com.ng/files/";
 const baseUrl = web;
 const nlocal = "http://localhost:3000/news/";
-const nweb = "https://orbitaltech.com.ng/news/";
+const nweb = "https://resultsphere.com.ng/news/";
 const nbaseUrl = nweb;
 const mongoClient = new MongoClient(url);
 const orbital = require("../computations/compile-results");
@@ -182,14 +182,14 @@ const uploadRegForm = async (req, res) => {
             The Admin Panel will be used to administrate and control the entire functionalities of your School instance created on our platform. Below are the credentials you will need to access it.
             
             Admin Panel Credentials:
-            Link: https://orbitaltech.com.ng/admin
+            Link: https://resultsphere.com.ng/admin
             Username: ${req.body.email}
             Password: ${req.body.phone}
             
             
             School Website and Portal:
             This is where the public can access your school website and portal created on our platform. Below is how to access your school on our official website.
-            1. Visit https://orbitaltech.com.ng or search and download the Orbital Node App on Google Play Store
+            1. Visit https://resultsphere.com.ng or search and download the Orbital Node App on Google Play Store
             2. Type in your school name on the "Visit your school website" field
             3. Click on your school from the search suggestions
             4. Click on "Go" to visit your school website.
