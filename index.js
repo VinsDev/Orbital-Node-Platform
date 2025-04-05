@@ -5,7 +5,7 @@ const path = require("path");
 const initRoutes = require("./routes");
 
 var corsOptions = {
-  origin: "https://orbitalnodetechnologies.com"
+  origin: "https://resultsphere.com.ng"
 };
 
 app.use(cors(corsOptions));
